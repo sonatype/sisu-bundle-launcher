@@ -1,0 +1,113 @@
+//
+// Copyright (c) 2007-2011 Sonatype, Inc. All rights reserved.
+//
+// This program is licensed to you under the Apache License Version 2.0,
+// and you may not use this file except in compliance with the Apache License Version 2.0.
+// You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the Apache License Version 2.0 is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+//
+
+%package org.sonatype.sisu.bl.internal.support
+%class LifecycleHandler
+%fsmclass LifecycleHandlerContext
+
+%start MainMap::Stopped
+
+%map MainMap
+%%
+
+Preparing {
+    perform nil {
+        log("Preparing");
+        doPrepare();
+    }
+    commit [ctxt.success()] Prepared {
+        log("Prepared");
+    }
+    commit Failed {}
+    prepare nil {}
+}
+
+Prepared {
+    clean Cleaning {}
+    start Starting {}
+    prepare nil {}
+}
+
+Cleaning {
+    perform nil {
+        log("Cleaning");
+        doClean();
+    }
+    commit [ctxt.success()] Clean {
+        log("Cleaned");
+    }
+    commit Failed {}
+    clean nil {}
+}
+
+Clean {
+    prepare Preparing {}
+    clean nil {}
+}
+
+Starting {
+    perform nil {
+        log("Starting");
+        doStart();
+    }
+    commit [ctxt.success()] Started {
+        log("Started");
+    }
+    commit Failed {}
+    start nil {}
+}
+
+Started {
+    stop Stopping {}
+    start nil {}
+}
+
+Stopping {
+    perform nil {
+        log("Stopping");
+        doStop();
+    }
+    commit [ctxt.success()] Stopped {
+        log("Stopped");
+    }
+    commit Failed {}
+    stop nil {}
+}
+
+Stopped {
+    prepare Preparing {}
+    clean Cleaning {}
+    stop nil {}
+}
+
+Failed
+    Entry {
+       throwFailureIfFailed();
+    }
+{
+
+}
+
+Default {
+    clean nil {}
+    prepare nil {}
+    start nil {}
+    stop nil {}
+    perform nil {}
+    commit nil {}
+}
+
+
+
+
+%%
