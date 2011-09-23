@@ -78,6 +78,13 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
     private Provider<C> configurationProvider;
 
     /**
+     * List of running bundles.
+     * Cannot be null.
+     */
+    @Inject
+    private RunningBundles runningBundles;
+
+    /**
      * Bundle configuration.
      * Cannot be null.
      */
@@ -116,6 +123,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
         try {
             startApplication();
             getState().setRunning(true);
+            runningBundles.add( this );
             waitForBoot();
         } catch (RuntimeException e) {
             doStop();
@@ -140,6 +148,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
         } finally {
             unconfigurePort();
             getState().reset();
+            runningBundles.remove( this );
         }
     }
 
