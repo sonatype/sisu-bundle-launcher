@@ -19,7 +19,7 @@ import java.net.URL;
  *
  * @since 1.0
  */
-public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
+public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
 
     /**
      * Starts application created from this bundle, waiting for application to boot for a period of time specified by
@@ -28,7 +28,7 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T start();
+    B start();
 
     /**
      * Stops a running application created from this bundle.
@@ -36,7 +36,7 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T stop();
+    B stop();
 
     /**
      * Prepare file system to run by unpacking the configured bundle in target directory, applying
@@ -45,7 +45,7 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T prepare();
+    B prepare();
 
     /**
      * Cleans up filesystem, basically removing the target directory.
@@ -53,7 +53,7 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T cleanup() throws Exception;
+    B cleanup() throws Exception;
 
     /**
      * Returns bundle configuration.
@@ -61,7 +61,7 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return bundle configuration, always a non null value
      * @since 1.0
      */
-    C getConfiguration();
+    BC getConfiguration();
 
     /**
      * Sets bundle configuration.
@@ -70,47 +70,14 @@ public interface Bundle<T extends Bundle, C extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T setConfiguration(C configuration);
+    B setConfiguration(BC configuration);
 
     /**
-     * Returns application running state.
+     * Returns true if application is running and false otherwise.
      *
-     * @return bundle running state, always a non null value
+     * @return true if application is running and false otherwise.
      * @since 1.0
      */
-    State getState();
-
-    /**
-     * Information about running state of application.
-     *
-     * @since 1.0
-     */
-    interface State {
-
-        /**
-         * Returns true if application is running and false otherwise.
-         *
-         * @return true if application is running and false otherwise.
-         * @since 1.0
-         */
-        boolean isRunning();
-
-        /**
-         * Returns the port (random generated) application is running on. If bundle is not running return 0 (zero).
-         *
-         * @return the port (random generated) application is running on. 0 (zero) if bundle is not running.
-         * @since 1.0
-         */
-        int getPort();
-
-        /**
-         * Returns the URL application is available at. If bundle is not running returns null.
-         *
-         * @return URL application is available at. Null if bundle is not running.
-         * @since 1.0
-         */
-        URL getUrl();
-
-    }
+    boolean isRunning();
 
 }

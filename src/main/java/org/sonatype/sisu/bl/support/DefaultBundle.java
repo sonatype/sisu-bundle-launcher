@@ -15,7 +15,6 @@ package org.sonatype.sisu.bl.support;
 import org.apache.tools.ant.DirectoryScanner;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
-import org.sonatype.sisu.bl.internal.DefaultBundleState;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
 import org.sonatype.sisu.bl.support.jsw.JSWExecFactory;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
@@ -26,9 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,9 +36,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 1.0
  */
 @Named
-public abstract class DefaultBundle<B extends Bundle, C extends BundleConfiguration>
-        extends BundleLifecycle<B, C>
-        implements Bundle<B, C> {
+public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfiguration>
+        extends BundleLifecycle<B, BC>
+        implements Bundle<B, BC> {
 
     /**
      * Bundle name.
@@ -75,7 +71,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * Cannot be null.
      */
     @Inject
-    private Provider<C> configurationProvider;
+    private Provider<BC> configurationProvider;
 
     /**
      * List of running bundles.
@@ -88,13 +84,12 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * Bundle configuration.
      * Cannot be null.
      */
-    private C configuration;
+    private BC configuration;
 
     /**
-     * Running state.
-     * Cannot be null.
+     * True if application is running, false otherwise.
      */
-    private DefaultBundleState state;
+    private boolean running;
 
     /**
      * Constructor. Creates the bundle with a default configuration and a not running state.
@@ -105,7 +100,6 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
     @Inject
     public DefaultBundle(final String name) {
         this.name = checkNotNull(name);
-        state = new DefaultBundleState();
     }
 
     /**
@@ -122,17 +116,17 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
     public void doStart() {
         try {
             startApplication();
-            getState().setRunning(true);
-            runningBundles.add( this );
+            running = true;
+            runningBundles.add(this);
             waitForBoot();
         } catch (RuntimeException e) {
             doStop();
-            throw (RuntimeException) e;
+            throw e;
         }
     }
 
     /**
-     * Stops application if running, returns the used port to port reservation service and sets the state to not running.
+     * Stops application, if running.
      * <p/>
      * {@inheritDoc}
      *
@@ -141,14 +135,14 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      */
     @Override
     public void doStop() {
-        try {
-            if (getState().isRunning()) {
+        if (running) {
+            try {
                 stopApplication();
+            } finally {
+                unconfigure();
+                running = false;
+                runningBundles.remove(this);
             }
-        } finally {
-            unconfigurePort();
-            getState().reset();
-            runningBundles.remove( this );
         }
     }
 
@@ -157,7 +151,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * - ensuring a valid configuration<br/>
      * - cleanup of target directory<br/>
      * - unpacking bundle<br/>
-     * - configure a random port using port reservation service<br/>
+     * - configure<br/>
      * - applying overlays
      * <p/>
      * {@inheritDoc}
@@ -170,7 +164,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
         validateConfiguration();
         createBundle();
         renameApplicationDirectory();
-        configurePort();
+        configure();
         applyOverlays();
     }
 
@@ -190,7 +184,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * @since 1.0
      */
     @Override
-    public C getConfiguration() {
+    public BC getConfiguration() {
         if (this.configuration == null) {
             this.configuration = configurationProvider.get();
             if (configuration.getId() == null) {
@@ -206,7 +200,7 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * @since 1.0
      */
     @Override
-    public B setConfiguration(C configuration) {
+    public B setConfiguration(BC configuration) {
         this.configuration = configuration;
         return (B) this;
     }
@@ -217,8 +211,8 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
      * @since 1.0
      */
     @Override
-    public DefaultBundleState getState() {
-        return state;
+    public boolean isRunning() {
+        return running;
     }
 
     /**
@@ -236,32 +230,31 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
     protected abstract void stopApplication();
 
     /**
-     * Composes application URL in format {@code http://localhost:<port>/<aplication name>}.
+     * Template method for subclasses to perform configuration tasks when bundle is starting, if necessary.
      *
-     * @return application URL
      * @since 1.0
      */
-    protected String composeApplicationURL() {
-        return String.format("http://localhost:%s/%s", getState().getPort(), name);
+    protected void configure() {
+        // template method
     }
 
     /**
-     * Checks if application is alive by accessing state provided URL and checking that it responds with 200 OK.
+     * Template method for subclasses to perform un-configuration tasks when bundle is stopping, if necessary.
+     *
+     * @since 1.0
+     */
+    protected void unconfigure() {
+        // template method
+    }
+
+    /**
+     * Checks if application is alive.
      *
      * @return true if application is alive, false otherwise
      * @since 1.0
      */
     protected boolean applicationAlive() {
-        try {
-            HttpURLConnection urlConnection = (HttpURLConnection) getState().getUrl().openConnection();
-            urlConnection.setConnectTimeout(0);
-            urlConnection.setReadTimeout(0);
-            urlConnection.setUseCaches(false);
-            urlConnection.connect();
-            return urlConnection.getResponseCode() == 200;
-        } catch (IOException ignore) {
-            return false;
-        }
+        return true;
     }
 
     /**
@@ -297,7 +290,8 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
         while (System.currentTimeMillis() < start + startTimeout * 1000) {
             try {
                 if (applicationAlive()) {
-                    log().info("Application is running at {} (started in {} seconds)", getState().getUrl().toExternalForm(), (System.currentTimeMillis() - start) / 1000);
+                    logApplicationIsAlive();
+                    log().debug("Application {} started in {} seconds", getName(), (System.currentTimeMillis() - start) / 1000);
                     return;
                 }
                 Thread.sleep(Math.min(startTimeout, 1000));
@@ -306,6 +300,19 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
             }
         }
         throw new RuntimeException("Could not detect application running in the configured timeout of " + startTimeout + " seconds");
+    }
+
+    /**
+     * Template method to eventually log the fact that application is alive.
+     *
+     * @since 1.0
+     */
+    protected void logApplicationIsAlive() {
+        //template method
+    }
+
+    String getName() {
+        return name;
     }
 
     /**
@@ -369,31 +376,6 @@ public abstract class DefaultBundle<B extends Bundle, C extends BundleConfigurat
         }
         for (Overlay overlay : overlays) {
             overlay.applyTo(config.getTargetDirectory());
-        }
-    }
-
-    /**
-     * Reserves a port form port reservation service and add creates a JSW configuration file specifying jetty port as
-     * a system property.
-     *
-     * @throws RuntimeException if a problem occurred during reading of JSW configuration or writing the additional JSW
-     *                          configuration file
-     */
-    private void configurePort() throws RuntimeException {
-        try {
-            getState().setPort(portReservationService.reservePort());
-            getState().setUrl(new URL(composeApplicationURL()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Cancels reserved port.
-     */
-    private void unconfigurePort() {
-        if (getState().getPort() > 0) {
-            portReservationService.cancelPort(getState().getPort());
         }
     }
 

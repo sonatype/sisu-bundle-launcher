@@ -111,9 +111,10 @@ public class BundleLifecycleTest
         }
 
         @Override
-        public State getState() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        public boolean isRunning() {
+            return false;  //To change body of implemented methods use File | Settings | File Templates.
         }
+
     }
 
 
