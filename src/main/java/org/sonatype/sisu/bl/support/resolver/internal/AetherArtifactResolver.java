@@ -26,6 +26,7 @@ import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.support.resolver.ArtifactResolver;
 import org.sonatype.sisu.bl.support.resolver.ResolvedArtifact;
 
@@ -66,7 +67,7 @@ public class AetherArtifactResolver
     private String localRepo;
 
     @Inject
-    void setLocalRepo(@Named("${aether.repo.local:-}") String localRepo) {
+    void setLocalRepo(@Nullable @Named("${aether.repo.local}") String localRepo) {
         this.localRepo = localRepo;
         if (localRepo == null || localRepo.length() <= 0) {
             String path = System.getProperty("maven.repo.local", "");
