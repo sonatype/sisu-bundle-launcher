@@ -20,6 +20,7 @@ import org.sonatype.sisu.bl.support.RunningBundles;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import java.util.Set;
  * @since 1.0
  */
 @Named
+@Singleton
 public class DefaultRunningBundles
     implements RunningBundles
 {
