@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.ChmodTask} builder.
  *
  * @since 1.0
  */
@@ -24,10 +24,31 @@ public interface ChmodBuilder
     extends FileTask
 {
 
+    /**
+     * Adds an include pattern (ANT style) to filter the files to have permissions changed.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodBuilder include( String pattern );
 
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to have permissions changed.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodBuilder exclude( String pattern );
 
+    /**
+     * Permissions to be applied to files form specified directory that matches include/exclude patterns.
+     *
+     * @param permissions linus style permissions to be applied
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodBuilder permissions( String permissions );
 
 }

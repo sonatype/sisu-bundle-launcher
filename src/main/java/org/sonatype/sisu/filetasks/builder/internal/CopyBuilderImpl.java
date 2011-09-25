@@ -49,15 +49,15 @@ public class CopyBuilderImpl
     }
 
     @Override
-    public CopyDirectoryBuilder directory( final FileRef sourceDir )
+    public CopyDirectoryBuilder directory( final FileRef directory )
     {
-        return copyDirectoryBuilderProvider.get().directory( sourceDir );
+        return copyDirectoryBuilderProvider.get().directory( directory );
     }
 
     @Override
-    public CopyFileBuilder file( final FileRef sourceFile )
+    public CopyFileBuilder file( final FileRef file )
     {
-        return copyFileBuilderProvider.get().file( sourceFile );
+        return copyFileBuilderProvider.get().file( file );
     }
 
 }

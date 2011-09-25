@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Renames a file/directory.
  *
  * @since 1.0
  */
@@ -26,8 +26,22 @@ public interface RenameTask
     extends FileTask
 {
 
+    /**
+     * File/directory to be renamed.
+     *
+     * @param target file/directory to be renamed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     RenameTask setTarget( File target );
 
+    /**
+     * New name.
+     *
+     * @param name new name
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     RenameTask setName( String name );
 
 }

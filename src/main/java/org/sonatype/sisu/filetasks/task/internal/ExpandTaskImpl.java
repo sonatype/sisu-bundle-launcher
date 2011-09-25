@@ -18,13 +18,14 @@ import org.apache.tools.ant.taskdefs.Untar;
 import org.apache.tools.ant.types.mappers.CutDirsMapper;
 import org.sonatype.sisu.filetasks.task.ExpandTask;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link ExpandTask} implementation.
  *
  * @since 1.0
  */
@@ -34,29 +35,62 @@ class ExpandTaskImpl
     implements ExpandTask
 {
 
+    /**
+     * Archive file to be expanded.
+     */
     private File archive;
 
+    /**
+     * Destination directory where archive will be expanded.
+     */
     private File toDirectory;
 
+    /**
+     * If a file which is newer in destination should be replaced. Default true.
+     */
     private boolean overwriteNewer;
 
+    /**
+     * Number of directories from archive to cut while expanding. Defaults to zero = no directories will be cut.
+     */
     private int directoriesToCut;
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
+    @Inject
+    ExpandTaskImpl()
+    {
+        overwriteNewer = true;
+        directoriesToCut = 0;
+    }
+
+    /**
+     * Returns a {@link Expand} or {@link Untar} ANT task based on archive extension.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<? extends Expand> antTaskType()
     {
         return checkNotNull( archive ).getName().endsWith( ".tar.gz" ) ? Untar.class : Expand.class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Expand expand )
     {
-        expand.setSrc( archive );
-
+        expand.setSrc( checkNotNull( archive ) );
         expand.setDest( checkNotNull( toDirectory ) );
-
         expand.setOverwrite( overwriteNewer );
-
         if ( directoriesToCut > 0 )
         {
             expand.add( new CutDirsMapper()
@@ -66,10 +100,14 @@ class ExpandTaskImpl
                 }
             } );
         }
-
         expand.setStripAbsolutePathSpec( true );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandTask setArchive( final File archive )
     {
@@ -77,6 +115,11 @@ class ExpandTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandTask setToDirectory( final File directory )
     {
@@ -84,6 +127,11 @@ class ExpandTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandTaskImpl setOverwriteNewer( final boolean overwrite )
     {
@@ -91,6 +139,11 @@ class ExpandTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandTask setDirectoriesToCut( final int directoriesToCut )
     {

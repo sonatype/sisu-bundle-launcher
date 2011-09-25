@@ -96,9 +96,9 @@ class CopyDirectoryBuilderImpl
     }
 
     @Override
-    public PathBuilder to()
+    public DestinationBuilder to()
     {
-        return new PathBuilder()
+        return new DestinationBuilder()
         {
             @Override
             public CopyDirectoryBuilderImpl directory( final FileRef directory )

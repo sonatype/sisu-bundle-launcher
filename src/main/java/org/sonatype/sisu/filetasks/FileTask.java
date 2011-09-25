@@ -14,13 +14,18 @@
 package org.sonatype.sisu.filetasks;
 
 /**
- * TODO
+ * A file related task.
  *
  * @since 1.0
  */
 public interface FileTask
 {
 
+    /**
+     * Executes the file task.
+     *
+     * @since 1.0
+     */
     void run();
 
 }

@@ -16,13 +16,18 @@ package org.sonatype.sisu.filetasks.builder;
 import java.io.File;
 
 /**
- * TODO
+ * Implemented by builders that can re-target their internal path references to a specified directory.
  *
  * @since 1.0
  */
 public interface Targetable
 {
 
+    /**
+     * Re-target internal paths to specified directory.
+     *
+     * @param targetDirectory parent directory to re-target to
+     */
     void setTargetDirectory( File targetDirectory );
 
 }

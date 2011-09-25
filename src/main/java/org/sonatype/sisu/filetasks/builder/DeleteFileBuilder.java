@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.DeleteFileTask} builder.
  *
  * @since 1.0
  */

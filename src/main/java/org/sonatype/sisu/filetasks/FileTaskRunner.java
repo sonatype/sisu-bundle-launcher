@@ -20,40 +20,77 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * TODO
+ * Helper for execution of {@link FileTask}s.
  *
  * @since 1.0
  */
-public class FileTaskRunner {
+public class FileTaskRunner
+{
 
-    public static Target onDirectory(final File directory) {
-        return new Target() {
+    /**
+     * Ongoing builder for specifying a set of tasks that should be applied over specified directory.
+     *
+     * @param directory to which {@link FileTask}s should be applied
+     * @return ongoing builder
+     * @since 1.0
+     */
+    public static Target onDirectory( final File directory )
+    {
+        return new Target()
+        {
+
             @Override
-            public void apply(final FileTask... tasks) {
-                if (tasks != null && tasks.length > 0) {
-                    apply(Arrays.asList(tasks));
+            public void apply( final FileTask... tasks )
+            {
+                if ( tasks != null && tasks.length > 0 )
+                {
+                    apply( Arrays.asList( tasks ) );
                 }
             }
 
             @Override
-            public void apply(final Collection<FileTask> tasks) {
-                if (tasks != null && tasks.size() > 0) {
-                    for (FileTask task : tasks) {
-                        if (task instanceof Targetable) {
-                            ((Targetable) task).setTargetDirectory(directory);
+            public void apply( final Collection<FileTask> tasks )
+            {
+                if ( tasks != null && tasks.size() > 0 )
+                {
+                    for ( FileTask task : tasks )
+                    {
+                        if ( task instanceof Targetable )
+                        {
+                            ( (Targetable) task ).setTargetDirectory( directory );
                         }
                         task.run();
                     }
                 }
             }
+
         };
     }
 
-    public static interface Target {
+    /**
+     * Target set of {@link FileTask}s.
+     *
+     * @since 1.0
+     */
+    public static interface Target
+    {
 
-        void apply(FileTask... tasks);
+        /**
+         * Executes the specified tasks.
+         *
+         * @param tasks to be executed
+         * @since 1.0
+         */
+        void apply( FileTask... tasks );
 
-        void apply(Collection<FileTask> tasks);
+        /**
+         * Executes the specified tasks.
+         *
+         * @param tasks to be executed
+         * @since 1.0
+         */
+        void apply( Collection<FileTask> tasks );
+
     }
 
 }

@@ -20,7 +20,7 @@ import org.sonatype.sisu.filetasks.support.AntHelper;
 import javax.inject.Inject;
 
 /**
- * TODO
+ * Base class for all ANT based tasks implementations.
  *
  * @since 1.0
  */
@@ -28,31 +28,57 @@ abstract class AbstractAntTask<T extends Task>
     implements FileTask
 {
 
+    /**
+     * ANT helper used to create ANT tasks.
+     */
     @Inject
     private AntHelper ant;
 
+    /**
+     * Creates an ANT task (type specified by subclasses), asks to be prepared and executes it if
+     * {@link #shouldExecute()} (default, if not overridden returns true)
+     *
+     * @since 1.0
+     */
     @Override
     public final void run()
     {
-        T antTask = ant().createTask( antTaskType() );
         if ( shouldExecute() )
         {
+            T antTask = ant.createTask( antTaskType() );
             prepare( antTask );
             antTask.execute();
         }
     }
 
+    /**
+     * Whether or not the task should be executed. For example a delete task should not be executed if file to be
+     * deleted does not exist.
+     *
+     * @return if task should be executed (returns true by default)
+     * @since 1.0
+     */
     boolean shouldExecute()
     {
         return true;
     }
 
+    /**
+     * Type of ANT task to be created.
+     * Must be implemented by concrete file tasks.
+     *
+     * @return type of ANT task to be created
+     * @since 1.0
+     */
     abstract Class<? extends T> antTaskType();
 
+    /**
+     * Prepares the ANT task before execution by setting available options/values.
+     * Must be implemented by concrete file tasks.
+     *
+     * @param antTask to be prepared before is executed
+     * @since 1.0
+     */
     abstract void prepare( T antTask );
 
-    AntHelper ant()
-    {
-        return ant;
-    }
 }

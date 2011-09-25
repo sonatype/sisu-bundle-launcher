@@ -20,8 +20,10 @@ import org.sonatype.sisu.filetasks.task.DeleteFileTask;
 import javax.inject.Named;
 import java.io.File;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TODO
+ * ANT based {@link DeleteFileTask} implementation.
  *
  * @since 1.0
  */
@@ -31,29 +33,56 @@ class DeleteFileTaskImpl
     implements DeleteFileTask
 {
 
+    /**
+     * File to be deleted.
+     */
     private File file;
 
+    /**
+     * Returns a {@link Delete} ANT task.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<Delete> antTaskType()
     {
         return Delete.class;
     }
 
+    /**
+     * Returns false if file to be deleted does not exist, true otherwise.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     boolean shouldExecute()
     {
         return file.exists();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Delete delete )
     {
         FileSet fileSet = new FileSet();
-        fileSet.setFile( file );
+        fileSet.setFile( checkNotNull( file ) );
         delete.addFileset( fileSet );
         delete.setFailOnError( true );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteFileTaskImpl setFile( final File file )
     {

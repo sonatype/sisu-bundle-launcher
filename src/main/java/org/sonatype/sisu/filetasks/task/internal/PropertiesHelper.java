@@ -11,7 +11,7 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-package org.sonatype.sisu.filetasks.support;
+package org.sonatype.sisu.filetasks.task.internal;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,17 +23,25 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TODO
+ * Properties file related utility methods.
  *
  * @since 1.0
  */
 public class PropertiesHelper
 {
 
+    /**
+     * Loads a properties file. If file does not exist creates a set of empty properties.
+     *
+     * @param propertiesFile properties file to be loaded
+     * @return loaded properties, empty if properties file does not exist
+     */
     public static Properties load( File propertiesFile )
     {
-        if ( !propertiesFile.exists() )
+        if ( !checkNotNull( propertiesFile ).exists() )
         {
             return new Properties();
         }
@@ -72,12 +80,18 @@ public class PropertiesHelper
         }
     }
 
+    /**
+     * Saves properties to a file.
+     *
+     * @param properties     to be saved
+     * @param propertiesFile destination properties file
+     */
     public static void save( Properties properties, File propertiesFile )
     {
         OutputStream out = null;
         try
         {
-            propertiesFile.getParentFile().mkdirs();
+            checkNotNull( propertiesFile ).getParentFile().mkdirs();
             out = new BufferedOutputStream( new FileOutputStream( propertiesFile ) );
             if ( propertiesFile.getName().endsWith( ".xml" ) )
             {

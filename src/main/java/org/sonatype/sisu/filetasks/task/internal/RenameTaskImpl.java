@@ -22,7 +22,7 @@ import java.io.File;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link RenameTask} implementation.
  *
  * @since 1.0
  */
@@ -32,25 +32,47 @@ class RenameTaskImpl
     implements RenameTask
 {
 
+    /**
+     * File/directory to be renamed.
+     */
     private File target;
 
+    /**
+     * New name.
+     */
     private String name;
 
+    /**
+     * Returns a {@link Move} ANT task.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<Move> antTaskType()
     {
         return Move.class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Move move )
     {
         move.setFile( checkNotNull( target ) );
         move.setTofile( new File( target.getParentFile(), checkNotNull( name ) ) );
-
         move.setFailOnError( true );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public RenameTask setTarget( final File target )
     {
@@ -58,10 +80,16 @@ class RenameTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public RenameTask setName( final String name )
     {
         this.name = name;
         return this;
     }
+
 }

@@ -91,9 +91,9 @@ public class ExpandBuilderImpl
     }
 
     @Override
-    public PathBuilder to()
+    public DestinationBuilder to()
     {
-        return new PathBuilder()
+        return new DestinationBuilder()
         {
             @Override
             public ExpandBuilderImpl directory( final FileRef directory )

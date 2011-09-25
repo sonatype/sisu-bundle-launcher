@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * TODO
+ * Copy settings builder (included in {@link CopyFileBuilder} and {@link CopyDirectoryBuilder}.
  *
  * @since 1.0
  */
@@ -27,18 +27,64 @@ public interface CopySettingsBuilder<B extends CopySettingsBuilder>
     extends FileTask
 {
 
+    /**
+     * Specifies that newer files present in destination should be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B overwriteNewer();
 
+    /**
+     * Specifies that newer files present in destination should not be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B doNotOverwriteNewer();
 
+    /**
+     * Specifies that read only files present in destination should be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B overwriteReadOnly();
 
+    /**
+     * Specifies that read only files present in destination should not be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B doNotOverwriteReadOnly();
 
+    /**
+     * Adds a filtering property to be replaced in copied files.
+     *
+     * @param key   property key
+     * @param value property value
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B filterUsing( String key, String value );
 
+    /**
+     * Adds all properties specified as filtering properties to be replaced in copied files.
+     *
+     * @param properties to add
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B filterUsing( Properties properties );
 
+    /**
+     * Reads all properties form specified properties file as filtering properties to be replaced in copied files.
+     *
+     * @param propertiesFile file containing properties
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     B filterUsing( File propertiesFile );
 
 }

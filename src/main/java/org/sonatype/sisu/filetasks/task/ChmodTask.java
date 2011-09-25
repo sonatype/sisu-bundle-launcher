@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Changes permissions of files from a directory.
  *
  * @since 1.0
  */
@@ -26,12 +26,40 @@ public interface ChmodTask
     extends FileTask
 {
 
+    /**
+     * Specify the directory containing the files to have permission changed.
+     *
+     * @param directory directory containing the files to have permissions changed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodTask setDirectory( File directory );
 
+    /**
+     * Adds an include pattern (ANT style) to filter the files to have permissions changed.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodTask addIncludePattern( String pattern );
 
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to have permissions changed.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodTask addExcludePattern( String pattern );
 
+    /**
+     * Permissions to be applied to files form specified directory that matches include/exclude patterns.
+     *
+     * @param permissions linus style permissions to be applied
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ChmodTask setPermissions( String permissions );
 
 }

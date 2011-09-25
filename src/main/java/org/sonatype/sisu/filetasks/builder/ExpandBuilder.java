@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.ExpandTask} builder.
  *
  * @since 1.0
  */
@@ -24,17 +24,54 @@ public interface ExpandBuilder
     extends FileTask
 {
 
+    /**
+     * Specifies that newer files present in destination should be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandBuilder overwriteNewer();
 
+    /**
+     * Specifies that newer files present in destination should not be overwritten.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandBuilder doNotOverwriteNewer();
 
+    /**
+     * Number of directories to be cut (form source archive), while expanding.
+     *
+     * @param directoriesToCut number of directories to be cut (form source archive), while expanding
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandBuilder cutDirectories( int directoriesToCut );
 
-    PathBuilder to();
+    /**
+     * Ongoing destination builder.
+     *
+     * @return ongoing destination builder.
+     * @since 1.0
+     */
+    DestinationBuilder to();
 
-    interface PathBuilder
+    /**
+     * Ongoing destination builder.
+     *
+     * @since 1.0
+     */
+    interface DestinationBuilder
     {
 
+        /**
+         * Target directory where archive will be expanded.
+         *
+         * @param directory where archive will be expanded
+         * @return itself, for fluent API usage
+         * @since 1.0
+         */
         ExpandBuilder directory( FileRef directory );
 
     }

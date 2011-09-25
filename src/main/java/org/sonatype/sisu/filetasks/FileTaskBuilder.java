@@ -23,25 +23,74 @@ import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
 import org.sonatype.sisu.filetasks.builder.RenameBuilder;
 
 /**
- * TODO
+ * Helper for easy, fluent API building of {@link FileTask}s.
  *
  * @since 1.0
  */
 public interface FileTaskBuilder
 {
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.CopyDirectoryTask} or {@link org.sonatype.sisu.filetasks.task.CopyFileTask}
+     * builder.
+     *
+     * @return ongoing copy task builder
+     * @since 1.0
+     */
     CopyBuilder copy();
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.DeleteDirectoryTask} or {@link org.sonatype.sisu.filetasks.task.DeleteFileTask}
+     * builder.
+     *
+     * @return ongoing delete task builder
+     * @since 1.0
+     */
     DeleteBuilder delete();
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.RenameTask} builder.
+     *
+     * @param target renamed file/directory reference
+     * @return ongoing rename task builder
+     * @since 1.0
+     */
     RenameBuilder rename( FileRef target );
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.MoveTask} builder.
+     *
+     * @param from file to be moved reference
+     * @return ongoing move task builder
+     * @since 1.0
+     */
     MoveBuilder move( FileRef from );
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.ExpandTask} builder.
+     *
+     * @param archive archive to be expanded reference
+     * @return ongoing expand task builder
+     * @since 1.0
+     */
     ExpandBuilder expand( FileRef archive );
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.PropertiesTask} builder.
+     *
+     * @param target properties file to be changed/created reference
+     * @return ongoing properties task builder
+     * @since 1.0
+     */
     PropertiesBuilder properties( FileRef target );
 
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.ChmodTask} builder.
+     *
+     * @param directory directory containing files to have permissions changed reference
+     * @return ongoing change permissions task builder
+     * @since 1.0
+     */
     ChmodBuilder chmod( FileRef directory );
 
 }

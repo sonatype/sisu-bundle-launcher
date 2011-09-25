@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.DeleteDirectoryTask} builder.
  *
  * @since 1.0
  */
@@ -24,12 +24,38 @@ public interface DeleteDirectoryBuilder
     extends FileTask
 {
 
+    /**
+     * Adds an include pattern (ANT style) to filter the files to be deleted.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryBuilder include( String pattern );
 
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to be deleted.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryBuilder exclude( String pattern );
 
+    /**
+     * Specifies that once a directory is empty (or was empty before delete), it should also be deleted.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryBuilder includeEmptyDirectories();
 
+    /**
+     * Specifies that once a directory is empty (or was empty before delete), it should not be deleted.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryBuilder excludeEmptyDirectories();
 
 }

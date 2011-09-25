@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.MoveTask} builder.
  *
  * @since 1.0
  */
@@ -24,6 +24,13 @@ public interface MoveBuilder
     extends FileTask
 {
 
+    /**
+     * Destination file/directory where the file has to be moved.
+     *
+     * @param to destination file/directory where the file has to be moved
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     MoveBuilder to( FileRef to );
 
 }

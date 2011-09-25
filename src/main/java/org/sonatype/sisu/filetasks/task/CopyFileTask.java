@@ -26,10 +26,31 @@ public interface CopyFileTask
     extends CopySettings, FileTask
 {
 
+    /**
+     * Source file to be copied.
+     *
+     * @param file to be copied
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyFileTask setFromFile( File file );
 
+    /**
+     * Target directory to copy to. File will be created with same name as source file
+     *
+     * @param directory destination
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyFileTask setToDirectory( File directory );
 
+    /**
+     * Target file to copy to.
+     *
+     * @param file destination
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyFileTask setToFile( File file );
 
 }

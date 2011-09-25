@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * TODO
+ * Creates/modifies a properties file.
  *
  * @since 1.0
  */
@@ -27,16 +27,59 @@ public interface PropertiesTask
     extends FileTask
 {
 
+    /**
+     * Properties file to be modified. If file does not exist it will be created.
+     *
+     * @param propertiesFile to be created/modified
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask setTargetFile( File propertiesFile );
 
+    /**
+     * Sets a property by key. If property is not present it will be added.
+     *
+     * @param key   property key
+     * @param value property value
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask setProperty( String key, String value );
 
+    /**
+     * Sets/adds all properties specified.
+     *
+     * @param properties to be added
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask setProperties( Properties properties );
 
+    /**
+     * Reads properties from specified properties file and add/set them.
+     *
+     * @param propertiesFile file containing properties
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask setProperties( File propertiesFile );
 
+    /**
+     * Removes a property by key.
+     *
+     * @param key of property to be removed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask removeProperty( String key );
 
+    /**
+     * Removes all properties. If there are properties to be set, those properties will replace all eventually existing
+     * properties in target file.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesTask removeAllProperties();
 
 }

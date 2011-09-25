@@ -26,7 +26,7 @@ import java.io.PrintStream;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Wrapper for invoking Ant tasks.
+ * Utility for using ANT tasks.
  *
  * @since 1.0
  */
@@ -34,11 +34,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AntHelper
 {
 
+    /**
+     * ANT instance.
+     * Never null.
+     */
     private final Project ant;
 
+    /**
+     * (eventually) injected logger.
+     */
     @Inject
     private Logger logger = LoggerFactory.getLogger( AntHelper.class );
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
     @Inject
     AntHelper()
     {
@@ -47,6 +59,14 @@ public class AntHelper
         ant.init();
     }
 
+    /**
+     * Creates and basically configures an ANT task by type.
+     *
+     * @param type type of ANT task to be created
+     * @param <T>  task type
+     * @return created ANT task
+     * @since 1.0
+     */
     public <T extends ProjectComponent> T createTask( final Class<T> type )
     {
         checkNotNull( type );
@@ -63,6 +83,12 @@ public class AntHelper
         }
     }
 
+    /**
+     * Proxies ANT logger to SLF4J logger.
+     *
+     * @param logger SLF4J logger
+     * @param ant    ANT
+     */
     private void initAntLogger( final Logger logger, final Project ant )
     {
         checkNotNull( logger );
@@ -93,8 +119,16 @@ public class AntHelper
         extends DefaultLogger
     {
 
+        /**
+         * Proxy SLF4J logger.
+         */
         protected Logger logger;
 
+        /**
+         * Constructor.
+         *
+         * @param logger proxy SLF4J logger
+         */
         private Slf4jAntLoggerAdapter( final Logger logger )
         {
             if ( logger == null )
@@ -107,6 +141,9 @@ public class AntHelper
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void printMessage( final String message, final PrintStream stream, final int priority )
         {
@@ -130,5 +167,7 @@ public class AntHelper
                     break;
             }
         }
+
     }
+
 }

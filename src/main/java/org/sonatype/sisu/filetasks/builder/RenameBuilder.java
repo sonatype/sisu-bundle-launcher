@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.RenameTask} builder.
  *
  * @since 1.0
  */
@@ -24,6 +24,13 @@ public interface RenameBuilder
     extends FileTask
 {
 
+    /**
+     * New name.
+     *
+     * @param name new name
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     RenameBuilder to( String name );
 
 }

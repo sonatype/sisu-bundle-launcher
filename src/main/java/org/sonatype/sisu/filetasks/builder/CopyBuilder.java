@@ -14,15 +14,27 @@
 package org.sonatype.sisu.filetasks.builder;
 
 /**
- * TODO
+ * Ongoing copy file/directory builder.
  *
  * @since 1.0
  */
 public interface CopyBuilder
 {
 
-    CopyDirectoryBuilder directory( final FileRef sourceDir );
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.CopyDirectoryTask} builder.
+     *
+     * @param directory directory to be copied
+     * @return ongoing copy directory task builder
+     */
+    CopyDirectoryBuilder directory( final FileRef directory );
 
-    CopyFileBuilder file( final FileRef sourceFile );
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.CopyFileTask} builder.
+     *
+     * @param file file to be copied
+     * @return ongoing copy file task builder
+     */
+    CopyFileBuilder file( final FileRef file );
 
 }

@@ -23,8 +23,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * TODO
+ * ANT based {@link DeleteDirectoryTask} implementation.
  *
  * @since 1.0
  */
@@ -34,14 +36,33 @@ class DeleteDirectoryTaskImpl
     implements DeleteDirectoryTask
 {
 
+    /**
+     * Directory to be deleted.
+     */
     private File directory;
 
+    /**
+     * True if empty or becoming empty directories should be deleted. Default true.
+     */
     private boolean includeEmptyDirectories;
 
+    /**
+     * Include patterns to filter files that will be deleted.
+     * Never null.
+     */
     private final List<String> includes;
 
+    /**
+     * Exclude patterns to filter files that will be deleted.
+     * Never null.
+     */
     private final List<String> excludes;
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
     @Inject
     DeleteDirectoryTaskImpl()
     {
@@ -50,23 +71,42 @@ class DeleteDirectoryTaskImpl
         includeEmptyDirectories = true;
     }
 
+    /**
+     * Returns a {@link Delete} ANT task.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<Delete> antTaskType()
     {
         return Delete.class;
     }
 
+    /**
+     * Returns false if directory to be deleted does not exist, true otherwise.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     boolean shouldExecute()
     {
         return directory.exists();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Delete delete )
     {
         FileSet fileSet = new FileSet();
-        fileSet.setDir( directory );
+        fileSet.setDir( checkNotNull( directory ) );
         if ( includes.size() > 0 )
         {
             fileSet.appendIncludes( includes.toArray( new String[includes.size()] ) );
@@ -80,6 +120,11 @@ class DeleteDirectoryTaskImpl
         delete.setFailOnError( true );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryTaskImpl setDirectory( final File directory )
     {
@@ -87,6 +132,11 @@ class DeleteDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryTaskImpl setIncludeEmptyDirectories( final boolean includeEmptyDirectories )
     {
@@ -94,6 +144,11 @@ class DeleteDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryTaskImpl addIncludePattern( final String pattern )
     {
@@ -101,6 +156,11 @@ class DeleteDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryTaskImpl addExcludePattern( final String pattern )
     {

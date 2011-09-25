@@ -14,15 +14,27 @@
 package org.sonatype.sisu.filetasks.builder;
 
 /**
- * TODO
+ * Ongoing delete file/directory builder.
  *
  * @since 1.0
  */
 public interface DeleteBuilder
 {
 
-    DeleteDirectoryBuilder directory( final FileRef sourceDir );
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.DeleteDirectoryTask} builder.
+     *
+     * @param directory directory to be deleted
+     * @return ongoing delete directory task builder
+     */
+    DeleteDirectoryBuilder directory( final FileRef directory );
 
-    DeleteFileBuilder file( final FileRef sourceFile );
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.DeleteFileTask} builder.
+     *
+     * @param file file to be deleted
+     * @return ongoing delete file task builder
+     */
+    DeleteFileBuilder file( final FileRef file );
 
 }

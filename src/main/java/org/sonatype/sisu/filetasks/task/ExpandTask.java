@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Expands an archive.
  *
  * @since 1.0
  */
@@ -26,12 +26,40 @@ public interface ExpandTask
     extends FileTask
 {
 
+    /**
+     * Archive to be expanded. It can be in any of zip/jar/tar formats (format determined by extension).
+     *
+     * @param archive to be expanded
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandTask setArchive( File archive );
 
+    /**
+     * Target directory where archive will be expanded.
+     *
+     * @param directory where archive will be expanded
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandTask setToDirectory( File directory );
 
+    /**
+     * Whether or not newer files present in destination should be overwritten.
+     *
+     * @param overwrite true/false newer files present in destination should be overwritten
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandTask setOverwriteNewer( boolean overwrite );
 
+    /**
+     * Number of directories to be cut (form source archive), while expanding.
+     *
+     * @param directoriesToCut number of directories to be cut (form source archive), while expanding
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     ExpandTask setDirectoriesToCut( int directoriesToCut );
 
 }

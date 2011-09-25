@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Recursively deletes a directory.
  *
  * @since 1.0
  */
@@ -26,12 +26,41 @@ public interface DeleteDirectoryTask
     extends FileTask
 {
 
+    /**
+     * Directory to be deleted.
+     *
+     * @param directory to be deleted
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryTask setDirectory( File directory );
 
+    /**
+     * Adds an include pattern (ANT style) to filter the files to be deleted.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryTask addIncludePattern( String pattern );
 
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to be deleted.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryTask addExcludePattern( String pattern );
 
+    /**
+     * Whether or not once a directory is empty (or was empty before delete), it should also be deleted.
+     *
+     * @param includeEmptyDirectories true/false if once a directory is empty (or was empty before delete), it should
+     *                                also be deleted
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryTask setIncludeEmptyDirectories( boolean includeEmptyDirectories );
 
 }

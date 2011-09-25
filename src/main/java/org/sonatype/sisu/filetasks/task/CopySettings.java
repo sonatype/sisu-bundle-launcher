@@ -19,22 +19,60 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * TODO
+ * Copy task settings.
  *
+ * @see CopyDirectoryTask
+ * @see CopyFileTask
  * @since 1.0
  */
 public interface CopySettings
     extends FileTask
 {
 
+    /**
+     * Whether or not newer files present in destination should be overwritten. By default it will be overwritten.
+     *
+     * @param overwrite true/false if newer files present in destination should be overwritten
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopySettings setOverwriteNewer( boolean overwrite );
 
+    /**
+     * Whether or not read only files present in destination should be overwritten. By default it will be overwritten.
+     *
+     * @param overwrite true/false if read only files present in destination should be overwritten
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopySettings setOverwriteReadOnly( boolean overwrite );
 
+    /**
+     * Adds a filtering property to be replaced in copied files.
+     *
+     * @param key   property key
+     * @param value property value
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopySettings addFilter( String key, String value );
 
+    /**
+     * Adds all properties specified as filtering properties to be replaced in copied files.
+     *
+     * @param properties to add
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopySettings addFilters( Properties properties );
 
+    /**
+     * Reads all properties form specified properties file as filtering properties to be replaced in copied files.
+     *
+     * @param propertiesFile file containing properties
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopySettings addFilters( File propertiesFile );
 
 }

@@ -24,13 +24,38 @@ public interface CopyFileBuilder
     extends CopySettingsBuilder<CopyFileBuilder>, FileTask
 {
 
-    PathBuilder to();
+    /**
+     * Ongoing destination builder.
+     *
+     * @return ongoing destination builder.
+     * @since 1.0
+     */
+    DestinationBuilder to();
 
-    interface PathBuilder
+    /**
+     * Ongoing destination builder.
+     *
+     * @since 1.0
+     */
+    interface DestinationBuilder
     {
 
+        /**
+         * Target directory where the file should be copied.
+         *
+         * @param directory target directory where the file should be copied
+         * @return itself, for fluent API usage
+         * @since 1.0
+         */
         CopyFileBuilder directory( FileRef directory );
 
+        /**
+         * Target file where the file should be copied.
+         *
+         * @param file target file where the file should be copied
+         * @return itself, for fluent API usage
+         * @since 1.0
+         */
         CopyFileBuilder file( FileRef file );
 
     }

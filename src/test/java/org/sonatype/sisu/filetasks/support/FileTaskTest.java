@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.filetasks.task.internal.PropertiesHelper;
 import org.sonatype.sisu.litmus.testsupport.inject.InjectedTestSupport;
 
 import javax.inject.Inject;

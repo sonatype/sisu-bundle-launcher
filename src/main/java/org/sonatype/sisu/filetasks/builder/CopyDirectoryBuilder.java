@@ -16,7 +16,7 @@ package org.sonatype.sisu.filetasks.builder;
 import org.sonatype.sisu.filetasks.FileTask;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.CopyDirectoryTask} builder.
  *
  * @since 1.0
  */
@@ -24,19 +24,63 @@ public interface CopyDirectoryBuilder
     extends CopySettingsBuilder<CopyDirectoryBuilder>, FileTask
 {
 
+    /**
+     * Adds an include pattern (ANT style) to filter the files to be copied.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyDirectoryBuilder include( String pattern );
 
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to be copied.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyDirectoryBuilder exclude( String pattern );
 
+    /**
+     * Specifies that empty directories should be copied.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyDirectoryBuilder includeEmptyDirectories();
 
+    /**
+     * Specifies that empty directories should not be copied.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyDirectoryBuilder excludeEmptyDirectories();
 
-    PathBuilder to();
+    /**
+     * Ongoing destination builder.
+     *
+     * @return ongoing destination builder.
+     * @since 1.0
+     */
+    DestinationBuilder to();
 
-    interface PathBuilder
+    /**
+     * Ongoing destination builder.
+     *
+     * @since 1.0
+     */
+    interface DestinationBuilder
     {
 
+        /**
+         * Target directory where the files should be copied.
+         *
+         * @param directory target directory where the files should be copied
+         * @return itself, for fluent API usage
+         * @since 1.0
+         */
         CopyDirectoryBuilder directory( FileRef directory );
 
     }

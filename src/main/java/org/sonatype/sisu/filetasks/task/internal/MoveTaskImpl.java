@@ -14,7 +14,7 @@
 package org.sonatype.sisu.filetasks.task.internal;
 
 import org.apache.tools.ant.taskdefs.Move;
-import org.sonatype.sisu.filetasks.task.RenameTask;
+import org.sonatype.sisu.filetasks.task.MoveTask;
 
 import javax.inject.Named;
 import java.io.File;
@@ -22,46 +22,74 @@ import java.io.File;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link MoveTask} implementation.
  *
  * @since 1.0
  */
 @Named
 class MoveTaskImpl
     extends AbstractAntTask<Move>
-    implements RenameTask
+    implements MoveTask
 {
 
-    private File target;
+    /**
+     * File/directory to be moved.
+     */
+    private File from;
 
-    private String name;
+    /**
+     * Destination file/directory to move to.
+     */
+    private File to;
 
+    /**
+     * Returns a {@link Move} ANT task.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<Move> antTaskType()
     {
         return Move.class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Move move )
     {
-        move.setFile( checkNotNull( target ) );
-        move.setTofile( new File( target.getParentFile(), checkNotNull( name ) ) );
-
+        move.setFile( checkNotNull( from ) );
+        move.setTofile( checkNotNull( to ) );
         move.setFailOnError( true );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
-    public RenameTask setTarget( final File target )
+    public MoveTask setFrom( final File from )
     {
-        this.target = target;
+        this.from = from;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
-    public RenameTask setName( final String name )
+    public MoveTask setTo( final File target )
     {
-        this.name = name;
+        this.from = target;
         return this;
     }
+
 }

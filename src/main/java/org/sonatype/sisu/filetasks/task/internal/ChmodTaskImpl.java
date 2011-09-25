@@ -26,7 +26,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link ChmodTask} implementation.
  *
  * @since 1.0
  */
@@ -36,14 +36,33 @@ class ChmodTaskImpl
     implements ChmodTask
 {
 
+    /**
+     * Directory containing files to change permissions for.
+     */
     private File directory;
 
+    /**
+     * Include patterns to filter files that will have permissions changed.
+     * Never null.
+     */
     private final List<String> includes;
 
+    /**
+     * Exclude patterns to filter files that will have permissions changed.
+     * Never null.
+     */
     private final List<String> excludes;
 
+    /**
+     * Permissions that should be set.
+     */
     private String permissions;
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
     @Inject
     ChmodTaskImpl()
     {
@@ -51,12 +70,24 @@ class ChmodTaskImpl
         excludes = new ArrayList<String>();
     }
 
+    /**
+     * Returns a {@link Chmod} ANT task.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     Class<Chmod> antTaskType()
     {
         return Chmod.class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Chmod chmod )
     {
@@ -74,6 +105,11 @@ class ChmodTaskImpl
         chmod.setPerm( checkNotNull( permissions ) );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodTaskImpl setDirectory( final File directory )
     {
@@ -81,6 +117,11 @@ class ChmodTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodTaskImpl addIncludePattern( final String pattern )
     {
@@ -88,6 +129,11 @@ class ChmodTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodTaskImpl addExcludePattern( final String pattern )
     {
@@ -95,6 +141,11 @@ class ChmodTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodTask setPermissions( final String permissions )
     {

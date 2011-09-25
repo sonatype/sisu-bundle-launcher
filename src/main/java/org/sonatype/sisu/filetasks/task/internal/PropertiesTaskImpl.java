@@ -13,7 +13,6 @@
 
 package org.sonatype.sisu.filetasks.task.internal;
 
-import org.sonatype.sisu.filetasks.support.PropertiesHelper;
 import org.sonatype.sisu.filetasks.task.PropertiesTask;
 
 import javax.inject.Inject;
@@ -26,11 +25,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.sonatype.sisu.filetasks.support.PropertiesHelper.load;
-import static org.sonatype.sisu.filetasks.support.PropertiesHelper.save;
+import static org.sonatype.sisu.filetasks.task.internal.PropertiesHelper.load;
+import static org.sonatype.sisu.filetasks.task.internal.PropertiesHelper.save;
 
 /**
- * TODO
+ * {@link PropertiesTask} implementation.
  *
  * @since 1.0
  */
@@ -39,14 +38,34 @@ class PropertiesTaskImpl
     implements PropertiesTask
 {
 
+    /**
+     * Target properties file to be modified/created.
+     */
     private File propertiesFile;
 
+    /**
+     * Properties to be set. Initially filled with values from existing properties file.
+     * Never null.
+     */
     private Map<String, String> propertiesToSet;
 
+    /**
+     * Keys of properties to be removed.
+     * Never null.
+     */
     private List<String> propertiesToRemove;
 
+    /**
+     * If all properties should be removed. If there are properties to be set, those properties will replace all
+     * eventually existing properties in target file.
+     */
     private boolean removeAllProperties;
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
     @Inject
     PropertiesTaskImpl()
     {
@@ -55,6 +74,11 @@ class PropertiesTaskImpl
         removeAllProperties = false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public void run()
     {
@@ -84,6 +108,11 @@ class PropertiesTaskImpl
         save( properties, propertiesFile );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask setTargetFile( final File propertiesFile )
     {
@@ -91,6 +120,11 @@ class PropertiesTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask setProperty( final String key, final String value )
     {
@@ -98,6 +132,11 @@ class PropertiesTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask setProperties( final Properties properties )
     {
@@ -108,18 +147,33 @@ class PropertiesTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask setProperties( final File propertiesFile )
     {
         return setProperties( PropertiesHelper.load( propertiesFile ) );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask removeProperty( final String key )
     {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesTask removeAllProperties()
     {

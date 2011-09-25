@@ -47,15 +47,15 @@ public class DeleteBuilderImpl
     }
 
     @Override
-    public DeleteDirectoryBuilderImpl directory( final FileRef sourceDir )
+    public DeleteDirectoryBuilderImpl directory( final FileRef directory )
     {
-        return deleteDirectoryBuilderProvider.get().directory( sourceDir );
+        return deleteDirectoryBuilderProvider.get().directory( directory );
     }
 
     @Override
-    public DeleteFileBuilderImpl file( final FileRef sourceFile )
+    public DeleteFileBuilderImpl file( final FileRef file )
     {
-        return deleteFileBuilderProvider.get().file( sourceFile );
+        return deleteFileBuilderProvider.get().file( file );
     }
 
 }

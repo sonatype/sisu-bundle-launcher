@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * TODO
+ * {@link org.sonatype.sisu.filetasks.task.PropertiesTask} builder.
  *
  * @since 1.0
  */
@@ -27,14 +27,50 @@ public interface PropertiesBuilder
     extends FileTask
 {
 
+    /**
+     * Sets a property by key. If property is not present it will be added.
+     *
+     * @param key   property key
+     * @param value property value
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesBuilder property( String key, String value );
 
+    /**
+     * Sets/adds all properties specified.
+     *
+     * @param properties to be added
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesBuilder properties( Properties properties );
 
+    /**
+     * Reads properties from specified properties file and add/set them.
+     *
+     * @param propertiesFile file containing properties
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesBuilder properties( File propertiesFile );
 
+    /**
+     * Removes a property by key.
+     *
+     * @param key of property to be removed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesBuilder removeProperty( String key );
 
+    /**
+     * Removes all properties. If there are properties to be set, those properties will replace all eventually existing
+     * properties in target file.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     PropertiesBuilder removeAllProperties();
 
 }

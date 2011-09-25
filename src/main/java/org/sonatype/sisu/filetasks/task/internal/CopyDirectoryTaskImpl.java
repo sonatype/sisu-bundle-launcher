@@ -26,7 +26,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link CopyDirectoryTask} implementation.
  *
  * @since 1.0
  */
@@ -36,23 +36,51 @@ class CopyDirectoryTaskImpl
     implements CopyDirectoryTask
 {
 
+    /**
+     * Source directory to copy from.
+     */
     private File fromDirectory;
 
+    /**
+     * Target directory to copy to.
+     */
     private File toDirectory;
 
+    /**
+     * True if empty directories should be copied. Default true.
+     */
     private boolean includeEmptyDirectories;
 
+    /**
+     * Include patterns to filter files that will be copied.
+     * Never null.
+     */
     private final List<String> includes;
 
+    /**
+     * Exclude patterns to filter files that will be copied.
+     * Never null.
+     */
     private final List<String> excludes;
 
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
     @Inject
     CopyDirectoryTaskImpl()
     {
         includes = new ArrayList<String>();
         excludes = new ArrayList<String>();
+        includeEmptyDirectories = true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Copy copy )
     {
@@ -73,6 +101,11 @@ class CopyDirectoryTaskImpl
         copy.setTodir( toDirectory );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryTask setFromDirectory( final File directory )
     {
@@ -80,12 +113,23 @@ class CopyDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     public CopyDirectoryTask setToDirectory( final File directory )
     {
         this.toDirectory = directory;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryTask setIncludeEmptyDirectories( final boolean includeEmptyDirectories )
     {
@@ -93,6 +137,11 @@ class CopyDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryTaskImpl addIncludePattern( final String pattern )
     {
@@ -100,6 +149,11 @@ class CopyDirectoryTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryTaskImpl addExcludePattern( final String pattern )
     {

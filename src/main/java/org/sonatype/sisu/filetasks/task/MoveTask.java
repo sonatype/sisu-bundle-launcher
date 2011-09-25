@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Moves a file.
  *
  * @since 1.0
  */
@@ -26,8 +26,22 @@ public interface MoveTask
     extends FileTask
 {
 
+    /**
+     * File/directory to be moved
+     *
+     * @param from file/directory to be moved
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     MoveTask setFrom( File from );
 
+    /**
+     * Destination file/directory where the file has to be moved.
+     *
+     * @param to destination file/directory where the file has to be moved
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     MoveTask setTo( File to );
 
 }

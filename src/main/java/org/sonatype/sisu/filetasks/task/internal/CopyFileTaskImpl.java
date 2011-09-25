@@ -22,7 +22,7 @@ import java.io.File;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO
+ * ANT based {@link CopyFileTask} implementation.
  *
  * @since 1.0
  */
@@ -32,19 +32,32 @@ class CopyFileTaskImpl
     implements CopyFileTask
 {
 
+    /**
+     * File to be copied.
+     */
     private File fromFile;
 
+    /**
+     * Target directory to copy to.
+     */
     private File toDirectory;
 
+    /**
+     * Target file to copy to.
+     */
     private File toFile;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     void prepare( final Copy copy )
     {
         super.prepare( copy );
 
         copy.setFile( checkNotNull( fromFile ) );
-
         if ( toDirectory != null )
         {
             copy.setTodir( toDirectory );
@@ -56,6 +69,11 @@ class CopyFileTaskImpl
         copy.setTodir( toDirectory );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyFileTask setFromFile( final File file )
     {
@@ -63,12 +81,23 @@ class CopyFileTaskImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     public CopyFileTask setToDirectory( final File directory )
     {
         this.toDirectory = directory;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyFileTask setToFile( final File file )
     {

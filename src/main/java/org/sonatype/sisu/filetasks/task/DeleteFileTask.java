@@ -18,7 +18,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 import java.io.File;
 
 /**
- * TODO
+ * Deletes a file.
  *
  * @since 1.0
  */
@@ -26,6 +26,13 @@ public interface DeleteFileTask
     extends FileTask
 {
 
+    /**
+     * File to be deleted.
+     *
+     * @param file to be deleted
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteFileTask setFile( File file );
 
 }
