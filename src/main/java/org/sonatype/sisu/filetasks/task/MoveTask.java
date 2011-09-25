@@ -27,7 +27,7 @@ public interface MoveTask
 {
 
     /**
-     * File/directory to be moved
+     * File/directory to be moved.
      *
      * @param from file/directory to be moved
      * @return itself, for fluent API usage

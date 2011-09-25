@@ -32,14 +32,26 @@ class CopyDirectoryBuilderImpl
     implements CopyDirectoryBuilder
 {
 
+    /**
+     * Re-target-able directory to copy files from.
+     */
     private Retargetable from;
 
+    /**
+     * Re-target-able directory to copy files to.
+     */
     private Retargetable to;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link CopyDirectoryTask} to be used
+     * @since 1.0
+     */
     @Inject
-    CopyDirectoryBuilderImpl( CopyDirectoryTask copy )
+    CopyDirectoryBuilderImpl( final CopyDirectoryTask task )
     {
-        super( copy );
+        super( task );
         from = addRetargetable( new Retargetable()
         {
             @Override
@@ -61,12 +73,24 @@ class CopyDirectoryBuilderImpl
 
     }
 
+    /**
+     * Source directory to be copied.
+     *
+     * @param directory to be copied
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyDirectoryBuilderImpl directory( FileRef directory )
     {
         from.setFileRef( directory );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryBuilderImpl include( final String pattern )
     {
@@ -74,6 +98,11 @@ class CopyDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryBuilderImpl exclude( final String pattern )
     {
@@ -81,6 +110,11 @@ class CopyDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryBuilderImpl includeEmptyDirectories()
     {
@@ -88,6 +122,11 @@ class CopyDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryBuilderImpl excludeEmptyDirectories()
     {
@@ -95,6 +134,11 @@ class CopyDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DestinationBuilder to()
     {

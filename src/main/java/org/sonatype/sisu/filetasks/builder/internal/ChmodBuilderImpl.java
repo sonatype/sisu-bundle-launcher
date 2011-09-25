@@ -32,12 +32,24 @@ class ChmodBuilderImpl
     implements ChmodBuilder
 {
 
-    private Retargetable target;
-
+    /**
+     * Task to be used.
+     */
     private ChmodTask task;
 
+    /**
+     * Re-target-able directory containing files to change permissions.
+     */
+    private Retargetable target;
+
+    /**
+     * Constructor.
+     *
+     * @param task {@link ChmodTask} to be used
+     * @since 1.0
+     */
     @Inject
-    ChmodBuilderImpl( ChmodTask task )
+    ChmodBuilderImpl( final ChmodTask task )
     {
         this.task = task;
         target = addRetargetable( new Retargetable()
@@ -51,12 +63,24 @@ class ChmodBuilderImpl
         } );
     }
 
-    ChmodBuilderImpl directory( FileRef directory )
+    /**
+     * Specify the directory containing the files to have permission changed.
+     *
+     * @param directory directory containing the files to have permissions changed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    ChmodBuilderImpl directory( final FileRef directory )
     {
         target.setFileRef( directory );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodBuilderImpl include( final String pattern )
     {
@@ -64,6 +88,11 @@ class ChmodBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodBuilderImpl exclude( final String pattern )
     {
@@ -71,6 +100,11 @@ class ChmodBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodBuilder permissions( final String permissions )
     {
@@ -78,6 +112,12 @@ class ChmodBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     ChmodTask task()
     {
         return task;

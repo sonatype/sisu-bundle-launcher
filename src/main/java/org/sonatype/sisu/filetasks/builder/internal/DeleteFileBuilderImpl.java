@@ -32,12 +32,25 @@ class DeleteFileBuilderImpl
     implements DeleteFileBuilder
 {
 
-    private Retargetable target;
-
+    /**
+     * Task to be used.
+     */
     private DeleteFileTask task;
 
+    /**
+     * Re-target-able file to be deleted.
+     */
+    private Retargetable target;
+
+
+    /**
+     * Constructor.
+     *
+     * @param task {@link DeleteFileTask} to be used
+     * @since 1.0
+     */
     @Inject
-    DeleteFileBuilderImpl( DeleteFileTask task )
+    DeleteFileBuilderImpl( final DeleteFileTask task )
     {
         this.task = task;
         target = addRetargetable( new Retargetable()
@@ -51,12 +64,25 @@ class DeleteFileBuilderImpl
         } );
     }
 
-    DeleteFileBuilderImpl file( FileRef directory )
+    /**
+     * File to be deleted.
+     *
+     * @param file to be deleted
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteFileBuilderImpl file( FileRef file )
     {
-        target.setFileRef( directory );
+        target.setFileRef( file );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     DeleteFileTask task()
     {
         return task;

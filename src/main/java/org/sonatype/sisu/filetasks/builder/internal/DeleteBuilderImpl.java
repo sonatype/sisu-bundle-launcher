@@ -38,6 +38,12 @@ public class DeleteBuilderImpl
 
     private Provider<DeleteFileBuilderImpl> deleteFileBuilderProvider;
 
+    /**
+     * Constructor.
+     * @param deleteDirectoryBuilderProvider ongoing delete directory builder provider
+     * @param deleteFileBuilderProvider ongoing delete file builder provider
+     * @since 1.0
+     */
     @Inject
     DeleteBuilderImpl( Provider<DeleteDirectoryBuilderImpl> deleteDirectoryBuilderProvider,
                        Provider<DeleteFileBuilderImpl> deleteFileBuilderProvider )
@@ -46,12 +52,22 @@ public class DeleteBuilderImpl
         this.deleteFileBuilderProvider = checkNotNull( deleteFileBuilderProvider );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryBuilderImpl directory( final FileRef directory )
     {
         return deleteDirectoryBuilderProvider.get().directory( directory );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteFileBuilderImpl file( final FileRef file )
     {

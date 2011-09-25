@@ -33,12 +33,24 @@ public class PropertiesBuilderImpl
     implements PropertiesBuilder
 {
 
+    /**
+     * Task to be used.
+     */
     private PropertiesTask task;
 
+    /**
+     * Re-target-able properties files to be created/updated.
+     */
     private Retargetable file;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link PropertiesTask} to be used
+     * @since 1.0
+     */
     @Inject
-    PropertiesBuilderImpl( PropertiesTask task )
+    PropertiesBuilderImpl( final PropertiesTask task )
     {
         this.task = task;
         file = addRetargetable( new Retargetable()
@@ -51,12 +63,24 @@ public class PropertiesBuilderImpl
         } );
     }
 
-    public PropertiesBuilderImpl file( final FileRef target )
+    /**
+     * Properties file to be modified. If file does not exist it will be created.
+     *
+     * @param propertiesFile to be created/modified
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    public PropertiesBuilderImpl file( final FileRef propertiesFile )
     {
-        this.file.setFileRef( target );
+        this.file.setFileRef( propertiesFile );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilderImpl property( final String key, final String value )
     {
@@ -64,6 +88,11 @@ public class PropertiesBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilderImpl properties( final Properties properties )
     {
@@ -71,6 +100,11 @@ public class PropertiesBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilderImpl properties( final File propertiesFile )
     {
@@ -78,6 +112,11 @@ public class PropertiesBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilderImpl removeProperty( final String key )
     {
@@ -85,6 +124,11 @@ public class PropertiesBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilderImpl removeAllProperties()
     {
@@ -92,6 +136,12 @@ public class PropertiesBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     PropertiesTask task()
     {
         return task;

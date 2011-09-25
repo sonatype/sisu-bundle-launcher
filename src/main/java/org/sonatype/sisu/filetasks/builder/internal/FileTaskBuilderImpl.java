@@ -28,6 +28,8 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * TODO
  * ]
@@ -40,20 +42,53 @@ class FileTaskBuilderImpl
     implements FileTaskBuilder
 {
 
+    /**
+     * Copy builder.
+     */
     private CopyBuilder copyBuilder;
 
+    /**
+     * Delete builder.
+     */
     private DeleteBuilder deleteBuilder;
 
+    /**
+     * Rename builder provider.
+     */
     private Provider<RenameBuilderImpl> renameBuilderProvider;
 
+    /**
+     * <ove builder provider.
+     */
     private Provider<MoveBuilderImpl> moveBuilderProvider;
 
+    /**
+     * Expand builder provider.
+     */
     private Provider<ExpandBuilderImpl> expandBuilderProvider;
 
+    /**
+     * Properties builder provider.
+     */
     private Provider<PropertiesBuilderImpl> propertiesBuilderProvider;
 
+    /**
+     * Chmod builder provider.
+     */
     private Provider<ChmodBuilderImpl> chmodBuilderProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param copyBuilder               copy builder
+     * @param deleteBuilder             delete builder
+     * @param renameBuilderProvider     rename builder provider
+     * @param moveBuilderProvider       move builder provider
+     * @param expandBuilderProvider     expand builder provider
+     * @param propertiesBuilderProvider properties builder provider
+     * @param chmodBuilderProvider      chmod builder provider
+     * @since 1.0
+     */
     @Inject
     FileTaskBuilderImpl( final CopyBuilder copyBuilder,
                          final DeleteBuilder deleteBuilder,
@@ -63,51 +98,86 @@ class FileTaskBuilderImpl
                          final Provider<PropertiesBuilderImpl> propertiesBuilderProvider,
                          final Provider<ChmodBuilderImpl> chmodBuilderProvider )
     {
-        this.copyBuilder = copyBuilder;
-        this.deleteBuilder = deleteBuilder;
-        this.renameBuilderProvider = renameBuilderProvider;
-        this.moveBuilderProvider = moveBuilderProvider;
-        this.expandBuilderProvider = expandBuilderProvider;
-        this.propertiesBuilderProvider = propertiesBuilderProvider;
-        this.chmodBuilderProvider = chmodBuilderProvider;
+        this.copyBuilder = checkNotNull( copyBuilder );
+        this.deleteBuilder = checkNotNull( deleteBuilder );
+        this.renameBuilderProvider = checkNotNull( renameBuilderProvider );
+        this.moveBuilderProvider = checkNotNull( moveBuilderProvider );
+        this.expandBuilderProvider = checkNotNull( expandBuilderProvider );
+        this.propertiesBuilderProvider = checkNotNull( propertiesBuilderProvider );
+        this.chmodBuilderProvider = checkNotNull( chmodBuilderProvider );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyBuilder copy()
     {
         return copyBuilder;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteBuilder delete()
     {
         return deleteBuilder;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public RenameBuilder rename( final FileRef target )
     {
         return renameBuilderProvider.get().target( target );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public MoveBuilder move( final FileRef from )
     {
         return moveBuilderProvider.get().from( from );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandBuilder expand( FileRef archive )
     {
         return expandBuilderProvider.get().archive( archive );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public PropertiesBuilder properties( final FileRef target )
     {
         return propertiesBuilderProvider.get().file( target );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ChmodBuilder chmod( final FileRef directory )
     {

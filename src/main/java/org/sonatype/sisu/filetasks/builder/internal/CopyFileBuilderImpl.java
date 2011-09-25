@@ -32,17 +32,32 @@ class CopyFileBuilderImpl
     implements CopyFileBuilder
 {
 
-    private Retargetable source;
+    /**
+     * Re-target-able file to be copied.
+     */
+    private Retargetable from;
 
-    private Retargetable targetFile;
+    /**
+     * Re-target-able file to copy file to.
+     */
+    private Retargetable toFile;
 
-    private Retargetable targetDirectory;
+    /**
+     * Re-target-able directory to copy file to.
+     */
+    private Retargetable toDirectory;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link CopyFileTask} to be used
+     * @since 1.0
+     */
     @Inject
-    CopyFileBuilderImpl( CopyFileTask copy )
+    CopyFileBuilderImpl( final CopyFileTask task )
     {
-        super( copy );
-        source = addRetargetable( new Retargetable()
+        super( task );
+        from = addRetargetable( new Retargetable()
         {
             @Override
             void retargetAs( final File file )
@@ -51,7 +66,7 @@ class CopyFileBuilderImpl
             }
 
         } );
-        targetFile = addRetargetable( new Retargetable()
+        toFile = addRetargetable( new Retargetable()
         {
             @Override
             void retargetAs( final File file )
@@ -60,7 +75,7 @@ class CopyFileBuilderImpl
             }
 
         } );
-        targetDirectory = addRetargetable( new Retargetable()
+        toDirectory = addRetargetable( new Retargetable()
         {
             @Override
             void retargetAs( final File file )
@@ -71,28 +86,50 @@ class CopyFileBuilderImpl
         } );
     }
 
+    /**
+     * Source file to be copied.
+     *
+     * @param file to be copied
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     CopyFileBuilderImpl file( FileRef file )
     {
-        source.setFileRef( file );
+        from.setFileRef( file );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DestinationBuilder to()
     {
         return new DestinationBuilder()
         {
+            /**
+             * {@inheritDoc}
+             *
+             * @since 1.0
+             */
             @Override
             public CopyFileBuilderImpl directory( final FileRef directory )
             {
-                targetDirectory.setFileRef( directory );
+                toDirectory.setFileRef( directory );
                 return CopyFileBuilderImpl.this;
             }
 
+            /**
+             * {@inheritDoc}
+             *
+             * @since 1.0
+             */
             @Override
             public CopyFileBuilderImpl file( final FileRef file )
             {
-                targetFile.setFileRef( file );
+                toFile.setFileRef( file );
                 return CopyFileBuilderImpl.this;
             }
         };

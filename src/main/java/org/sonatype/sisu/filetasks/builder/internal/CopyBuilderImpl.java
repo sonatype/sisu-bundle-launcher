@@ -40,6 +40,13 @@ public class CopyBuilderImpl
 
     private Provider<CopyFileBuilderImpl> copyFileBuilderProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param copyDirectoryBuilderProvider ongoing copy directory builder provider
+     * @param copyFileBuilderProvider      ongoing copy file builderprovider
+     * @since 1.0
+     */
     @Inject
     CopyBuilderImpl( Provider<CopyDirectoryBuilderImpl> copyDirectoryBuilderProvider,
                      Provider<CopyFileBuilderImpl> copyFileBuilderProvider )
@@ -48,12 +55,22 @@ public class CopyBuilderImpl
         this.copyFileBuilderProvider = checkNotNull( copyFileBuilderProvider );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyDirectoryBuilder directory( final FileRef directory )
     {
         return copyDirectoryBuilderProvider.get().directory( directory );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public CopyFileBuilder file( final FileRef file )
     {

@@ -32,14 +32,29 @@ public class MoveBuilderImpl
     implements MoveBuilder
 {
 
+    /**
+     * Task to be used.
+     */
     private MoveTask task;
 
+    /**
+     * Re-target-able file/directory to be renamed.
+     */
     private Retargetable from;
 
+    /**
+     * Re-target-able new file/directory.
+     */
     private Retargetable to;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link MoveTask} to be used
+     * @since 1.0
+     */
     @Inject
-    MoveBuilderImpl( MoveTask task )
+    MoveBuilderImpl( final MoveTask task )
     {
         this.task = task;
         from = addRetargetable( new Retargetable()
@@ -62,12 +77,24 @@ public class MoveBuilderImpl
         } );
     }
 
+    /**
+     * File/directory to be moved.
+     *
+     * @param from file/directory to be moved
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     public MoveBuilderImpl from( final FileRef from )
     {
         this.from.setFileRef( from );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public MoveBuilderImpl to( final FileRef to )
     {
@@ -75,6 +102,12 @@ public class MoveBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     MoveTask task()
     {
         return task;

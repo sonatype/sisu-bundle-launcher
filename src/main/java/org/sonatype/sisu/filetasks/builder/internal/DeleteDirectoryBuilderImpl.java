@@ -32,12 +32,24 @@ class DeleteDirectoryBuilderImpl
     implements DeleteDirectoryBuilder
 {
 
-    private Retargetable target;
-
+    /**
+     * Task to be used.
+     */
     private DeleteDirectoryTask task;
 
+    /**
+     * Re-target-able directory to be deleted.
+     */
+    private Retargetable target;
+
+    /**
+     * Constructor.
+     *
+     * @param task {@link DeleteDirectoryTask} to be used
+     * @since 1.0
+     */
     @Inject
-    DeleteDirectoryBuilderImpl( DeleteDirectoryTask task )
+    DeleteDirectoryBuilderImpl( final DeleteDirectoryTask task )
     {
         this.task = task;
         target = addRetargetable( new Retargetable()
@@ -51,12 +63,24 @@ class DeleteDirectoryBuilderImpl
         } );
     }
 
+    /**
+     * Directory to be deleted.
+     *
+     * @param directory to be deleted
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     DeleteDirectoryBuilderImpl directory( FileRef directory )
     {
         target.setFileRef( directory );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryBuilderImpl include( final String pattern )
     {
@@ -64,6 +88,11 @@ class DeleteDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryBuilderImpl exclude( final String pattern )
     {
@@ -71,6 +100,11 @@ class DeleteDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryBuilderImpl includeEmptyDirectories()
     {
@@ -78,6 +112,11 @@ class DeleteDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DeleteDirectoryBuilderImpl excludeEmptyDirectories()
     {
@@ -85,6 +124,12 @@ class DeleteDirectoryBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     DeleteDirectoryTask task()
     {
         return task;

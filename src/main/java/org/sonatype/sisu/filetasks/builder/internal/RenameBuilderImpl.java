@@ -32,12 +32,24 @@ public class RenameBuilderImpl
     implements RenameBuilder
 {
 
+    /**
+     * Task to be used.
+     */
     private RenameTask task;
 
+    /**
+     * Re-target-able file/directory to be renamed.
+     */
     private Retargetable target;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link RenameTask} to be used
+     * @since 1.0
+     */
     @Inject
-    RenameBuilderImpl( RenameTask task )
+    RenameBuilderImpl( final RenameTask task )
     {
         this.task = task;
         target = addRetargetable( new Retargetable()
@@ -51,12 +63,24 @@ public class RenameBuilderImpl
         } );
     }
 
+    /**
+     * File/directory to be renamed.
+     *
+     * @param target file/directory to be renamed
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     public RenameBuilderImpl target( final FileRef target )
     {
         this.target.setFileRef( target );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public RenameBuilderImpl to( final String name )
     {
@@ -64,6 +88,12 @@ public class RenameBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     RenameTask task()
     {
         return task;

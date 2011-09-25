@@ -32,14 +32,29 @@ public class ExpandBuilderImpl
     implements ExpandBuilder
 {
 
+    /**
+     * Task to be used.
+     */
     private ExpandTask task;
 
+    /**
+     * Re-target-able archive to be expanded.
+     */
     private Retargetable archive;
 
+    /**
+     * Re-target-able directory where files will be expanded.
+     */
     private Retargetable directory;
 
+    /**
+     * Constructor.
+     *
+     * @param task {@link ExpandTask} to be used
+     * @since 1.0
+     */
     @Inject
-    ExpandBuilderImpl( ExpandTask task )
+    ExpandBuilderImpl( final ExpandTask task )
     {
         this.task = task;
         archive = addRetargetable( new Retargetable()
@@ -62,12 +77,24 @@ public class ExpandBuilderImpl
         } );
     }
 
+    /**
+     * Archive to be expanded. It can be in any of zip/jar/tar formats (format determined by extension).
+     *
+     * @param archive to be expanded
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
     public ExpandBuilderImpl archive( final FileRef archive )
     {
         this.archive.setFileRef( archive );
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandBuilderImpl overwriteNewer()
     {
@@ -75,6 +102,11 @@ public class ExpandBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandBuilderImpl doNotOverwriteNewer()
     {
@@ -82,6 +114,11 @@ public class ExpandBuilderImpl
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public ExpandBuilderImpl cutDirectories( final int directoriesToCut )
     {
@@ -90,11 +127,21 @@ public class ExpandBuilderImpl
 
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
     @Override
     public DestinationBuilder to()
     {
         return new DestinationBuilder()
         {
+            /**
+             * {@inheritDoc}
+             *
+             * @since 1.0
+             */
             @Override
             public ExpandBuilderImpl directory( final FileRef directory )
             {
@@ -105,6 +152,12 @@ public class ExpandBuilderImpl
         };
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     ExpandTask task()
     {
         return task;

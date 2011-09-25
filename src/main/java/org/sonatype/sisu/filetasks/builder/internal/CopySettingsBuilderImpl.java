@@ -32,6 +32,9 @@ class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySet
     implements CopySettingsBuilder<BI>
 {
 
+    /**
+     * Task to be used.
+     */
     private CS task;
 
     @Inject
