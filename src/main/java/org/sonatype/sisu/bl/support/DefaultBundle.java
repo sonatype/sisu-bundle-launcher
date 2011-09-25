@@ -18,8 +18,8 @@ import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
 import org.sonatype.sisu.bl.support.jsw.JSWExecFactory;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
-import org.sonatype.sisu.overlay.Overlay;
-import org.sonatype.sisu.overlay.OverlayBuilder;
+import org.sonatype.sisu.filetasks.FileTask;
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
+import static org.sonatype.sisu.filetasks.builder.FileRef.file;
+import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 /**
  * Default bundle implementation.
@@ -50,7 +53,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Cannot be null.
      */
     @Inject
-    private OverlayBuilder overlayBuilder;
+    private FileTaskBuilder fileTasksBuilder;
 
     /**
      * JSW Executor factory.
@@ -271,10 +274,10 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         String[] dirs = ds.getIncludedDirectories();
 
         if (dirs.length == 1 && new File(config.getTargetDirectory(), dirs[0]).exists()) {
-            overlayBuilder.rename()
-                    .from(dirs[0])
-                    .to(name)
-                    .applyTo(config.getTargetDirectory());
+            onDirectory(config.getTargetDirectory()).apply(
+                    fileTasksBuilder.rename(path(dirs[0]))
+                            .to(name)
+            );
         }
     }
 
@@ -340,9 +343,9 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Deletes target directory.
      */
     private void deleteTarget() {
-        overlayBuilder.delete()
-                .directory("/")
-                .applyTo(getConfiguration().getTargetDirectory());
+        onDirectory(getConfiguration().getTargetDirectory()).apply(
+                fileTasksBuilder.delete().directory(path("/"))
+        );
     }
 
     /**
@@ -355,13 +358,15 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             return;
         }
         if (bundle.isDirectory()) {
-            overlayBuilder.overlayDirectory(bundle)
-                    .over().directory("/")
-                    .applyTo(config.getTargetDirectory());
+            onDirectory(config.getTargetDirectory()).apply(
+                    fileTasksBuilder.copy().directory(file(bundle))
+                            .to().directory(path("/"))
+            );
         } else {
-            overlayBuilder.expand(bundle)
-                    .to().directory("/")
-                    .applyTo(config.getTargetDirectory());
+            onDirectory(config.getTargetDirectory()).apply(
+                    fileTasksBuilder.expand(file(bundle))
+                            .to().directory(path("/"))
+            );
         }
     }
 
@@ -370,13 +375,11 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     private void applyOverlays() {
         BundleConfiguration config = getConfiguration();
-        List<Overlay> overlays = config.getOverlays();
+        List<FileTask> overlays = config.getOverlays();
         if (overlays == null) {
             return;
         }
-        for (Overlay overlay : overlays) {
-            overlay.applyTo(config.getTargetDirectory());
-        }
+        onDirectory(config.getTargetDirectory()).apply(overlays);
     }
 
 }

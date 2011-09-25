@@ -14,7 +14,8 @@ package org.sonatype.sisu.bl.support.jsw.internal;
 
 import org.sonatype.sisu.bl.support.jsw.JSWExec;
 import org.sonatype.sisu.bl.support.jsw.JSWExecFactory;
-import org.sonatype.sisu.overlay.internal.AntHelper;
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.filetasks.support.AntHelper;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,15 +36,22 @@ class JSWExecFactoryImpl
      * ANT helper used by {@link JSWExecImpl}.
      */
     private AntHelper antHelper;
+    /**
+     * File Task builder used by {@link JSWExecImpl}.
+     */
+    private FileTaskBuilder fileTaskBuilder;
 
     /**
      * Constructor.
      *
-     * @param antHelper ANT helper used by {@link JSWExecImpl}
+     * @param antHelper       ANT helper used by {@link JSWExecImpl}
+     * @param fileTaskBuilder file task builder used by {@link JSWExecImpl}.
      * @since 1.0
      */
     @Inject
-    public JSWExecFactoryImpl(final AntHelper antHelper) {
+    public JSWExecFactoryImpl(final AntHelper antHelper,
+                              final FileTaskBuilder fileTaskBuilder) {
+        this.fileTaskBuilder = fileTaskBuilder;
         this.antHelper = checkNotNull(antHelper);
     }
 
@@ -54,7 +62,7 @@ class JSWExecFactoryImpl
      */
     @Override
     public JSWExec create(final File binDir, final String appName) {
-        return new JSWExecImpl(binDir, appName, antHelper);
+        return new JSWExecImpl(binDir, appName, antHelper, fileTaskBuilder);
     }
 
 }

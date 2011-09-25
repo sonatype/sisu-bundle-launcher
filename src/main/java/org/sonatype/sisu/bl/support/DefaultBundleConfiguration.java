@@ -16,7 +16,7 @@ import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.support.resolver.BundleResolver;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
-import org.sonatype.sisu.overlay.Overlay;
+import org.sonatype.sisu.filetasks.FileTask;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -63,7 +63,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     /**
      * List of overlays to be applied to exploded bundle. Should never be null.
      */
-    private List<Overlay> overlays;
+    private List<FileTask> overlays;
 
     /**
      * Number of seconds to wait for application to boot.
@@ -172,7 +172,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * @since 1.0
      */
     @Override
-    public List<Overlay> getOverlays() {
+    public List<FileTask> getOverlays() {
         return overlays;
     }
 
@@ -182,8 +182,8 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * @since 1.0
      */
     @Override
-    public T setOverlays(List<Overlay> overlays) {
-        this.overlays = new ArrayList<Overlay>();
+    public T setOverlays(List<FileTask> overlays) {
+        this.overlays = new ArrayList<FileTask>();
         if (overlays != null) {
             this.overlays.addAll(overlays);
         }
@@ -196,7 +196,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * @since 1.0
      */
     @Override
-    public T setOverlays(Overlay... overlays) {
+    public T setOverlays(FileTask... overlays) {
         return setOverlays(Arrays.asList(overlays));
     }
 
@@ -206,7 +206,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * @since 1.0
      */
     @Override
-    public T addOverlays(Overlay... overlays) {
+    public T addOverlays(FileTask... overlays) {
         this.overlays.addAll(Arrays.asList(overlays));
         return (T) this;
     }

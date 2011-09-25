@@ -83,7 +83,7 @@
 
         <dependency>
             <groupId>org.sonatype.sisu</groupId>
-            <artifactId>sisu-overlay</artifactId>
+            <artifactId>sisu-file-tasks</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

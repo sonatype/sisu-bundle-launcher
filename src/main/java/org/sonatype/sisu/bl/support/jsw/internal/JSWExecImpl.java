@@ -20,13 +20,16 @@ import org.apache.tools.ant.types.Commandline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.bl.support.jsw.JSWExec;
-import org.sonatype.sisu.overlay.internal.AntHelper;
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.filetasks.support.AntHelper;
 
 import java.io.File;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
+import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
+import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 /**
  * Default {@link JSWExec} implementation.
@@ -39,9 +42,14 @@ class JSWExecImpl
     private Logger logger = LoggerFactory.getLogger(JSWExecImpl.class);
 
     private final String appName;
+
     private final File controlScript;
+
     private final String controlScriptCanonicalPath;
+
     private final AntHelper ant;
+
+    private FileTaskBuilder fileTaskBuilder;
 
     /**
      * Constructor.
@@ -53,10 +61,10 @@ class JSWExecImpl
      * @throws RuntimeException     if the JSW exec script cannot be found for this platform
      * @since 1.0
      */
-    public JSWExecImpl(final File bundle, final String appName, final AntHelper ant) throws RuntimeException {
-
+    public JSWExecImpl(final File bundle, final String appName, final AntHelper ant, FileTaskBuilder fileTaskBuilder) throws RuntimeException {
         checkNotNull(bundle);
         this.ant = checkNotNull(ant);
+        this.fileTaskBuilder = checkNotNull(fileTaskBuilder);
         this.appName = checkNotNull(appName);
 
         if (!bundle.isDirectory()) {
@@ -87,7 +95,9 @@ class JSWExecImpl
 
         this.controlScript = new File(bindDir, appName + extension);
 
-        ant.chmod(bundle, "**/*", "u+x");
+        onDirectory(bundle).apply(
+                fileTaskBuilder.chmod(path("/")).permissions("u+x")
+        );
 
         if (!this.controlScript.isFile() || !this.controlScript.canExecute()) {
             throw new RuntimeException(format("JSW script %s is not an executable file", this.controlScript.getAbsolutePath()));

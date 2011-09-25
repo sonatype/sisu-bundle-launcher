@@ -13,7 +13,7 @@
 
 package org.sonatype.sisu.bl;
 
-import org.sonatype.sisu.overlay.Overlay;
+import org.sonatype.sisu.filetasks.FileTask;
 
 import java.io.File;
 import java.util.List;
@@ -82,7 +82,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @return overlays to be applied over exploded bundle, always a non null value (eventually empty)
      * @since 1.0
      */
-    List<Overlay> getOverlays();
+    List<FileTask> getOverlays();
 
     /**
      * Sets overlays. Provided overlays will overwrite existing overlays.
@@ -93,7 +93,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T setOverlays(List<Overlay> overlays);
+    T setOverlays(List<FileTask> overlays);
 
     /**
      * Sets overlays. Provided overlays will overwrite existing overlays.
@@ -103,7 +103,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T setOverlays(Overlay... overlays);
+    T setOverlays(FileTask... overlays);
 
     /**
      * Append overlays to existing set of overlays.
@@ -112,7 +112,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @return itself, for usage in fluent api
      * @since 1.0
      */
-    T addOverlays(Overlay... overlays);
+    T addOverlays(FileTask... overlays);
 
     /**
      * Returns the number of seconds to wait for application to start (boot).
