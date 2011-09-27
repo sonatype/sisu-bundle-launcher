@@ -96,7 +96,7 @@ class JSWExecImpl
         this.controlScript = new File(bindDir, appName + extension);
 
         onDirectory(bundle).apply(
-                fileTaskBuilder.chmod(path("/")).permissions("u+x")
+                this.fileTaskBuilder.chmod(path("/")).permissions("u+x")
         );
 
         if (!this.controlScript.isFile() || !this.controlScript.canExecute()) {

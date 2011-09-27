@@ -16,8 +16,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
-import org.sonatype.sisu.bl.support.jsw.JSWExecFactory;
-import org.sonatype.sisu.bl.support.port.PortReservationService;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 
@@ -49,25 +47,11 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     private String name;
 
     /**
-     * Overlay builder used to create overlays necessary to prepare bundle target directory.
+     * File tasks builder used to manipulate files necessary to prepare bundle target directory.
      * Cannot be null.
      */
     @Inject
     private FileTaskBuilder fileTasksBuilder;
-
-    /**
-     * JSW Executor factory.
-     * Cannot be null.
-     */
-    @Inject
-    private JSWExecFactory jswExecFactory;
-
-    /**
-     * Port reservation service used to generate an random port to be used by running application.
-     * Cannot be null.
-     */
-    @Inject
-    private PortReservationService portReservationService;
 
     /**
      * Configuration provider used to create default bundle configurations.
