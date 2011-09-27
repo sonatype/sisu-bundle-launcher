@@ -15,7 +15,6 @@ package org.sonatype.sisu.filetasks.support;
 
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.sonatype.sisu.filetasks.FileTask;
@@ -30,11 +29,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.MatcherAssert;
+import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.exists;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 
 /**
@@ -97,9 +100,7 @@ public abstract class FileTaskTest
         {
             // ignore
         }
-        assertThat( "File " + testMethodTargetFile.getAbsolutePath() + " does not exist",
-                    testMethodTargetFile.exists(),
-                    is( false ) );
+        assertThat( testMethodTargetFile, not(exists()));
     }
 
     protected File testClassSourceFile( String subPath )
@@ -119,12 +120,12 @@ public abstract class FileTaskTest
 
     protected void assertExists( String path )
     {
-        assertThat( "File " + path + " exists", new File( testMethodTargetFile, path ).exists(), is( true ) );
+        assertThat(new File( testMethodTargetFile, path ), exists() );
     }
 
     protected void assertDoesNotExist( String path )
     {
-        assertThat( "File " + path + " does not exist", new File( testMethodTargetFile, path ).exists(), is( false ) );
+        assertThat(new File( testMethodTargetFile, path ), not(exists()) );
     }
 
     protected void assertSameContent( File file1, File file2 )
@@ -139,7 +140,7 @@ public abstract class FileTaskTest
 
             assertThat(
                 "File " + file1.getAbsolutePath() + " has same content as " + file2.getAbsolutePath(),
-                IOUtil.contentEquals( in1, in2 ), Matchers.is( true )
+                IOUtil.contentEquals( in1, in2 ), is( true )
             );
         }
         catch ( Exception e )
@@ -190,14 +191,11 @@ public abstract class FileTaskTest
         assertExists( path );
         File file = testMethodTargetFile( path );
 
-        Properties properties = PropertiesHelper.load( file );
+        Map<? super String,? super String> properties = PropertiesHelper.load( file );
         for ( PropertyBinding binding : bindings )
         {
-            assertThat(
-                "Property '" + binding.key + " in file " + file.getAbsolutePath(),
-                properties.getProperty( binding.key ),
-                is( equalTo( binding.value ) )
-            );
+            MatcherAssert.assertThat("Property '" + binding.key + " in file " + file.getAbsolutePath(), (Map<String,String>) properties, org.hamcrest.Matchers.hasEntry(binding.key, binding.value));
+
         }
     }
 
@@ -207,14 +205,10 @@ public abstract class FileTaskTest
         assertExists( path );
         File file = testMethodTargetFile( path );
 
-        Properties properties = PropertiesHelper.load( file );
+        Map<? super String,? super String> properties = PropertiesHelper.load( file );
         for ( String key : keys )
         {
-            assertThat(
-                "Property '" + key + " in file " + file.getAbsolutePath(),
-                properties.getProperty( key ),
-                is( nullValue() )
-            );
+            MatcherAssert.assertThat("Property '" + key + " not in file " + file.getAbsolutePath(), (Map<String,String>) properties, not(org.hamcrest.Matchers.hasKey(key)));
         }
     }
 
