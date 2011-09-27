@@ -12,8 +12,6 @@
  */
 package org.sonatype.sisu.bl;
 
-import java.net.URL;
-
 /**
  * An application bundle.
  *
