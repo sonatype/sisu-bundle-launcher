@@ -86,9 +86,9 @@ class MoveTaskImpl
      * @since 1.0
      */
     @Override
-    public MoveTask setTo( final File target )
+    public MoveTask setTo( final File to )
     {
-        this.from = target;
+        this.to = to;
         return this;
     }
 
