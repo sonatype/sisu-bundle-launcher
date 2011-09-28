@@ -59,6 +59,11 @@ class DeleteDirectoryTaskImpl
     private final List<String> excludes;
 
     /**
+     * True if delete should fail if file to be deleted does not exist.
+     */
+    private boolean failIfNotPresent;
+
+    /**
      * Constructor.
      *
      * @since 1.0
@@ -94,7 +99,7 @@ class DeleteDirectoryTaskImpl
     @Override
     boolean shouldExecute()
     {
-        return directory.exists();
+        return failIfNotPresent || directory.exists();
     }
 
     /**
@@ -165,6 +170,18 @@ class DeleteDirectoryTaskImpl
     public DeleteDirectoryTaskImpl addExcludePattern( final String pattern )
     {
         this.excludes.add( pattern );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public DeleteDirectoryTaskImpl setFailIfNotPresent( final boolean failIfNotPresent )
+    {
+        this.failIfNotPresent = failIfNotPresent;
         return this;
     }
 

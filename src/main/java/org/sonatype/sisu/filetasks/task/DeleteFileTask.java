@@ -35,4 +35,13 @@ public interface DeleteFileTask
      */
     DeleteFileTask setFile( File file );
 
+    /**
+     * Whether or not delete should fail if file to be removed does not exist. By default it will not fail.
+     *
+     * @param failIfNotPresent true/false if delete should fail if file to be removed does not exist
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteFileTask setFailIfNotPresent( boolean failIfNotPresent );
+
 }

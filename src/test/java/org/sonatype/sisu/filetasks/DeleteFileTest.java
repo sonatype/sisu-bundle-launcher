@@ -13,6 +13,7 @@
 
 package org.sonatype.sisu.filetasks;
 
+import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
 
@@ -20,7 +21,7 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 /**
- * TODO
+ * "Delete File" task/builder related tests.
  *
  * @since 1.0
  */
@@ -28,6 +29,9 @@ public class DeleteFileTest
     extends FileTaskTest
 {
 
+    /**
+     * Test that file is removed.
+     */
     @Test
     public void deleteFile01()
     {
@@ -38,6 +42,33 @@ public class DeleteFileTest
             builder().delete().file( path( "dir01/file0101.txt" ) )
         );
         assertDoesNotExist( "dir01/file0101.txt" );
+    }
+
+    /**
+     * Test that delete does not fail if file to be deleted does not exist.
+     *
+     * @since 1.0
+     */
+    @Test
+    public void deleteFile02()
+    {
+        run(
+            builder().delete().file( path( "dir01/file0101.txt" ) ).doNotFailIfNotPresent()
+        );
+        assertDoesNotExist( "set-1/dir01/file0101.txt" );
+    }
+
+    /**
+     * Test that delete fails if file to be deleted does not exist.
+     *
+     * @since 1.0
+     */
+    @Test( expected = BuildException.class )
+    public void deleteFile03()
+    {
+        run(
+            builder().delete().file( path( "dir01/file0101.txt" ) ).failIfNotPresent()
+        );
     }
 
 }

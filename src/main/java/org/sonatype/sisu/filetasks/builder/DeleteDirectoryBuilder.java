@@ -58,4 +58,20 @@ public interface DeleteDirectoryBuilder
      */
     DeleteDirectoryBuilder excludeEmptyDirectories();
 
+    /**
+     * Specifies that delete should fail if directory to be removed does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteDirectoryBuilder failIfNotPresent( );
+
+    /**
+     * Specifies that delete should not fail if directory to be removed does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteDirectoryBuilder doNotFailIfNotPresent( );
+
 }

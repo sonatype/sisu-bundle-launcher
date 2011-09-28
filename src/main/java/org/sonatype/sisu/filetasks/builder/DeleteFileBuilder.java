@@ -24,4 +24,20 @@ public interface DeleteFileBuilder
     extends FileTask
 {
 
+    /**
+     * Specifies that delete should fail if file to be removed does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteFileBuilder failIfNotPresent( );
+
+    /**
+     * Specifies that delete should not fail if file to be removed does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    DeleteFileBuilder doNotFailIfNotPresent( );
+
 }

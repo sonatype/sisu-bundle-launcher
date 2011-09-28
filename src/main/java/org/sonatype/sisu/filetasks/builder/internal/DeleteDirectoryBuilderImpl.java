@@ -130,6 +130,30 @@ class DeleteDirectoryBuilderImpl
      * @since 1.0
      */
     @Override
+    public DeleteDirectoryBuilder failIfNotPresent()
+    {
+        task().setFailIfNotPresent( true );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public DeleteDirectoryBuilder doNotFailIfNotPresent()
+    {
+        task().setFailIfNotPresent( false );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     DeleteDirectoryTask task()
     {
         return task;

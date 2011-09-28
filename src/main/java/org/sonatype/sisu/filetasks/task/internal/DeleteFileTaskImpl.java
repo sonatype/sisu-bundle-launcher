@@ -39,6 +39,11 @@ class DeleteFileTaskImpl
     private File file;
 
     /**
+     * True if delete should fail if file to be deleted does not exist.
+     */
+    private boolean failIfNotPresent;
+
+    /**
      * Returns a {@link Delete} ANT task.
      * <p/>
      * {@inheritDoc}
@@ -61,7 +66,7 @@ class DeleteFileTaskImpl
     @Override
     boolean shouldExecute()
     {
-        return file.exists();
+        return failIfNotPresent || file.exists();
     }
 
     /**
@@ -87,6 +92,18 @@ class DeleteFileTaskImpl
     public DeleteFileTaskImpl setFile( final File file )
     {
         this.file = file;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public DeleteFileTaskImpl setFailIfNotPresent( final boolean failIfNotPresent )
+    {
+        this.failIfNotPresent = failIfNotPresent;
         return this;
     }
 

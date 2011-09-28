@@ -13,6 +13,7 @@
 
 package org.sonatype.sisu.filetasks;
 
+import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
 
@@ -20,7 +21,7 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 /**
- * TODO
+ * "Delete Directory" task/builder related tests.
  *
  * @since 1.0
  */
@@ -28,8 +29,11 @@ public class DeleteDirectoryTest
     extends FileTaskTest
 {
 
+    /**
+     * Test that directory is deleted, including directories that becomes empty.
+     */
     @Test
-    public void deleteFile01()
+    public void deleteDirectory01()
     {
         run(
             builder().copy().directory( file( testClassSourceFile( "set-1" ) ) )
@@ -42,8 +46,11 @@ public class DeleteDirectoryTest
         assertDoesNotExist( "dir01/file0101.txt" );
     }
 
+    /**
+     * Test that directories that become empty will not be deleted.
+     */
     @Test
-    public void deleteFile02()
+    public void deleteDirectory02()
     {
         run(
             builder().copy().directory( file( testClassSourceFile( "set-1" ) ) )
@@ -55,6 +62,33 @@ public class DeleteDirectoryTest
         assertExists( "set-1" );
         assertDoesNotExist( "dir01" );
         assertDoesNotExist( "dir01/file0101.txt" );
+    }
+
+    /**
+     * Test that delete does not fail if directory to be deleted does not exist.
+     *
+     * @since 1.0
+     */
+    @Test
+    public void deleteDirectory03()
+    {
+        run(
+            builder().delete().directory( path( "set-1" ) ).doNotFailIfNotPresent()
+        );
+        assertDoesNotExist( "set-1" );
+    }
+
+    /**
+     * Test that delete fails if directory to be deleted does not exist.
+     *
+     * @since 1.0
+     */
+    @Test( expected = BuildException.class )
+    public void deleteDirectory04()
+    {
+        run(
+            builder().delete().directory( path( "set-1" ) ).failIfNotPresent()
+        );
     }
 
 }

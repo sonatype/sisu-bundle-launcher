@@ -42,7 +42,6 @@ class DeleteFileBuilderImpl
      */
     private Retargetable target;
 
-
     /**
      * Constructor.
      *
@@ -74,6 +73,30 @@ class DeleteFileBuilderImpl
     DeleteFileBuilderImpl file( FileRef file )
     {
         target.setFileRef( file );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public DeleteFileBuilderImpl failIfNotPresent()
+    {
+        task().setFailIfNotPresent( true );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public DeleteFileBuilderImpl doNotFailIfNotPresent()
+    {
+        task().setFailIfNotPresent( false );
         return this;
     }
 
