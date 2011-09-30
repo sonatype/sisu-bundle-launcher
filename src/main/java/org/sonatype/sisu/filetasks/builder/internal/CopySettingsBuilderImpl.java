@@ -38,7 +38,7 @@ class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySet
     private CS task;
 
     @Inject
-    CopySettingsBuilderImpl( CS task )
+    CopySettingsBuilderImpl( final CS task )
     {
         this.task = task;
     }
@@ -89,6 +89,20 @@ class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySet
     public BI filterUsing( final File propertiesFile )
     {
         task().addFilters( propertiesFile );
+        return (BI) this;
+    }
+
+    @Override
+    public BI failIfSourceDoesNotExist()
+    {
+        task().setFailIfSourceDoesNotExist( true );
+        return (BI) this;
+    }
+
+    @Override
+    public BI doNotFailIfSourceDoesNotExist()
+    {
+        task().setFailIfSourceDoesNotExist( false );
         return (BI) this;
     }
 

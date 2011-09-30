@@ -13,10 +13,10 @@
 
 package org.sonatype.sisu.filetasks.task;
 
-import org.sonatype.sisu.filetasks.FileTask;
-
 import java.io.File;
 import java.util.Properties;
+
+import org.sonatype.sisu.filetasks.FileTask;
 
 /**
  * Copy task settings.
@@ -74,5 +74,14 @@ public interface CopySettings
      * @since 1.0
      */
     CopySettings addFilters( File propertiesFile );
+
+    /**
+     * Whether or not if copy should fail when file/directory to be copied does not exist. By default it will fail.
+     *
+     * @param fail true/false if copy should fail when file/directory to be copied does not exist
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    CopySettings setFailIfSourceDoesNotExist( boolean fail );
 
 }

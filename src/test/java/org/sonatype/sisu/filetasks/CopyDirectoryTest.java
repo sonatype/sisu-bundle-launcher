@@ -13,13 +13,15 @@
 
 package org.sonatype.sisu.filetasks;
 
-import org.junit.Test;
-import org.sonatype.sisu.filetasks.support.FileTaskTest;
-
-import java.util.Properties;
-
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
+
+import java.io.File;
+import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+import org.sonatype.sisu.filetasks.support.FileTaskTest;
 
 /**
  * TODO
@@ -231,6 +233,33 @@ public class CopyDirectoryTest
             "property.manual=manual",
             "property.properties=properties",
             "property.propertiesFile=propertiesFile"
+        );
+    }
+
+    /**
+     * Test that copy fails if directory to be copied does not exist.
+     */
+    @Test( expected = BuildException.class )
+    public void copyDirectory13()
+    {
+        run(
+            builder().copy()
+                .directory( file( new File( String.valueOf( System.currentTimeMillis() ) ) ) )
+                .to().directory( path( "/" ) )
+        );
+    }
+
+    /**
+     * Test that copy does not fail if directory to be copied does not exist and flag is set.
+     */
+    @Test
+    public void copyDirectory14()
+    {
+        run(
+            builder().copy()
+                .directory( file( new File( String.valueOf( System.currentTimeMillis() ) ) ) )
+                .to().directory( path( "/" ) )
+                .doNotFailIfSourceDoesNotExist()
         );
     }
 

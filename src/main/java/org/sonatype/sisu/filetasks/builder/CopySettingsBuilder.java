@@ -13,10 +13,10 @@
 
 package org.sonatype.sisu.filetasks.builder;
 
-import org.sonatype.sisu.filetasks.FileTask;
-
 import java.io.File;
 import java.util.Properties;
+
+import org.sonatype.sisu.filetasks.FileTask;
 
 /**
  * Copy settings builder (included in {@link CopyFileBuilder} and {@link CopyDirectoryBuilder}.
@@ -86,5 +86,21 @@ public interface CopySettingsBuilder<B extends CopySettingsBuilder>
      * @since 1.0
      */
     B filterUsing( File propertiesFile );
+
+    /**
+     * Specifies that copy should fail when file/directory to be copied does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    B failIfSourceDoesNotExist();
+
+    /**
+     * Specifies that copy should not fail when file/directory to be copied does not exist.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    B doNotFailIfSourceDoesNotExist();
 
 }

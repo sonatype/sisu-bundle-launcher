@@ -16,8 +16,10 @@ package org.sonatype.sisu.filetasks.task.internal;
 import org.apache.tools.ant.taskdefs.Copy;
 import org.sonatype.sisu.filetasks.task.CopyFileTask;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,6 +48,35 @@ class CopyFileTaskImpl
      * Target file to copy to.
      */
     private File toFile;
+
+    /**
+     * True if copy should fail when file to be copied does not exist.
+     */
+    private boolean failIfSourceDoesNotExist;
+
+    /**
+     * Constructor.
+     *
+     * @since 1.0
+     */
+    @Inject
+    CopyFileTaskImpl()
+    {
+        failIfSourceDoesNotExist = true;
+    }
+
+    /**
+     * Execute only when source file exists or it does not exist and we should fail.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    boolean shouldExecute()
+    {
+        return fromFile.exists() || failIfSourceDoesNotExist;
+    }
 
     /**
      * {@inheritDoc}
@@ -102,6 +133,18 @@ class CopyFileTaskImpl
     public CopyFileTask setToFile( final File file )
     {
         this.toFile = file;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public CopyFileTask setFailIfSourceDoesNotExist( final boolean fail )
+    {
+        this.failIfSourceDoesNotExist = fail;
         return this;
     }
 

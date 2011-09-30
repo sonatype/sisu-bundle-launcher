@@ -13,17 +13,17 @@
 
 package org.sonatype.sisu.filetasks.task.internal;
 
-import org.apache.tools.ant.taskdefs.Copy;
-import org.apache.tools.ant.types.FileSet;
-import org.sonatype.sisu.filetasks.task.CopyDirectoryTask;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.apache.tools.ant.taskdefs.Copy;
+import org.apache.tools.ant.types.FileSet;
+import org.sonatype.sisu.filetasks.task.CopyDirectoryTask;
 
 /**
  * ANT based {@link CopyDirectoryTask} implementation.
@@ -64,6 +64,11 @@ class CopyDirectoryTaskImpl
     private final List<String> excludes;
 
     /**
+     * True if copy should fail when directory to be copied does not exist.
+     */
+    private boolean failIfSourceDoesNotExist;
+
+    /**
      * Constructor.
      *
      * @since 1.0
@@ -74,6 +79,20 @@ class CopyDirectoryTaskImpl
         includes = new ArrayList<String>();
         excludes = new ArrayList<String>();
         includeEmptyDirectories = true;
+        failIfSourceDoesNotExist = true;
+    }
+
+    /**
+     * Execute only when source directory exists or it does not exist and we should fail.
+     * <p/>
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    boolean shouldExecute()
+    {
+        return fromDirectory.exists() || failIfSourceDoesNotExist;
     }
 
     /**
@@ -158,6 +177,18 @@ class CopyDirectoryTaskImpl
     public CopyDirectoryTaskImpl addExcludePattern( final String pattern )
     {
         this.excludes.add( pattern );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public CopyDirectoryTaskImpl setFailIfSourceDoesNotExist( final boolean fail )
+    {
+        this.failIfSourceDoesNotExist = fail;
         return this;
     }
 

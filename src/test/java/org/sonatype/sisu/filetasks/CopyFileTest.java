@@ -13,9 +13,11 @@
 
 package org.sonatype.sisu.filetasks;
 
+import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
 
+import java.io.File;
 import java.util.Properties;
 
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
@@ -141,6 +143,33 @@ public class CopyFileTest
             "property.manual=manual",
             "property.properties=properties",
             "property.propertiesFile=propertiesFile"
+        );
+    }
+
+    /**
+     * Test that copy fails if file to be copied does not exist.
+     */
+    @Test( expected = BuildException.class )
+    public void copyFile08()
+    {
+        run(
+            builder().copy()
+                .file( file( new File( String.valueOf( System.currentTimeMillis() ) ) ) )
+                .to().directory( path( "/" ) )
+        );
+    }
+
+    /**
+     * Test that copy does not fail if file to be copied does not exist and flag is set.
+     */
+    @Test
+    public void copyFile09()
+    {
+        run(
+            builder().copy()
+                .file( file( new File( String.valueOf( System.currentTimeMillis() ) ) ) )
+                .to().directory( path( "/" ) )
+                .doNotFailIfSourceDoesNotExist()
         );
     }
 
