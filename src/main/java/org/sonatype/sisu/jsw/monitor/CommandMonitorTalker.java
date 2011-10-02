@@ -30,8 +30,6 @@ public class CommandMonitorTalker
 
     private static Logger log = LoggerFactory.getLogger( CommandMonitorTalker.class );
 
-    private static volatile Thread stopShutdownHook;
-
     private final int port;
 
     private static final String host = "127.0.0.1";
@@ -68,32 +66,25 @@ public class CommandMonitorTalker
 
     public static void installStopShutdownHook( final int commandPort )
     {
-        if ( stopShutdownHook == null )
+        Thread stopShutdownHook = new Thread( "JSW Sanity Stopper" )
         {
-            stopShutdownHook = new Thread( "JSW Sanity Stopper" )
+            @Override
+            public void run()
             {
-                @Override
-                public void run()
+                log.info( "Sending server stop command" );
+                try
                 {
-                    log.info( "Sending server stop command" );
-                    try
-                    {
-                        new CommandMonitorTalker( commandPort ).send( CommandMonitorThread.STOP_COMMAND );
-                    }
-                    catch ( Exception e )
-                    {
-                        // ignore
-                    }
+                    new CommandMonitorTalker( commandPort ).send( CommandMonitorThread.STOP_COMMAND );
                 }
-            };
+                catch ( Exception e )
+                {
+                    // ignore
+                }
+            }
+        };
 
-            Runtime.getRuntime().addShutdownHook( stopShutdownHook );
-            log.info( "Installed stop shutdown hook" );
-        }
-        else
-        {
-            log.info( "Stop shutdown hook already installed" );
-        }
+        Runtime.getRuntime().addShutdownHook( stopShutdownHook );
+        log.info( "Installed stop shutdown hook" );
     }
 
     private static <T> T[] $( final T... args )
