@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Default {@link BundleConfiguration} implementation that eventually (if bounded) makes use of
  * {@link BundleResolver} to resolve the bundle file and {@link TargetDirectoryResolver} to resolve target directory.
@@ -71,6 +73,18 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     private Integer startTimeout;
 
     /**
+     * Debugging port if debug is enabled. Zero (0) otherwise;
+     * Should never be null.
+     */
+    private Integer debugPort;
+
+    /**
+     * True if debugging is enabled and it should suspend execution on start, false otherwise.
+     * Should never be null.
+     */
+    private Boolean suspendOnStart;
+
+    /**
      * Resolver to be used to resolve application bundle file. Can be null.
      * Lazy used (if not null) when bundle file is requested.
      */
@@ -91,6 +105,9 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     public DefaultBundleConfiguration() {
         setId(null);
         setOverlays();
+
+        debugPort = 0;
+        suspendOnStart = false;
     }
 
     /**
@@ -241,6 +258,38 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Inject
     protected void configureStartTimeout(final @Named("${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}") Integer startTimeout) {
         setStartTimeout(startTimeout);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.10.0
+     */
+    @Override
+    public Integer getDebugPort() {
+        return debugPort;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.10.0
+     */
+    @Override
+    public Boolean isSuspendOnStart() {
+        return suspendOnStart;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.10.0
+     */
+    @Override
+    public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
+        this.debugPort = checkNotNull(debugPort);
+        this.suspendOnStart = checkNotNull(suspendOnStart);
+        return (T) this;
     }
 
     /**

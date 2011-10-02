@@ -131,4 +131,30 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      */
     T setStartTimeout(Integer timeout);
 
+    /**
+     * Returns debugging port.
+     *
+     * @return debugging port if debugging is enabled, zero otherwise
+     * @since 1.10.0
+     */
+    Integer getDebugPort();
+
+    /**
+     * Returns debugging suspend status.
+     *
+     * @return true if debugging is enabled and it should suspend on start
+     * @since 1.10.0
+     */
+    Boolean isSuspendOnStart();
+
+    /**
+     * Enables debugging.
+     *
+     * @param debugPort      debugging port
+     * @param suspendOnStart if debugging should suspend execution on start
+     * @return itself, for usage in fluent api
+     * @since 1.10.0
+     */
+    T enableDebugging(Integer debugPort, Boolean suspendOnStart);
+
 }
