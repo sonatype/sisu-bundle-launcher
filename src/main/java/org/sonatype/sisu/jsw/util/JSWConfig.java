@@ -21,7 +21,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.Properties;
+
+import org.sonatype.sisu.jsw.monitor.Launcher;
 
 /**
  * TODO
@@ -31,7 +34,13 @@ import java.util.Properties;
 public class JSWConfig
 {
 
-    private File config;
+    static final String WRAPPER_JAVA_MAINCLASS = "wrapper.java.mainclass";
+
+    static final String WRAPPER_JAVA_ADDITIONAL = "wrapper.java.additional";
+
+    static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
+
+    File config;
 
     private File override;
 
@@ -168,6 +177,58 @@ public class JSWConfig
             }
         }
         return setProperty( key + "." + ++index, value );
+    }
+
+    /**
+     * Configures JSW monitor that permits sending commands to running JSW process.
+     *
+     * @param port monitor port
+     * @return itself, for usage in fluent api
+     * @since 1.0
+     */
+    public JSWConfig configureMonitor( int port )
+    {
+        eventuallyConfigureLoader();
+
+        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.MONITOR_PORT + "=" + port );
+
+        return this;
+    }
+
+    /**
+     * Configures keep alive thread that pings a configured port to check if the running JSW process should stop itself.
+     *
+     * @param port keep alive port
+     * @return itself, for usage in fluent api
+     * @since 1.0
+     */
+    public JSWConfig configureKeepAlive( int port )
+    {
+        eventuallyConfigureLoader();
+
+        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.KEEP_ALIVE_PORT + "=" + port );
+
+        return this;
+    }
+
+    /**
+     * Configures monitored booter if not already configured
+     *
+     * @since 1.0
+     */
+    private void eventuallyConfigureLoader()
+    {
+        String mainClass = getProperty( WRAPPER_JAVA_MAINCLASS );
+        if ( Launcher.class.getName().equals( mainClass ) )
+        {
+            return;
+        }
+        setProperty( WRAPPER_JAVA_MAINCLASS, Launcher.class.getName() );
+        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LAUNCHER + "=" + mainClass );
+        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LOG_TO_SYSTEM_OUT + "=true" );
+
+        URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
+        addIndexedProperty( WRAPPER_JAVA_CLASSPATH, new File( location.getFile() ).getAbsolutePath() );
     }
 
 }

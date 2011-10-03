@@ -11,36 +11,34 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-package org.sonatype.sisu.jsw.exec;
-
-import java.io.File;
-import java.io.IOException;
+package org.sonatype.sisu.jsw.monitor.internal.log;
 
 /**
- * Helper to perform operations on JSW bundle scripts.
+ * TODO
  *
  * @since 1.0
  */
-public interface JSWExec
+public class LogProxy
 {
 
-    /**
-     * Starts the server using cmd line scripts.
-     *
-     * @return itself, for usage in fluent api
-     * @since 1.0
-     */
-    public JSWExec start();
+    public void debug( final String message, Object... args )
+    {
+        // does nothing
+    }
 
-    /**
-     * Stop the server using cmd line script.
-     * <p/>
-     * This method is more reliable when you need the server completely stopped
-     * before continuing.
-     *
-     * @return itself, for usage in fluent api
-     * @since 1.0
-     */
-    public JSWExec stop();
+    public void info( final String message, final Object... args )
+    {
+        // does nothing
+    }
+
+    public void error( final String message, Object... args )
+    {
+        // does nothing
+    }
+
+    public void error( final String message, Throwable e )
+    {
+        // does nothing
+    }
 
 }

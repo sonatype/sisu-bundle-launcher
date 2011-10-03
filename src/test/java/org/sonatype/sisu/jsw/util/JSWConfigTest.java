@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.sonatype.sisu.jsw.monitor.Launcher;
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
 
@@ -87,7 +88,7 @@ public class JSWConfigTest
         jswConfig.addIndexedProperty( "wrapper.java.classpath", "bar/*" );
         jswConfig.save();
         assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.classpath.4=foo/*",
-                                                             "wrapper.java.classpath.5=bar/*") );
+                                                             "wrapper.java.classpath.5=bar/*" ) );
     }
 
     @Test
@@ -97,6 +98,30 @@ public class JSWConfigTest
         jswConfig.addIndexedProperty( "wrapper.java.additional", "-Dfoo=bar" );
         jswConfig.save();
         assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.additional.1=-Dfoo=bar" ) );
+    }
+
+    @Test
+    public void configureMonitor()
+        throws IOException
+    {
+        jswConfig.configureMonitor( 9001 );
+        jswConfig.save();
+        assertThat( additionalConfig, FileMatchers.contains(
+            JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
+            JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.MONITOR_PORT + "=9001"
+        ) );
+    }
+
+    @Test
+    public void configureKeepAlive()
+        throws IOException
+    {
+        jswConfig.configureKeepAlive( 9001 );
+        jswConfig.save();
+        assertThat( additionalConfig, FileMatchers.contains(
+            JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
+            JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.KEEP_ALIVE_PORT + "=9001"
+        ) );
     }
 
 }

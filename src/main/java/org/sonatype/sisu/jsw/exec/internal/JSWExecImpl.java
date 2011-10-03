@@ -20,7 +20,6 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.ExecTask;
@@ -31,9 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.support.AntHelper;
 import org.sonatype.sisu.jsw.exec.JSWExec;
-import org.sonatype.sisu.jsw.monitor.CommandMonitorThread;
-import org.sonatype.sisu.jsw.monitor.MonitoredBooter;
-import org.sonatype.sisu.jsw.util.JSWConfig;
 
 /**
  * Default {@link JSWExec} implementation.
@@ -43,8 +39,6 @@ import org.sonatype.sisu.jsw.util.JSWConfig;
 class JSWExecImpl
     implements JSWExec
 {
-
-    private static final String WRAPPER_JAVA_MAINCLASS = "wrapper.java.mainclass";
 
     private Logger logger = LoggerFactory.getLogger( JSWExecImpl.class );
 
@@ -152,31 +146,6 @@ class JSWExecImpl
     public JSWExecImpl stop()
     {
         executeJSWScript( "stop", false );
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
-    @Override
-    public JSWExec installMonitor( final int port, final File config, final File override )
-        throws IOException
-    {
-        JSWConfig jswConfig = new JSWConfig( config, override );
-        jswConfig.load();
-        String mainClass = jswConfig.getProperty( WRAPPER_JAVA_MAINCLASS );
-        jswConfig.setProperty( WRAPPER_JAVA_MAINCLASS, MonitoredBooter.class.getName() );
-        jswConfig.addIndexedProperty( "wrapper.java.additional", "-D" + MonitoredBooter.LAUNCHER + "=" + mainClass );
-        jswConfig.addIndexedProperty( "wrapper.java.additional", "-D" + MonitoredBooter.PORT + "=" + port );
-        jswConfig.addIndexedProperty( "wrapper.java.additional",
-                                      "-D" + CommandMonitorThread.LOG_TO_SYSTEM_OUT + "=true" );
-
-        URL location = MonitoredBooter.class.getProtectionDomain().getCodeSource().getLocation();
-        jswConfig.addIndexedProperty( "wrapper.java.classpath", new File( location.getFile() ).getCanonicalPath() );
-
-        jswConfig.save();
         return this;
     }
 

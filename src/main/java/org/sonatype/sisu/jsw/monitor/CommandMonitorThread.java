@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.sonatype.sisu.jsw.monitor.internal.log.LogProxy;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 /**
@@ -32,31 +33,29 @@ public class CommandMonitorThread
     extends Thread
 {
 
-    public static final String LOG_TO_SYSTEM_OUT = CommandMonitorTalker.class.getName() + ".logToSystemOut";
-
     public static final String STOP_COMMAND = "STOP";
 
     public static final String RESTART_COMMAND = "RESTART";
 
     private final ServerSocket socket;
 
-    private final boolean logToSystemOut;
+    private LogProxy log;
 
-    public CommandMonitorThread( final int port )
+    public CommandMonitorThread( final int port,
+                                 final LogProxy log )
         throws IOException
     {
-        setDaemon( true );
-        setName( "Bootstrap Command Monitor" );
-        // Only listen on local interface
+        this.log = log;
         this.socket = new ServerSocket( port, 1, InetAddress.getByName( "127.0.0.1" ) );
 
-        this.logToSystemOut = Boolean.getBoolean( LOG_TO_SYSTEM_OUT );
+        setDaemon( true );
+        setName( "Bootstrap Command Monitor" );
     }
 
     @Override
     public void run()
     {
-        debug( "Listening for commands: {}", socket );
+        log.debug( "Listening for commands: {}", socket );
 
         boolean running = true;
         while ( running )
@@ -64,51 +63,38 @@ public class CommandMonitorThread
             try
             {
                 Socket client = socket.accept();
-                debug( "Accepted client: {}", client );
+                log.debug( "Accepted client: {}", client );
 
                 BufferedReader reader = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
                 String command = reader.readLine();
-                debug( "Read command: {}", command );
+                log.debug( "Read command: {}", command );
                 client.close();
 
                 if ( STOP_COMMAND.equals( command ) )
                 {
-                    debug( "Stopping" );
-                    WrapperManager.stopAndReturn( 0 );
+                    log.debug( "Stopping JSW" );
+                    WrapperManager.stop( 0 );
                     running = false;
                 }
                 else if ( RESTART_COMMAND.equals( command ) )
                 {
-                    debug( "Restarting" );
+                    log.debug( "Restarting JSW" );
                     WrapperManager.restartAndReturn();
                 }
                 else
                 {
-                    error( "Unknown command: {}", command );
+                    log.error( "Unknown command: {}", command );
                 }
 
                 socket.close();
             }
             catch ( Exception e )
             {
-                error( "Failed", e );
+                log.error( "Failed", e );
             }
         }
 
-        debug( "Done" );
-    }
-
-    protected void debug( final String message, Object... args )
-    {
-        if ( logToSystemOut )
-        {
-            System.out.println( "CommandMonitorThread: " + String.format( message.replace( "{}", "%s" ), args ) );
-        }
-    }
-
-    protected void error( final String message, Object... args )
-    {
-        debug( message, args );
+        log.debug( "Done" );
     }
 
 }
