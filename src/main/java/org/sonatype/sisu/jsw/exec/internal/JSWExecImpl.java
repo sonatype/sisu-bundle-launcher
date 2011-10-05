@@ -133,8 +133,16 @@ class JSWExecImpl
      */
     public JSWExecImpl start()
     {
-        //need console since on windows we would first need a service installed if start cmd was used
-        executeJSWScript( "start" );
+        boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
+        if ( windows )
+        {
+            //need console since on windows we would first need a service installed if start cmd was used
+            executeJSWScript( "console" );
+        }
+        else
+        {
+            executeJSWScript( "start" );
+        }
         return this;
     }
 
@@ -145,7 +153,11 @@ class JSWExecImpl
      */
     public JSWExecImpl stop()
     {
-        executeJSWScript( "stop", false );
+        boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
+        if ( !windows )
+        {
+            executeJSWScript( "stop", false );
+        }
         return this;
     }
 

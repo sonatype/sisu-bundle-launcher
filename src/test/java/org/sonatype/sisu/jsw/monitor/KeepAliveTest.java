@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.jsw.monitor.internal.log.Slf4jLogProxy;
@@ -63,7 +64,11 @@ public class KeepAliveTest
         aliveThread.stopRunning();
         aliveThread.join();
 
-        assertThat( shutDown.get(), is( true ) );
+        boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
+        if ( !windows )
+        {
+            assertThat( shutDown.get(), is( true ) );
+        }
     }
 
 }
