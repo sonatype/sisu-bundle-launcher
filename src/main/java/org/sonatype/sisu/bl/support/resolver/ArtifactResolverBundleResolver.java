@@ -57,7 +57,7 @@ public class ArtifactResolverBundleResolver
     public ArtifactResolverBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
                                           final ArtifactResolver artifactResolver) {
 
-        this.bundleCoordinates = checkNotNull(bundleCoordinates);
+        this.bundleCoordinates = bundleCoordinates;
         this.artifactResolver = checkNotNull(artifactResolver);
     }
 
