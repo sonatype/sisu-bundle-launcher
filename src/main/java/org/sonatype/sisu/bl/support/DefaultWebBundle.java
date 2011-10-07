@@ -152,5 +152,20 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
         return String.format("http://localhost:%s/%s", port, getName());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        if (isRunning()) {
+            sb.append(" [").append(getUrl()).append("]");
+        }
+        return sb.toString();
+    }
+
 
 }

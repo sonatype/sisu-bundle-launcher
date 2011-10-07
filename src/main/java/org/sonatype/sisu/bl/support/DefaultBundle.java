@@ -366,4 +366,18 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         onDirectory(config.getTargetDirectory()).apply(overlays);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName()).append(" bundle");
+        sb.append(" [id: ").append(getConfiguration().getId()).append("]");
+        sb.append(isRunning() ? " [running]" : " [not running]");
+        return sb.toString();
+    }
+
 }
