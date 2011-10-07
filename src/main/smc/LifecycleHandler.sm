@@ -33,7 +33,6 @@ Preparing {
 }
 
 Prepared {
-    clean Cleaning {}
     start Starting {}
     prepare nil {}
 }
