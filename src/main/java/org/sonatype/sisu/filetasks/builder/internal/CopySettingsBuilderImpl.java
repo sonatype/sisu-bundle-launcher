@@ -26,7 +26,6 @@ import java.util.Properties;
  *
  * @since 1.0
  */
-@Named
 class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySettings>
     extends BuilderImpl
     implements CopySettingsBuilder<BI>
@@ -37,7 +36,6 @@ class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySet
      */
     private CS task;
 
-    @Inject
     CopySettingsBuilderImpl( final CS task )
     {
         this.task = task;
