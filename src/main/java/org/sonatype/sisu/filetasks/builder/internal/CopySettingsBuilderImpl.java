@@ -13,20 +13,18 @@
 
 package org.sonatype.sisu.filetasks.builder.internal;
 
-import org.sonatype.sisu.filetasks.builder.CopySettingsBuilder;
-import org.sonatype.sisu.filetasks.task.CopySettings;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.util.Properties;
+
+import org.sonatype.sisu.filetasks.builder.CopySettingsBuilder;
+import org.sonatype.sisu.filetasks.task.CopySettings;
 
 /**
  * TODO
  *
  * @since 1.0
  */
-class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySettings>
+abstract class CopySettingsBuilderImpl<BI extends CopySettingsBuilder, CS extends CopySettings>
     extends BuilderImpl
     implements CopySettingsBuilder<BI>
 {
