@@ -12,22 +12,26 @@
  */
 package org.sonatype.sisu.bl.support.resolver;
 
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.inject.Nullable;
+import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
 
 /**
- * {@link ArtifactResolver} based {@link BundleResolver}.
+ * {@link MavenArtifactResolver} based {@link BundleResolver}.
  * <p/>
  * Resolves the bundle specified by its Maven artifact coordinates.
  *
  * @since 1.0
  */
-public class ArtifactResolverBundleResolver
+public class MavenBridgedBundleResolver
         implements BundleResolver {
 
     /**
@@ -43,7 +47,7 @@ public class ArtifactResolverBundleResolver
     /**
      * Artifact resolver.
      */
-    private ArtifactResolver artifactResolver;
+    private MavenArtifactResolver artifactResolver;
 
     /**
      * Constructor.
@@ -54,15 +58,15 @@ public class ArtifactResolverBundleResolver
      * @since 1.0
      */
     @Inject
-    public ArtifactResolverBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
-                                          final ArtifactResolver artifactResolver) {
+    public MavenBridgedBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
+                                      final MavenArtifactResolver artifactResolver) {
 
         this.bundleCoordinates = bundleCoordinates;
         this.artifactResolver = checkNotNull(artifactResolver);
     }
 
     /**
-     * Resolves bundle specified by Maven artifact coordinates using provided {@link ArtifactResolver}.
+     * Resolves bundle specified by Maven artifact coordinates using provided {@link MavenArtifactResolver}.
      * <p/>
      * {@inheritDoc}
      *
@@ -72,8 +76,14 @@ public class ArtifactResolverBundleResolver
         if (bundleCoordinates == null) {
             throw new RuntimeException("Bundle coordinates must be set. Did you set 'DefaultBundleConfiguration.bundleCoordinates' configuration property?");
         }
-        ResolvedArtifact artifact = artifactResolver.resolveArtifact(bundleCoordinates);
-        return artifact.getFile();
+        try {
+            Artifact artifact = artifactResolver.resolveArtifact(
+                    request().artifact(bundleCoordinates)
+            );
+            return artifact.getFile();
+        } catch (ArtifactResolutionException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
 }
