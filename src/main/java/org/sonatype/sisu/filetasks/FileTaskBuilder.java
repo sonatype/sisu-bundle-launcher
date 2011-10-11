@@ -15,6 +15,7 @@ package org.sonatype.sisu.filetasks;
 
 import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
 import org.sonatype.sisu.filetasks.builder.CopyBuilder;
+import org.sonatype.sisu.filetasks.builder.CreateBuilder;
 import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
 import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
 import org.sonatype.sisu.filetasks.builder.FileRef;
@@ -38,6 +39,16 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     CopyBuilder copy();
+
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.CreateFileTask}
+     * builder.
+     *
+     * @return ongoing copy task builder
+     * @since 1.0
+     */
+    CreateBuilder create();
+
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.DeleteDirectoryTask} or {@link org.sonatype.sisu.filetasks.task.DeleteFileTask}

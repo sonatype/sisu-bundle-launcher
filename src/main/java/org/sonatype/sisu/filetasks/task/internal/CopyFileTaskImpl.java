@@ -19,7 +19,6 @@ import org.sonatype.sisu.filetasks.task.CopyFileTask;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
-import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

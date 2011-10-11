@@ -46,7 +46,7 @@ public abstract class BuilderImpl
     }
 
     /**
-     * Adds a re-target=able path.
+     * Adds a re-targetable path.
      *
      * @param retargetable to add
      * @return passed retargetable for fluent API usage
@@ -65,7 +65,7 @@ public abstract class BuilderImpl
      * @since 1.0
      */
     @Override
-    public void run()
+    public final void run()
     {
         task().run();
     }

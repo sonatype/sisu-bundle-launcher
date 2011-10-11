@@ -28,11 +28,11 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.sonatype.sisu.filetasks.builder.CreateBuilder;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO
- * ]
  *
  * @since 1.0
  */
@@ -46,6 +46,12 @@ class FileTaskBuilderImpl
      * Copy builder.
      */
     private CopyBuilder copyBuilder;
+
+    /**
+     * Create builder.
+     */
+    private CreateBuilder createBuilder;
+
 
     /**
      * Delete builder.
@@ -91,6 +97,7 @@ class FileTaskBuilderImpl
      */
     @Inject
     FileTaskBuilderImpl( final CopyBuilder copyBuilder,
+                         final CreateBuilder createBuilder,
                          final DeleteBuilder deleteBuilder,
                          final Provider<RenameBuilderImpl> renameBuilderProvider,
                          final Provider<MoveBuilderImpl> moveBuilderProvider,
@@ -99,6 +106,7 @@ class FileTaskBuilderImpl
                          final Provider<ChmodBuilderImpl> chmodBuilderProvider )
     {
         this.copyBuilder = checkNotNull( copyBuilder );
+        this.createBuilder = checkNotNull( createBuilder );
         this.deleteBuilder = checkNotNull( deleteBuilder );
         this.renameBuilderProvider = checkNotNull( renameBuilderProvider );
         this.moveBuilderProvider = checkNotNull( moveBuilderProvider );
@@ -116,6 +124,17 @@ class FileTaskBuilderImpl
     public CopyBuilder copy()
     {
         return copyBuilder;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public CreateBuilder create()
+    {
+        return createBuilder;
     }
 
     /**
