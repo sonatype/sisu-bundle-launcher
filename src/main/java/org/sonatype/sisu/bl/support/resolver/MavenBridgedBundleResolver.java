@@ -72,9 +72,10 @@ public class MavenBridgedBundleResolver
      *
      * @since 1.0
      */
+    @Override
     public File resolve() {
         if (bundleCoordinates == null) {
-            throw new RuntimeException("Bundle coordinates must be set. Did you set 'DefaultBundleConfiguration.bundleCoordinates' configuration property?");
+            throw new RuntimeException("Bundle coordinates must be set. Did you set '" + BUNDLE_COORDINATES + "' configuration property?");
         }
         try {
             Artifact artifact = artifactResolver.resolveArtifact(
