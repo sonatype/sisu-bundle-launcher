@@ -15,8 +15,7 @@ package org.sonatype.sisu.jsw.exec.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
-import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
-import static org.sonatype.sisu.filetasks.builder.FileRef.path;
+import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +41,6 @@ class JSWExecImpl
 
     private Logger logger = LoggerFactory.getLogger( JSWExecImpl.class );
 
-    private final String appName;
-
     private final File controlScript;
 
     private final String controlScriptCanonicalPath;
@@ -51,6 +48,8 @@ class JSWExecImpl
     private final AntHelper ant;
 
     private FileTaskBuilder fileTaskBuilder;
+
+    private String appName;
 
     /**
      * Constructor.
@@ -83,30 +82,40 @@ class JSWExecImpl
         boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
         final String extension = windows ? ".bat" : "";
 
-        DirectoryScanner ds = new DirectoryScanner();
+        final String controlScriptName = this.appName + extension;
+
+        final DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir( bundle );
-        ds.setIncludes( new String[]{ "**/bin/" + appName + extension } );
+        ds.setIncludes( new String[]{ "**/bin/" + controlScriptName } );
         ds.scan();
         String[] scripts = ds.getIncludedFiles();
 
         if ( scripts.length == 0 )
         {
             throw new RuntimeException(
-                format( "Could not find script named %s in %s bundle", appName + extension, bundle ) );
+                format( "Could not find script named %s in %s bundle", controlScriptName, bundle ) );
         }
         if ( scripts.length > 1 )
         {
             throw new RuntimeException(
-                format( "Found more then one script named %s in %s bundle", appName + extension, bundle ) );
+                format( "Found more then one script named %s in %s bundle", controlScriptName, bundle ) );
         }
 
-        File bindDir = new File( bundle, scripts[0] ).getParentFile();
+        final File binDir = new File( bundle, scripts[0] ).getParentFile();
 
-        this.controlScript = new File( bindDir, appName + extension );
+        this.controlScript = new File( binDir, controlScriptName );
 
-        onDirectory( bundle ).apply(
-            this.fileTaskBuilder.chmod( path( "/" ) ).permissions( "u+x" )
-        );
+        this.fileTaskBuilder.chmod( file( binDir ) )
+            .exclude( "**/*.bat" )
+            .exclude( "**/*.dll" )
+            .exclude( "**/*.exe" )
+            .exclude( "**/*.jar" )
+            .exclude( "**/*.jnilib" )
+            .exclude( "**/*.so" )
+            .exclude( "**/*.txt" )
+            .exclude( "**/*.xml" )
+            .permissions( "u+x" )
+            .run();
 
         if ( !this.controlScript.isFile() || !this.controlScript.canExecute() )
         {
