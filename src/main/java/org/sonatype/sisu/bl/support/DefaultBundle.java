@@ -298,7 +298,11 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         //template method
     }
 
-    String getName() {
+    /**
+     *
+     * @return the name this bundle was created with
+     */
+    protected String getName() {
         return name;
     }
 
