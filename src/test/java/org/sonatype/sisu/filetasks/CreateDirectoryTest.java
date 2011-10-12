@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
 import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
+import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -41,5 +42,12 @@ public class CreateDirectoryTest extends FileTaskTest{
         run(builder().create().directory( file( testMethodTargetFile( "dir02" ) ) ) );
     }
 
+
+    @Test
+    public void createDirectoryOnDirectoryWithRelativePath()
+    {
+        run(builder().create().directory( path( "relative" ) ));
+        assertThat( testMethodTargetFile( "relative" ), FileMatchers.isDirectory());
+    }
 
 }

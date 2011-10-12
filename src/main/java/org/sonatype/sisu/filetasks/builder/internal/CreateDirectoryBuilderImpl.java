@@ -12,6 +12,7 @@
  */
 package org.sonatype.sisu.filetasks.builder.internal;
 
+import java.io.File;
 import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 import javax.inject.Named;
@@ -21,7 +22,7 @@ import org.sonatype.sisu.filetasks.task.CreateDirectoryTask;
 
 /**
  * TODO
- * 
+ *
  * @since 1.0
  */
 @Named
@@ -31,13 +32,28 @@ class CreateDirectoryBuilderImpl
 
     private final CreateDirectoryTask createDirectoryTask;
 
+    /**
+     * Re-targetable directory where to create the file.
+     */
+    private Retargetable target;
+
+
     @Inject
     public CreateDirectoryBuilderImpl(final CreateDirectoryTask createDirectoryTask) {
         this.createDirectoryTask = checkNotNull(createDirectoryTask);
+        target = addRetargetable( new Retargetable()
+        {
+            @Override
+            void retargetAs( final File file )
+            {
+                task().setDirectory( file );
+            }
+
+        } );
     }
 
-    CreateDirectoryBuilder directory(final FileRef file) {
-        createDirectoryTask.setDirectory(file.getFile());
+    CreateDirectoryBuilder directory(final FileRef fileref) {
+        target.setFileRef(fileref);
         return this;
     }
 

@@ -12,6 +12,7 @@
  */
 package org.sonatype.sisu.filetasks.builder.internal;
 
+import java.io.File;
 import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 import javax.inject.Named;
@@ -29,13 +30,28 @@ class CreateFileBuilderImpl extends BuilderImpl implements CreateFileBuilder {
 
     private final CreateFileTask createFileTask;
 
+    /**
+     * Re-targetable directory where to create the file.
+     */
+    private Retargetable target;
+
+
     @Inject
     public CreateFileBuilderImpl(final CreateFileTask createFileTask) {
         this.createFileTask = checkNotNull(createFileTask);
+        target = addRetargetable( new Retargetable()
+        {
+            @Override
+            void retargetAs( final File file )
+            {
+                task().setFile( file );
+            }
+
+        } );
     }
 
     CreateFileBuilder file(final FileRef file) {
-        createFileTask.setFile(file.getFile());
+        target.setFileRef( file );
         return this;
     }
 

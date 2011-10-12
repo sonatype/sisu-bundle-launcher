@@ -26,10 +26,15 @@ public interface CreateFileBuilder
      * Specifies the content the created file should contain.
      *
      * @param content the content contained by the file
-     * @return CreateFileBuilder for
+     * @return CreateFileBuilder for fluent API
      */
     CreateFileBuilder containing(final String content);
 
+    /**
+     * The charset the content should be encoded as
+     * @param encoding the charset to use to write the content
+     * @return CreatFileBuilder for fluent API
+     */
     CreateFileBuilder encodedAs(final String encoding);
 
 }

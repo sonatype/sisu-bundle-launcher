@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
 import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
+import static org.sonatype.sisu.filetasks.builder.FileRef.path;
+
 
 import static org.hamcrest.MatcherAssert.*;
 
@@ -59,6 +61,14 @@ public class CreateFileTest extends FileTaskTest{
         assertThat(testMethodTargetFile("test.txt"), FileMatchers.sized(0L));
     }
 
+
+    @Test
+    public void createFileOnDirectoryWithRelativePath()
+    {
+        run(builder().create().file( path( "relative.txt" ) ).containing("relative path file"));
+        assertExists( "relative.txt" );
+        assertThat(testMethodTargetFile("relative.txt"), FileMatchers.containsOnly("relative path file"));
+    }
 
 
 
