@@ -22,6 +22,7 @@ import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
 import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
 import org.sonatype.sisu.filetasks.builder.RenameBuilder;
+import org.sonatype.sisu.filetasks.builder.WarBuilder;
 
 /**
  * Helper for easy, fluent API building of {@link FileTask}s.
@@ -85,6 +86,17 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     ExpandBuilder expand( FileRef archive );
+
+
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.WarTask} builder.
+     *
+     * @param archive archive to be updated
+     * @return ongoing update archive task builder
+     * @since 1.0
+     */
+    WarBuilder war( FileRef archive );
+
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.PropertiesTask} builder.

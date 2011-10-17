@@ -29,6 +29,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.sonatype.sisu.filetasks.builder.CreateBuilder;
+import org.sonatype.sisu.filetasks.builder.WarBuilder;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -52,6 +53,10 @@ class FileTaskBuilderImpl
      */
     private CreateBuilder createBuilder;
 
+    /**
+     * Create builder.
+     */
+    private Provider<WarBuilderImpl> warBuilderProvider;
 
     /**
      * Delete builder.
@@ -99,6 +104,7 @@ class FileTaskBuilderImpl
     FileTaskBuilderImpl( final CopyBuilder copyBuilder,
                          final CreateBuilder createBuilder,
                          final DeleteBuilder deleteBuilder,
+                         final Provider<WarBuilderImpl> warBuilderProvider,
                          final Provider<RenameBuilderImpl> renameBuilderProvider,
                          final Provider<MoveBuilderImpl> moveBuilderProvider,
                          final Provider<ExpandBuilderImpl> expandBuilderProvider,
@@ -107,12 +113,14 @@ class FileTaskBuilderImpl
     {
         this.copyBuilder = checkNotNull( copyBuilder );
         this.createBuilder = checkNotNull( createBuilder );
+        this.warBuilderProvider = checkNotNull( warBuilderProvider );
         this.deleteBuilder = checkNotNull( deleteBuilder );
         this.renameBuilderProvider = checkNotNull( renameBuilderProvider );
         this.moveBuilderProvider = checkNotNull( moveBuilderProvider );
         this.expandBuilderProvider = checkNotNull( expandBuilderProvider );
         this.propertiesBuilderProvider = checkNotNull( propertiesBuilderProvider );
         this.chmodBuilderProvider = checkNotNull( chmodBuilderProvider );
+
     }
 
     /**
@@ -135,6 +143,17 @@ class FileTaskBuilderImpl
     public CreateBuilder create()
     {
         return createBuilder;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public WarBuilder war(final FileRef archive)
+    {
+        return warBuilderProvider.get().archive(archive);
     }
 
     /**
