@@ -34,4 +34,12 @@ public interface SymlinkBuilder
      */
     SymlinkBuilder as( FileRef as );
 
+    /**
+     * If an hard link should be created.
+     *
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    SymlinkBuilder makeHardLink();
+
 }

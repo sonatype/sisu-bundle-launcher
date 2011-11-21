@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import javax.inject.Named;
 
-import org.apache.tools.ant.taskdefs.optional.unix.Symlink;
 import org.sonatype.sisu.filetasks.task.SymlinkTask;
+import org.sonatype.sisu.filetasks.task.internal.ant.Symlink;
 
 /**
  * ANT based {@link SymlinkTask} implementation.
@@ -41,6 +41,11 @@ class SymlinkTaskImpl
      * Symlink to be created.
      */
     private File target;
+
+    /**
+     * True if a hard link should be created.
+     */
+    private boolean hardLink;
 
     /**
      * Returns a {@link Symlink} ANT task.
@@ -66,6 +71,7 @@ class SymlinkTaskImpl
         symlink.setAction( "single" );
         symlink.setResource( checkNotNull( source ).getAbsolutePath() );
         symlink.setLink( checkNotNull( target ).getAbsolutePath() );
+        symlink.setHardlink( hardLink );
         symlink.setFailOnError( true );
     }
 
@@ -90,6 +96,18 @@ class SymlinkTaskImpl
     public SymlinkTask setTarget( final File target )
     {
         this.target = target;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public SymlinkTask setHardLink( final boolean hardLink )
+    {
+        this.hardLink = hardLink;
         return this;
     }
 

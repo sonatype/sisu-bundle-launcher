@@ -44,4 +44,13 @@ public interface SymlinkTask
      */
     SymlinkTask setTarget( File file );
 
+    /**
+     * Whether a hard link should be created or not (default false).
+     *
+     * @param hardLink true, if a hard link should be created
+     * @return itself, for fluent API usage
+     * @since 1.0
+     */
+    SymlinkTask setHardLink(boolean hardLink );
+
 }

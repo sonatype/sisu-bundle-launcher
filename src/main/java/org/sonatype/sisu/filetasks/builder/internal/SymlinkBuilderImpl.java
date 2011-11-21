@@ -108,6 +108,18 @@ public class SymlinkBuilderImpl
      * @since 1.0
      */
     @Override
+    public SymlinkBuilder makeHardLink()
+    {
+        this.task.setHardLink( true );
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
     SymlinkTask task()
     {
         return task;

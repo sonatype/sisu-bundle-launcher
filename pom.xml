@@ -256,6 +256,7 @@
           <excludes>
             <exclude>**/target/**</exclude>
             <exclude>**/.*/**</exclude>
+            <exclude>**/Symlink.java</exclude>
           </excludes>
           <mapping>
             <scala>SLASHSTAR_STYLE</scala>
