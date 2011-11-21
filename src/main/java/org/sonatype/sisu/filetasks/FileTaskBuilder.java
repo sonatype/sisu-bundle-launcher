@@ -22,6 +22,7 @@ import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
 import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
 import org.sonatype.sisu.filetasks.builder.RenameBuilder;
+import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 import org.sonatype.sisu.filetasks.builder.WarBuilder;
 
 /**
@@ -49,7 +50,6 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     CreateBuilder create();
-
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.DeleteDirectoryTask} or {@link org.sonatype.sisu.filetasks.task.DeleteFileTask}
@@ -79,6 +79,15 @@ public interface FileTaskBuilder
     MoveBuilder move( FileRef from );
 
     /**
+     * {@link org.sonatype.sisu.filetasks.task.SymlinkTask} builder.
+     *
+     * @param source file/directory to be linked
+     * @return ongoing symlink task builder
+     * @since 1.0
+     */
+    SymlinkBuilder symlink( FileRef source );
+
+    /**
      * {@link org.sonatype.sisu.filetasks.task.ExpandTask} builder.
      *
      * @param archive archive to be expanded reference
@@ -86,7 +95,6 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     ExpandBuilder expand( FileRef archive );
-
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.WarTask} builder.
@@ -96,7 +104,6 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     WarBuilder war( FileRef archive );
-
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.PropertiesTask} builder.

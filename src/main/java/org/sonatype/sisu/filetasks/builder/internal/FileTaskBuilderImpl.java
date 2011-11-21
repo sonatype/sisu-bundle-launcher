@@ -22,6 +22,7 @@ import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
 import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
 import org.sonatype.sisu.filetasks.builder.RenameBuilder;
+import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -69,9 +70,14 @@ class FileTaskBuilderImpl
     private Provider<RenameBuilderImpl> renameBuilderProvider;
 
     /**
-     * <ove builder provider.
+     * Move builder provider.
      */
     private Provider<MoveBuilderImpl> moveBuilderProvider;
+
+    /**
+     * Symlink builder provider.
+     */
+    private Provider<SymlinkBuilderImpl> symlinkBuilderProvider;
 
     /**
      * Expand builder provider.
@@ -107,6 +113,7 @@ class FileTaskBuilderImpl
                          final Provider<WarBuilderImpl> warBuilderProvider,
                          final Provider<RenameBuilderImpl> renameBuilderProvider,
                          final Provider<MoveBuilderImpl> moveBuilderProvider,
+                         final Provider<SymlinkBuilderImpl> symlinkBuilderProvider,
                          final Provider<ExpandBuilderImpl> expandBuilderProvider,
                          final Provider<PropertiesBuilderImpl> propertiesBuilderProvider,
                          final Provider<ChmodBuilderImpl> chmodBuilderProvider )
@@ -117,6 +124,7 @@ class FileTaskBuilderImpl
         this.deleteBuilder = checkNotNull( deleteBuilder );
         this.renameBuilderProvider = checkNotNull( renameBuilderProvider );
         this.moveBuilderProvider = checkNotNull( moveBuilderProvider );
+        this.symlinkBuilderProvider = checkNotNull( symlinkBuilderProvider );
         this.expandBuilderProvider = checkNotNull( expandBuilderProvider );
         this.propertiesBuilderProvider = checkNotNull( propertiesBuilderProvider );
         this.chmodBuilderProvider = checkNotNull( chmodBuilderProvider );
@@ -187,6 +195,17 @@ class FileTaskBuilderImpl
     public MoveBuilder move( final FileRef from )
     {
         return moveBuilderProvider.get().from( from );
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public SymlinkBuilder symlink( final FileRef source )
+    {
+        return symlinkBuilderProvider.get().source( source );
     }
 
     /**
