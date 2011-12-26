@@ -71,7 +71,7 @@ public class CommandMonitorTalker
             @Override
             public void run()
             {
-                log.info( "Sending server stop command" );
+                log.debug( "Sending server stop command" );
                 try
                 {
                     new CommandMonitorTalker( commandPort ).send( CommandMonitorThread.STOP_COMMAND );
@@ -84,7 +84,7 @@ public class CommandMonitorTalker
         };
 
         Runtime.getRuntime().addShutdownHook( stopShutdownHook );
-        log.info( "Installed stop shutdown hook" );
+        log.debug( "Installed stop shutdown hook" );
     }
 
     private static <T> T[] $( final T... args )
