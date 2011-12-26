@@ -199,7 +199,7 @@ class JSWExecImpl
         Commandline.Argument arg = exec.createArg();
         arg.setValue( command );
         exec.setDir( script.getParentFile() );
-        logger.info( "Executing {} script cmd {} {}",
+        logger.debug( "Executing {} script cmd {} {}",
                      new Object[]{ appName, this.controlScriptCanonicalPath, command } );
         exec.execute();
     }
