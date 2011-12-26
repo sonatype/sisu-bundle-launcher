@@ -149,7 +149,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      * @since 1.0
      */
     protected String composeApplicationURL() {
-        return String.format("http://localhost:%s/%s", port, getName());
+        return String.format("http://localhost:%s/%s/", port, getName());
     }
 
     /**
