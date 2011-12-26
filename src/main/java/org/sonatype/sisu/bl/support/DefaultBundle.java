@@ -147,7 +147,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     @Override
     public void doPrepare() {
-        log().info("Using configuration {}", getConfiguration());
+        log().debug("Using configuration {}", getConfiguration());
         validateConfiguration();
         createBundle();
         renameApplicationDirectory();
