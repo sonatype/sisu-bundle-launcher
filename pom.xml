@@ -160,6 +160,40 @@
             </testResource>
         </testResources>
 
+        <pluginManagement>
+            <plugins>
+                <!--
+                mvn license:format -N
+                If its a new year, update the year range in the header.txt file
+                -->
+                <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                        <strictCheck>true</strictCheck>
+                        <header>${project.basedir}/header.txt</header>
+                        <useDefaultExcludes>false</useDefaultExcludes>
+                        <includes>
+                            <include>**/pom.xml</include>
+                            <include>**/*.xml</include>
+                            <include>**/*.properties</include>
+                            <include>**/*.java</include>
+                            <include>**/*.sm</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/target/**</exclude>
+                            <exclude>**/.*/**</exclude>
+                        </excludes>
+                        <mapping>
+                            <java>SLASHSTAR_STYLE</java>
+                            <sm>DOUBLESLASH_STYLE</sm>
+                        </mapping>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -259,45 +293,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!--
-            mvn license:format -N
-            If its a new year, update the year range in the header.txt file
-            -->
-            <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.9.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <strictCheck>true</strictCheck>
-                    <header>${project.basedir}/header.txt</header>
-                    <useDefaultExcludes>false</useDefaultExcludes>
-                    <includes>
-                        <include>**/pom.xml</include>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.java</include>
-                        <include>**/*.sm</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/target/**</exclude>
-                        <exclude>**/.*/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                        <sm>DOUBLESLASH_STYLE</sm>
-                    </mapping>
-                </configuration>
             </plugin>
         </plugins>
     </build>
