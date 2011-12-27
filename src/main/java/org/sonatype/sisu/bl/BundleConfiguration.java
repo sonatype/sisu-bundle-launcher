@@ -17,6 +17,7 @@ import org.sonatype.sisu.filetasks.FileTask;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An bundle configuration.
@@ -135,7 +136,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns debugging port.
      *
      * @return debugging port if debugging is enabled, zero otherwise
-     * @since 1.10.0
+     * @since 1.0
      */
     Integer getDebugPort();
 
@@ -143,7 +144,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns debugging suspend status.
      *
      * @return true if debugging is enabled and it should suspend on start
-     * @since 1.10.0
+     * @since 1.0
      */
     Boolean isSuspendOnStart();
 
@@ -153,8 +154,26 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param debugPort      debugging port
      * @param suspendOnStart if debugging should suspend execution on start
      * @return itself, for usage in fluent api
-     * @since 1.10.0
+     * @since 1.0
      */
     T enableDebugging(Integer debugPort, Boolean suspendOnStart);
+
+    /**
+     * Returns system properties.
+     *
+     * @return system properties map. Never null.
+     * @since 1.0
+     */
+    Map<String,String> getSystemProperties();
+
+    /**
+     * Sets a system property.
+     *
+     * @param key system property key
+     * @param value system property value
+     * @return itself, for usage in fluent api
+     * @since 1.0
+     */
+    T setSystemProperty(String key, String value);
 
 }

@@ -12,6 +12,7 @@
  */
 package org.sonatype.sisu.bl.support;
 
+import com.google.common.collect.Maps;
 import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.support.resolver.BundleResolver;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -97,6 +99,12 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     private TargetDirectoryResolver targetDirectoryResolver;
 
     /**
+     * System properties.
+     * Should never be null.
+     */
+    private final Map<String,String> systemProperties;
+
+    /**
      * Constructor.
      *
      * @since 1.0
@@ -108,6 +116,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
 
         debugPort = 0;
         suspendOnStart = false;
+        systemProperties = Maps.newHashMap();
     }
 
     /**
@@ -263,7 +272,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     /**
      * {@inheritDoc}
      *
-     * @since 1.10.0
+     * @since 1.0
      */
     @Override
     public Integer getDebugPort() {
@@ -273,7 +282,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     /**
      * {@inheritDoc}
      *
-     * @since 1.10.0
+     * @since 1.0
      */
     @Override
     public Boolean isSuspendOnStart() {
@@ -283,12 +292,33 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     /**
      * {@inheritDoc}
      *
-     * @since 1.10.0
+     * @since 1.0
      */
     @Override
     public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
         this.debugPort = checkNotNull(debugPort);
         this.suspendOnStart = checkNotNull(suspendOnStart);
+        return (T) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public Map<String, String> getSystemProperties() {
+        return systemProperties;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0
+     */
+    @Override
+    public T setSystemProperty(String key, String value) {
+        systemProperties.put(key,value);
         return (T) this;
     }
 
