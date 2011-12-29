@@ -1,0 +1,5 @@
+set-1/dir01/file0101.txt
+property.systemProperties=${java.version}
+property.manual=${property.manual}
+property.properties=${property.properties}
+property.propertiesFile=${property.propertiesFile}
