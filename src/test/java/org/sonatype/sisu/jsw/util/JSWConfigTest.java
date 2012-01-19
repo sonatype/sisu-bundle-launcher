@@ -19,7 +19,10 @@ import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -102,26 +105,46 @@ public class JSWConfigTest
 
     @Test
     public void configureMonitor()
-        throws IOException
+        throws Exception
     {
         jswConfig.configureMonitor( 9001 );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains(
-            JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
-            JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.MONITOR_PORT + "=9001"
-        ) );
+        assertThat( additionalConfig, FileMatchers.contains( JSWConfig.WRAPPER_JAVA_MAINCLASS + "="
+                                                                 + Launcher.class.getName(),
+                                                             JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
+                                                                 + Launcher.MONITOR_PORT + "=9001",
+                                                             JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4="
+                                                                 + getLauncherFile().getAbsolutePath() ) );
     }
 
     @Test
     public void configureKeepAlive()
-        throws IOException
+        throws Exception
     {
         jswConfig.configureKeepAlive( 9001 );
         jswConfig.save();
         assertThat( additionalConfig, FileMatchers.contains(
             JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
-            JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.KEEP_ALIVE_PORT + "=9001"
+                                                             JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
+                                                                 + Launcher.KEEP_ALIVE_PORT + "=9001",
+                                                             JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4="
+                                                                 + getLauncherFile().getAbsolutePath()
         ) );
     }
 
+    @Test
+    public void testLauncherPathWithSpaces()
+        throws Exception
+    {
+        URL url = new URL( "file:/path%20with%20spaces/and%20more%20spaces/launcher.jar" );
+        File file = jswConfig.urlToFile( url );
+        Assert.assertTrue( file.getAbsolutePath().replace( '\\', '/' ).endsWith( "/path with spaces/and more spaces/launcher.jar" ) );
+    }
+
+    private File getLauncherFile()
+        throws URISyntaxException
+    {
+        URL url = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
+        return new File( url.toURI() );
+    }
 }
