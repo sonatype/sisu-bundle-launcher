@@ -21,6 +21,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -227,8 +229,21 @@ public class JSWConfig
         addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LAUNCHER + "=" + mainClass );
         addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LOG_TO_SYSTEM_OUT + "=true" );
 
-        URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
-        addIndexedProperty( WRAPPER_JAVA_CLASSPATH, new File( location.getFile() ).getAbsolutePath() );
+        try
+        {
+            URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
+            addIndexedProperty( WRAPPER_JAVA_CLASSPATH, urlToFile( location ).getAbsolutePath() );
+        }
+        catch ( URISyntaxException e )
+        {
+            throw new IllegalStateException( e.getMessage(), e );
+        }
     }
 
+    File urlToFile( URL url )
+        throws URISyntaxException
+    {
+        URI uri = url.toURI();
+        return new File( uri );
+    }
 }
