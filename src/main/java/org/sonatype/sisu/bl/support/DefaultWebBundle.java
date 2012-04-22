@@ -142,7 +142,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
     }
 
     /**
-     * Composes application URL in format {@code http://localhost:<port>/<aplication name>}.
+     * Composes application URL in format {@code http://localhost:<port>/<application-name>}.
      *
      * @return application URL
      * @since 1.0
