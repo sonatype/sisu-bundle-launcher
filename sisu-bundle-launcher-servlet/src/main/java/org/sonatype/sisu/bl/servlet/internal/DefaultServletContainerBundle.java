@@ -17,6 +17,7 @@ import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.tools.ant.taskdefs.ExecTask;
@@ -114,7 +115,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
             arg.setValue( argument );
         }
 
-        exec.setDir( getConfiguration().getTargetDirectory() );
+        exec.setDir( new File( getConfiguration().getTargetDirectory(), getName() ) );
         exec.setFailIfExecutionFails( true );
 
         final Environment.Variable javaHome = new Environment.Variable();
