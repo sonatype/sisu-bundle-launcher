@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
 import org.sonatype.sisu.bl.servlet.ServletContainerBundle;
 import org.sonatype.sisu.bl.servlet.ServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.WAR;
@@ -112,8 +113,17 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
             Commandline.Argument arg = exec.createArg();
             arg.setValue( argument );
         }
+
         exec.setDir( getConfiguration().getTargetDirectory() );
+        exec.setFailIfExecutionFails( true );
+
+        final Environment.Variable javaHome = new Environment.Variable();
+        javaHome.setKey( "JAVA_HOME" );
+        javaHome.setValue( System.getProperty( "java.home" ) );
+        exec.addEnv( javaHome );
+
         log().debug( "Executing {} with arguments: ", script, arguments );
+
         exec.execute();
     }
 

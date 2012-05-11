@@ -90,7 +90,7 @@ public class DefaultTomcatBundle<TB extends TomcatBundle, TBC extends TomcatBund
         final File startupScript = new File(
             getConfiguration().getTargetDirectory(), getName() + "/bin/startup" + extension
         );
-        executeScript( startupScript.getAbsolutePath(), true );
+        executeScript( startupScript.getAbsolutePath(), false );
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DefaultTomcatBundle<TB extends TomcatBundle, TBC extends TomcatBund
         final File startupScript = new File(
             getConfiguration().getTargetDirectory(), getName() + "/bin/shutdown" + extension
         );
-        executeScript( startupScript.getAbsolutePath(), true, String.valueOf( serverPort ) );
+        executeScript( startupScript.getAbsolutePath(), false, String.valueOf( serverPort ) );
     }
 
     private void makeScriptsExecutable()
