@@ -14,6 +14,8 @@ package org.sonatype.sisu.bl.internal.support;
 
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.goodies.common.ComponentSupport;
+import org.sonatype.sisu.goodies.common.Mutex;
 import com.google.common.base.Throwables;
 
 /**
@@ -94,7 +96,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
         @Override
         public void log(final String message) {
-            BundleLifecycle.this.log().debug(message);
+            BundleLifecycle.this.log.debug(message);
         }
 
         @Override

@@ -97,7 +97,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      */
     @Override
     protected void logApplicationIsAlive() {
-        log().info("Application {} is running at {}", getName(), getUrl());
+        log.info("Application {} is running at {}", getName(), getUrl());
     }
 
     /**

@@ -142,7 +142,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     @Override
     public void doPrepare() {
-        log().debug("Using configuration {}", getConfiguration());
+        log.debug("Using configuration {}", getConfiguration());
         validateConfiguration();
         createBundle();
         renameApplicationDirectory();
@@ -238,13 +238,13 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         long start = System.currentTimeMillis();
         int startTimeout = getConfiguration().getStartTimeout();
 
-        log().info("Waiting for application to boot for {} seconds", startTimeout);
+        log.info("Waiting for application to boot for {} seconds", startTimeout);
 
         while (System.currentTimeMillis() < start + startTimeout * 1000) {
             try {
                 if (applicationAlive()) {
                     logApplicationIsAlive();
-                    log().debug("Application {} started in {} seconds", getName(), (System.currentTimeMillis() - start) / 1000);
+                    log.debug("Application {} started in {} seconds", getName(), (System.currentTimeMillis() - start) / 1000);
                     return;
                 }
                 Thread.sleep(Math.min(startTimeout, 1000));
@@ -284,7 +284,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             throw new RuntimeException("Id must be set in bundle configuration");
         }
         if (config.getBundle() == null) {
-            log().warn("There is no bundle to be created.");
+            log.warn("There is no bundle to be created.");
         }
         if (config.getTargetDirectory() == null) {
             throw new RuntimeException("Target directory must be set in bundle configuration");

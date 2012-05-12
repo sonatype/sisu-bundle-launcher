@@ -123,7 +123,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
         javaHome.setValue( System.getProperty( "java.home" ) );
         exec.addEnv( javaHome );
 
-        log().debug( "Executing {} with arguments: ", script, arguments );
+        log.debug( "Executing {} with arguments: ", script, arguments );
 
         exec.execute();
     }
