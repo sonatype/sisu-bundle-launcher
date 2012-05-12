@@ -24,6 +24,8 @@ import java.io.File;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
 
+import com.google.common.base.Throwables;
+
 /**
  * {@link MavenArtifactResolver} based {@link BundleResolver}.
  * <p/>
@@ -80,7 +82,7 @@ public class MavenBridgedBundleResolver
             );
             return artifact.getFile();
         } catch (ArtifactResolutionException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw Throwables.propagate( e );
         }
     }
 

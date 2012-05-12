@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.google.common.base.Throwables;
+
 /**
  * Default web bundle implementation.
  *
@@ -111,7 +113,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
             port = portReservationService.reservePort();
             url = new URL(composeApplicationURL());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw Throwables.propagate( e );
         }
     }
 

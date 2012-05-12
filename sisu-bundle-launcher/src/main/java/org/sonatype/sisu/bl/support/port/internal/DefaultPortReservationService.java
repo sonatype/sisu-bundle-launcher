@@ -13,6 +13,7 @@
 package org.sonatype.sisu.bl.support.port.internal;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
 
@@ -73,7 +74,7 @@ public class DefaultPortReservationService implements PortReservationService {
         try {
             server = new ServerSocket(0);
         } catch (IOException e) {
-            throw new RuntimeException(e.getLocalizedMessage(), e);
+            throw Throwables.propagate( e );
         }
 
         Integer portNumber = server.getLocalPort();

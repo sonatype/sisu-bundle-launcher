@@ -14,6 +14,7 @@ package org.sonatype.sisu.bl.internal.support;
 
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import com.google.common.base.Throwables;
 
 /**
  * TODO
@@ -106,13 +107,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
             if (success()) {
                 return;
             }
-            if (failure instanceof RuntimeException) {
-                throw (RuntimeException) failure;
-            }
-            if (failure instanceof Error) {
-                throw (Error) failure;
-            }
-            throw new RuntimeException(failure);
+            throw Throwables.propagate( failure );
         }
 
         @Override
