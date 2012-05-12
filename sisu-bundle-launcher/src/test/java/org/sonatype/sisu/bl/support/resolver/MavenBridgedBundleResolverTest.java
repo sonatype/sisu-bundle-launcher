@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 
 /**
- * TODO
+ * Tests for {@link MavenBridgedBundleResolver}.
  *
  * @since 1.0
  */

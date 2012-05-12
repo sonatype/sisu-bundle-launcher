@@ -18,7 +18,7 @@ import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 
 /**
- * TODO
+ * Tests for {#link BundleLifecycle}.
  *
  * @since 1.0
  */
@@ -82,37 +82,37 @@ public class BundleLifecycleTest
 
         @Override
         public void doPrepare() {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // Do nothing
         }
 
         @Override
         public void doClean() {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // Do nothing
         }
 
         @Override
         public void doStart() {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // Do nothing
         }
 
         @Override
         public void doStop() {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // Do nothing
         }
 
         @Override
         public BundleConfiguration getConfiguration() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override
         public Bundle setConfiguration(final BundleConfiguration configuration) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override
         public boolean isRunning() {
-            return false;  //To change body of implemented methods use File | Settings | File Templates.
+            return false;
         }
 
     }
