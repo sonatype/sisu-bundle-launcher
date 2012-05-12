@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
@@ -102,7 +103,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         try {
             startApplication();
             running = true;
-            runningBundles.add(this);
+            getRunningBundles().add( this );
             waitForBoot();
         } catch (RuntimeException e) {
             doStop();
@@ -125,7 +126,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             } finally {
                 unconfigure();
                 running = false;
-                runningBundles.remove(this);
+                getRunningBundles().remove( this );
             }
         }
     }
@@ -142,7 +143,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     @Override
     public void doPrepare() {
-        log.debug("Using configuration {}", getConfiguration());
+        log.debug( "Using configuration {}", getConfiguration() );
         validateConfiguration();
         createBundle();
         renameApplicationDirectory();
@@ -155,16 +156,28 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         deleteTarget();
     }
 
+
+    protected FileTaskBuilder getFileTasksBuilder() {
+        checkState(fileTasksBuilder != null);
+        return fileTasksBuilder;
+    }
+
+    protected RunningBundles getRunningBundles() {
+        checkState(runningBundles != null);
+        return runningBundles;
+    }
+
     @Override
     public BC getConfiguration() {
         if (this.configuration == null) {
             this.configuration = configurationProvider.get();
             if (configuration.getId() == null) {
-                configuration.setId(name + "-" + UUID.randomUUID());
+                configuration.setId( generateId() );
             }
         }
         return configuration;
     }
+
 
     @Override
     public B setConfiguration(BC configuration) {
@@ -211,6 +224,17 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     }
 
     /**
+     * Generates a random id for application.
+     * @return  generated id
+     *
+     * @since 1.2
+     */
+    protected String generateId()
+    {
+        return name + "-" + UUID.randomUUID();
+    }
+
+    /**
      * Renames application directory that usually has a name that contains the version to a name easy to be used in
      * overlays = application name.
      */
@@ -225,7 +249,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
         if (dirs.length == 1 && new File(config.getTargetDirectory(), dirs[0]).exists()) {
             onDirectory(config.getTargetDirectory()).apply(
-                    fileTasksBuilder.rename(path(dirs[0]))
+                    getFileTasksBuilder().rename(path(dirs[0]))
                             .to(name)
             );
         }
@@ -238,13 +262,14 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         long start = System.currentTimeMillis();
         int startTimeout = getConfiguration().getStartTimeout();
 
-        log.info("Waiting for application to boot for {} seconds", startTimeout);
+        log.info( "Waiting for application to boot for {} seconds", startTimeout );
 
         while (System.currentTimeMillis() < start + startTimeout * 1000) {
             try {
                 if (applicationAlive()) {
                     logApplicationIsAlive();
-                    log.debug("Application {} started in {} seconds", getName(), (System.currentTimeMillis() - start) / 1000);
+                    log.debug( "Application {} started in {} seconds", getName(),
+                               ( System.currentTimeMillis() - start ) / 1000 );
                     return;
                 }
                 Thread.sleep(Math.min(startTimeout, 1000));
@@ -284,7 +309,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             throw new RuntimeException("Id must be set in bundle configuration");
         }
         if (config.getBundle() == null) {
-            log.warn("There is no bundle to be created.");
+            log.warn( "There is no bundle to be created." );
         }
         if (config.getTargetDirectory() == null) {
             throw new RuntimeException("Target directory must be set in bundle configuration");
@@ -296,7 +321,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     private void deleteTarget() {
         onDirectory(getConfiguration().getTargetDirectory()).apply(
-                fileTasksBuilder.delete().directory(path("/"))
+                getFileTasksBuilder().delete().directory(path("/"))
         );
     }
 
@@ -311,12 +336,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         }
         if (bundle.isDirectory()) {
             onDirectory(config.getTargetDirectory()).apply(
-                    fileTasksBuilder.copy().directory(file(bundle))
+                    getFileTasksBuilder().copy().directory(file(bundle))
                             .to().directory(path("/"))
             );
         } else {
             onDirectory(config.getTargetDirectory()).apply(
-                    fileTasksBuilder.expand(file(bundle))
+                    getFileTasksBuilder().expand(file(bundle))
                             .to().directory(path("/"))
             );
         }

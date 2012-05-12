@@ -12,6 +12,8 @@
  */
 package org.sonatype.sisu.bl.support;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.WebBundle;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
@@ -97,7 +99,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      */
     @Override
     protected void logApplicationIsAlive() {
-        log.info("Application {} is running at {}", getName(), getUrl());
+        log.info( "Application {} is running at {}", getName(), getUrl() );
     }
 
     /**
@@ -123,7 +125,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
     @Override
     protected void unconfigure() {
         if (port > 0) {
-            portReservationService.cancelPort(port);
+            getPortReservationService().cancelPort(port);
         }
         port = 0;
         url = null;
@@ -136,6 +138,11 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      */
     protected String composeApplicationURL() {
         return String.format("http://localhost:%s/%s/", getPort(), getName());
+    }
+
+    protected PortReservationService getPortReservationService() {
+        checkState(portReservationService != null);
+        return portReservationService;
     }
 
     /**
