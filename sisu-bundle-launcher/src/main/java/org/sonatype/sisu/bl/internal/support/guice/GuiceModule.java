@@ -20,9 +20,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Named
-@Singleton
 public class GuiceModule
-        extends AbstractModule {
+    extends AbstractModule {
 
     @Override
     protected void configure() {
