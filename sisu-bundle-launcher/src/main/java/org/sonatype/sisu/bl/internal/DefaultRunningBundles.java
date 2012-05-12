@@ -12,18 +12,20 @@
  */
 package org.sonatype.sisu.bl.internal;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import org.sonatype.sisu.bl.Bundle;
-import org.sonatype.sisu.bl.support.RunningBundles;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.sonatype.sisu.bl.Bundle;
+import org.sonatype.sisu.bl.support.RunningBundles;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Sets;
 
 /**
  * Keeps a list of current running bundles.
@@ -39,24 +41,24 @@ public class DefaultRunningBundles
     /**
      * List of running bundles.
      */
-    private Set<Bundle> bundles;
+    private final Set<Bundle> bundles;
 
     @Inject
     public DefaultRunningBundles()
     {
-        bundles = Collections.synchronizedSet( new HashSet<Bundle>() );
+        bundles = Collections.synchronizedSet( Sets.<Bundle>newHashSet() );
     }
 
     @Override
     public void add( final Bundle bundle )
     {
-        bundles.add( bundle );
+        bundles.add( checkNotNull( bundle ) );
     }
 
     @Override
     public void remove( final Bundle bundle )
     {
-        bundles.remove( bundle );
+        bundles.remove( checkNotNull( bundle ) );
     }
 
     @Override
@@ -68,21 +70,17 @@ public class DefaultRunningBundles
     @Override
     public Bundle[] get( final Class<?> bundleType )
     {
-        if ( bundleType==null ) {
-             return get();
-        }
-        else {
-            final Collection<Bundle> filtered = Collections2.filter( bundles, new Predicate<Bundle>()
+        checkNotNull( bundleType );
+        final Collection<Bundle> filtered = Collections2.filter( bundles, new Predicate<Bundle>()
+        {
+            @Override
+            public boolean apply( final Bundle input )
             {
-                @Override
-                public boolean apply( final Bundle input )
-                {
-                    return bundleType.isInstance( input );
-                }
+                return bundleType.isInstance( input );
+            }
 
-            } );
-            return filtered.toArray( new Bundle[filtered.size()] );
-        }
+        } );
+        return filtered.toArray( new Bundle[filtered.size()] );
     }
 
 }
