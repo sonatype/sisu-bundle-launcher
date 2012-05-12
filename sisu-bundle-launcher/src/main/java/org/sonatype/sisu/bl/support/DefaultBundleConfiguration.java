@@ -122,7 +122,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T setId(final String id) {
         this.id = id;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -141,7 +141,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T setBundle(File bundle) {
         this.bundle = bundle;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -160,7 +160,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T setTargetDirectory(File targetDirectory) {
         this.targetDirectory = targetDirectory;
-        return (T) this;
+        return self();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         if (overlays != null) {
             this.overlays.addAll(overlays);
         }
-        return (T) this;
+        return self();
     }
 
     @Override
@@ -185,7 +185,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T addOverlays(FileTask... overlays) {
         this.overlays.addAll(Arrays.asList(overlays));
-        return (T) this;
+        return self();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T setStartTimeout(final Integer startTimeout) {
         this.startTimeout = startTimeout;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -222,7 +222,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
         this.debugPort = checkNotNull(debugPort);
         this.suspendOnStart = checkNotNull(suspendOnStart);
-        return (T) this;
+        return self();
     }
 
     @Override
@@ -233,7 +233,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Override
     public T setSystemProperty(String key, String value) {
         systemProperties.put(key,value);
-        return (T) this;
+        return self();
     }
 
     /**
@@ -255,6 +255,12 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     @Inject
     protected void setTargetDirectoryResolver(final @Nullable TargetDirectoryResolver targetDirectoryResolver) {
         this.targetDirectoryResolver = targetDirectoryResolver;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T self()
+    {
+        return (T) this;
     }
 
     @Override
