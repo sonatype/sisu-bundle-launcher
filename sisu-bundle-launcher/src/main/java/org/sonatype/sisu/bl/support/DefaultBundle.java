@@ -306,6 +306,30 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     }
 
     /**
+     * Creates application in target directory by unpacking the bundle or coping it if bundle is a directory.
+     *
+     * @since 1.2
+     */
+    protected void createBundle() {
+        BundleConfiguration config = getConfiguration();
+        File bundle = config.getBundle();
+        if (bundle == null) {
+            return;
+        }
+        if (bundle.isDirectory()) {
+            onDirectory(config.getTargetDirectory()).apply(
+                getFileTasksBuilder().copy().directory(file(bundle))
+                    .to().directory(path("/"))
+            );
+        } else {
+            onDirectory(config.getTargetDirectory()).apply(
+                getFileTasksBuilder().expand( file( bundle ) )
+                    .to().directory(path("/"))
+            );
+        }
+    }
+
+    /**
      * Validates configuration:<br/>
      * - id is set
      * - bundle is set<br/>
@@ -333,28 +357,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         onDirectory(getConfiguration().getTargetDirectory()).apply(
                 getFileTasksBuilder().delete().directory(path("/"))
         );
-    }
-
-    /**
-     * Creates application in target directory by unpacking the bundle or coping it if bundle is a directory.
-     */
-    private void createBundle() {
-        BundleConfiguration config = getConfiguration();
-        File bundle = config.getBundle();
-        if (bundle == null) {
-            return;
-        }
-        if (bundle.isDirectory()) {
-            onDirectory(config.getTargetDirectory()).apply(
-                    getFileTasksBuilder().copy().directory(file(bundle))
-                            .to().directory(path("/"))
-            );
-        } else {
-            onDirectory(config.getTargetDirectory()).apply(
-                    getFileTasksBuilder().expand( file( bundle ) )
-                            .to().directory(path("/"))
-            );
-        }
     }
 
     /**
