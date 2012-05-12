@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.support.RunningBundles;
+import org.sonatype.sisu.goodies.common.ComponentSupport;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
@@ -35,6 +36,7 @@ import com.google.common.collect.Sets;
 @Named
 @Singleton
 public class DefaultRunningBundles
+    extends ComponentSupport
     implements RunningBundles
 {
 
@@ -53,12 +55,14 @@ public class DefaultRunningBundles
     public void add( final Bundle bundle )
     {
         bundles.add( checkNotNull( bundle ) );
+        log.debug( "Added bundle: {}", bundle );
     }
 
     @Override
     public void remove( final Bundle bundle )
     {
         bundles.remove( checkNotNull( bundle ) );
+        log.debug( "Removed bundle: {}", bundle );
     }
 
     @Override
