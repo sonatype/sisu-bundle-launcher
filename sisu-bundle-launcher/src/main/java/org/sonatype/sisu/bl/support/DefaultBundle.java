@@ -160,7 +160,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         if (this.configuration == null) {
             this.configuration = configurationProvider.get();
             if (configuration.getId() == null) {
-                configuration.setId(name + "-" + UUID.randomUUID().toString());
+                configuration.setId(name + "-" + UUID.randomUUID());
             }
         }
         return configuration;
