@@ -13,9 +13,10 @@
 package org.sonatype.sisu.bl.support;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.sonatype.sisu.bl.WebBundleConfiguration.RANDOM_PORT;
 
-import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.WebBundle;
+import org.sonatype.sisu.bl.WebBundleConfiguration;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
 
 import javax.inject.Inject;
@@ -32,9 +33,9 @@ import com.google.common.base.Throwables;
  * @since 1.0
  */
 @Named
-public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleConfiguration>
-        extends DefaultBundle<WB, BC>
-        implements WebBundle<WB, BC> {
+public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBundleConfiguration>
+        extends DefaultBundle<WB, WBC>
+        implements WebBundle<WB, WBC> {
 
 
     /**
@@ -110,22 +111,29 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      *                          configuration file
      */
     @Override
-    protected void configure() throws RuntimeException {
-        try {
+    protected void configure()
+        throws Exception
+    {
+        if ( getConfiguration().getPort() == RANDOM_PORT )
+        {
             port = portReservationService.reservePort();
-            url = new URL(composeApplicationURL());
-        } catch (IOException e) {
-            throw Throwables.propagate( e );
         }
+        else
+        {
+            port = getConfiguration().getPort();
+        }
+        url = new URL( composeApplicationURL() );
     }
 
     /**
      * Cancels reserved port.
      */
     @Override
-    protected void unconfigure() {
-        if (port > 0) {
-            getPortReservationService().cancelPort(port);
+    protected void unconfigure()
+    {
+        if ( getConfiguration().getPort() == RANDOM_PORT && port > 0 )
+        {
+            getPortReservationService().cancelPort( port );
         }
         port = 0;
         url = null;

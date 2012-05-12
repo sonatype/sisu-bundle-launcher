@@ -106,7 +106,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
 
     @Inject
     public DefaultBundleConfiguration() {
-        setId(null);
         setOverlays();
 
         debugPort = 0;
@@ -258,7 +257,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     }
 
     @SuppressWarnings("unchecked")
-    private T self()
+    protected T self()
     {
         return (T) this;
     }

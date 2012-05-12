@@ -32,6 +32,8 @@ import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
+import com.google.common.base.Throwables;
+
 /**
  * Default bundle implementation.
  *
@@ -147,7 +149,14 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         validateConfiguration();
         createBundle();
         renameApplicationDirectory();
-        configure();
+        try
+        {
+            configure();
+        }
+        catch ( Exception e )
+        {
+            throw Throwables.propagate( e );
+        }
         applyOverlays();
     }
 
@@ -203,7 +212,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     /**
      * Template method for subclasses to perform configuration tasks when bundle is starting, if necessary.
      */
-    protected void configure() {
+    protected void configure()
+        throws Exception {
         // template method
     }
 
@@ -249,7 +259,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
         if (dirs.length == 1 && new File(config.getTargetDirectory(), dirs[0]).exists()) {
             onDirectory(config.getTargetDirectory()).apply(
-                    getFileTasksBuilder().rename(path(dirs[0]))
+                    getFileTasksBuilder().rename( path( dirs[0] ) )
                             .to(name)
             );
         }
@@ -341,7 +351,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             );
         } else {
             onDirectory(config.getTargetDirectory()).apply(
-                    getFileTasksBuilder().expand(file(bundle))
+                    getFileTasksBuilder().expand( file( bundle ) )
                             .to().directory(path("/"))
             );
         }

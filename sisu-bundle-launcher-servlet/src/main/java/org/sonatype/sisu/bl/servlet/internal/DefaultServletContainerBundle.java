@@ -59,6 +59,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
 
     @Override
     protected void configure()
+        throws Exception
     {
         super.configure();
         installWARs();

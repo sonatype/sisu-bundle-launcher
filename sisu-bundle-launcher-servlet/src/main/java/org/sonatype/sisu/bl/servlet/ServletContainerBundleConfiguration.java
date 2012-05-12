@@ -14,7 +14,7 @@ package org.sonatype.sisu.bl.servlet;
 
 import java.util.List;
 
-import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.WebBundleConfiguration;
 
 /**
  * TODO
@@ -22,7 +22,7 @@ import org.sonatype.sisu.bl.BundleConfiguration;
  * @since 1.0
  */
 public interface ServletContainerBundleConfiguration<SCBC extends ServletContainerBundleConfiguration>
-    extends BundleConfiguration<SCBC>
+    extends WebBundleConfiguration<SCBC>
 {
 
     List<WAR> getWARs();

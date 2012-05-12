@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.sonatype.sisu.bl.servlet.ServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.WAR;
-import org.sonatype.sisu.bl.support.DefaultBundleConfiguration;
+import org.sonatype.sisu.bl.support.DefaultWebBundleConfiguration;
 
 /**
  * TODO
@@ -26,7 +26,7 @@ import org.sonatype.sisu.bl.support.DefaultBundleConfiguration;
  * @since 1.0
  */
 public class DefaultServletContainerBundleConfiguration<SCBC extends ServletContainerBundleConfiguration>
-    extends DefaultBundleConfiguration<SCBC>
+    extends DefaultWebBundleConfiguration<SCBC>
     implements ServletContainerBundleConfiguration<SCBC>
 {
 
