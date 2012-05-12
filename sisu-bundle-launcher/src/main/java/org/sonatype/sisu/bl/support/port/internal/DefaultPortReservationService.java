@@ -38,7 +38,7 @@ public class DefaultPortReservationService implements PortReservationService {
     private final Set<Integer> ports = Sets.newHashSet();
 
     @Override
-    public Integer reservePort() {
+    public int reservePort() {
         int port = 0;
         int attempts = 0;
         boolean searchingForPort = true;
@@ -55,7 +55,7 @@ public class DefaultPortReservationService implements PortReservationService {
     }
 
     @Override
-    public void cancelPort(Integer port) {
+    public void cancelPort(int port) {
         Preconditions.checkNotNull(port);
         synchronized (ports) {
             if (!ports.remove(port)) {
@@ -69,7 +69,7 @@ public class DefaultPortReservationService implements PortReservationService {
      *
      * @return a free system port at the time this method was called.
      */
-    protected Integer findFreePort() {
+    protected int findFreePort() {
         ServerSocket server;
         try {
             server = new ServerSocket(0);

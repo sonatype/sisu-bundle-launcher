@@ -24,7 +24,7 @@ public interface PortReservationService {
      *
      * @return a free port at time of method call.
      */
-    Integer reservePort();
+    int reservePort();
 
     /**
      * Cancel the reservation of the specified port, indicating the service shall make it available for future reservations.
@@ -32,6 +32,6 @@ public interface PortReservationService {
      * @param port the port to unreserve
      * @throws IllegalArgumentException if the specified port has not been reserved
      */
-    void cancelPort(Integer port);
+    void cancelPort(int port);
 
 }
