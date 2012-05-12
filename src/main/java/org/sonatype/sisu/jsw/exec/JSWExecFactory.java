@@ -33,4 +33,15 @@ public interface JSWExecFactory
      */
     JSWExec create( File binDir, String appName );
 
+    /**
+     * Creates a {@link JSWExec} in an environment that is using a command monitor.
+     *
+     * @param binDir  the bin directory where the jsw control scripts are located
+     * @param appName the app name managed by JSW
+     * @param monitorPort monitor port
+     * @return created {@link JSWExec}
+     * @since 1.0
+     */
+    JSWExec create( File binDir, String appName, int monitorPort );
+
 }

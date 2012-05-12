@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.support.AntHelper;
 import org.sonatype.sisu.jsw.exec.JSWExec;
+import org.sonatype.sisu.jsw.monitor.CommandMonitorTalker;
+import org.sonatype.sisu.jsw.monitor.CommandMonitorThread;
 
 /**
  * Default {@link JSWExec} implementation.
@@ -51,23 +53,27 @@ class JSWExecImpl
 
     private String appName;
 
+    private final int monitorPort;
+
     /**
      * Constructor.
      *
-     * @param bundle  bundle directory.
-     * @param appName app name managed by JSW
-     * @param ant     ANT helper
-     * @throws NullPointerException if params are null
-     * @throws RuntimeException     if the JSW exec script cannot be found for this platform
+     * @param bundle      bundle directory.
+     * @param appName     app name managed by JSW
+     * @param monitorPort
+     * @param ant         ANT helper  @throws NullPointerException if params are null
+     * @throws RuntimeException if the JSW exec script cannot be found for this platform
      * @since 1.0
      */
-    public JSWExecImpl( final File bundle, final String appName, final AntHelper ant, FileTaskBuilder fileTaskBuilder )
+    public JSWExecImpl( final File bundle, final String appName, final int monitorPort, final AntHelper ant,
+                        FileTaskBuilder fileTaskBuilder )
         throws RuntimeException
     {
         checkNotNull( bundle );
+        this.appName = checkNotNull( appName );
+        this.monitorPort = monitorPort;
         this.ant = checkNotNull( ant );
         this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
-        this.appName = checkNotNull( appName );
 
         if ( !bundle.isDirectory() )
         {
@@ -142,6 +148,11 @@ class JSWExecImpl
      */
     public JSWExecImpl start()
     {
+        if ( monitorPort > 0 )
+        {
+            CommandMonitorTalker.installStopShutdownHook( monitorPort );
+        }
+
         boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
         if ( windows )
         {
@@ -163,7 +174,18 @@ class JSWExecImpl
     public JSWExecImpl stop()
     {
         boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
-        if ( !windows )
+        if ( windows )
+        {
+            if ( monitorPort > 0 )
+            {
+                new CommandMonitorTalker( monitorPort ).send( CommandMonitorThread.STOP_COMMAND );
+            }
+            else
+            {
+                logger.warn( "JSW not stopped as on windows a command monitor is used but monitor port was not set" );
+            }
+        }
+        else
         {
             executeJSWScript( "stop", false );
         }
@@ -200,7 +222,7 @@ class JSWExecImpl
         arg.setValue( command );
         exec.setDir( script.getParentFile() );
         logger.debug( "Executing {} script cmd {} {}",
-                     new Object[]{ appName, this.controlScriptCanonicalPath, command } );
+                      new Object[]{ appName, this.controlScriptCanonicalPath, command } );
         exec.execute();
     }
 
