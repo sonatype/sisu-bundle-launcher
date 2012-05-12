@@ -26,7 +26,6 @@ public interface TargetDirectoryResolver {
      * Resolves target directory.
      *
      * @return directory where application bundle to be run will be exploded
-     * @since 1.0
      */
     File resolve();
 

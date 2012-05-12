@@ -24,7 +24,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * configuration.
      *
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     B start();
 
@@ -32,7 +31,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * Stops a running application created from this bundle.
      *
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     B stop();
 
@@ -41,7 +39,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * overlays. The resulted directory should be able to just be started by bundle specific launcher.
      *
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     B prepare();
 
@@ -49,7 +46,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * Cleans up filesystem, basically removing the target directory.
      *
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     B cleanup() throws Exception;
 
@@ -57,7 +53,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * Returns bundle configuration.
      *
      * @return bundle configuration, always a non null value
-     * @since 1.0
      */
     BC getConfiguration();
 
@@ -66,7 +61,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      *
      * @param configuration configuration to be used. Can be null, case when a default configuration will be used
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     B setConfiguration(BC configuration);
 
@@ -74,7 +68,6 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      * Returns true if application is running and false otherwise.
      *
      * @return true if application is running and false otherwise.
-     * @since 1.0
      */
     boolean isRunning();
 

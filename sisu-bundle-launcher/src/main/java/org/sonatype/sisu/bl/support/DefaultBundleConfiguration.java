@@ -104,11 +104,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      */
     private final Map<String,String> systemProperties;
 
-    /**
-     * Constructor.
-     *
-     * @since 1.0
-     */
     @Inject
     public DefaultBundleConfiguration() {
         setId(null);
@@ -119,21 +114,11 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         systemProperties = Maps.newHashMap();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public String getId() {
         return id;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setId(final String id) {
         this.id = id;
@@ -144,8 +129,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * Resolves the bundle (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.BundleResolver} (if present).
      * <p/>
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     public File getBundle() {
@@ -155,11 +138,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         return bundle;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setBundle(File bundle) {
         this.bundle = bundle;
@@ -170,8 +148,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * Resolves the target directory (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver} (if present).
      * <p/>
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     public File getTargetDirectory() {
@@ -181,32 +157,17 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         return targetDirectory;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setTargetDirectory(File targetDirectory) {
         this.targetDirectory = targetDirectory;
         return (T) this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public List<FileTask> getOverlays() {
         return overlays;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setOverlays(List<FileTask> overlays) {
         this.overlays = new ArrayList<FileTask>();
@@ -216,42 +177,22 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         return (T) this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setOverlays(FileTask... overlays) {
         return setOverlays(Arrays.asList(overlays));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T addOverlays(FileTask... overlays) {
         this.overlays.addAll(Arrays.asList(overlays));
         return (T) this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Integer getStartTimeout() {
         return startTimeout;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setStartTimeout(final Integer startTimeout) {
         this.startTimeout = startTimeout;
@@ -261,39 +202,22 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     /**
      * Sets number of seconds to wait for application to boot. If injected will use the timeout bounded to
      * {@link #START_TIMEOUT} with a default of {@link #START_TIMEOUT_DEFAULT} seconds.
-     *
-     * @since 1.0
      */
     @Inject
     protected void configureStartTimeout(final @Named("${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}") Integer startTimeout) {
         setStartTimeout(startTimeout);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Integer getDebugPort() {
         return debugPort;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Boolean isSuspendOnStart() {
         return suspendOnStart;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
         this.debugPort = checkNotNull(debugPort);
@@ -301,21 +225,11 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         return (T) this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Map<String, String> getSystemProperties() {
         return systemProperties;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public T setSystemProperty(String key, String value) {
         systemProperties.put(key,value);
@@ -326,7 +240,6 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * Sets an optional bundle resolver.
      *
      * @param bundleResolver optional bundle resolver to be used to resolve application bundle if bundle not set
-     * @since 1.0
      */
     @Inject
     protected void setBundleResolver(final @Nullable BundleResolver bundleResolver) {
@@ -338,18 +251,12 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      *
      * @param targetDirectoryResolver optional target directory resolver to be used to resolve directory where
      *                                application bundle is exploded if target directory is not set
-     * @since 1.0
      */
     @Inject
     protected void setTargetDirectoryResolver(final @Nullable TargetDirectoryResolver targetDirectoryResolver) {
         this.targetDirectoryResolver = targetDirectoryResolver;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

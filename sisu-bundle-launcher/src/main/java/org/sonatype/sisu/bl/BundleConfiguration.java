@@ -29,7 +29,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns bundle identity.
      *
      * @return bundle identity
-     * @since 1.0
      */
     String getId();
 
@@ -38,7 +37,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param id bundle identity
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setId(String id);
 
@@ -46,7 +44,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns the bundle assembly (zip or tar).
      *
      * @return bundle assembly file
-     * @since 1.0
      */
     File getBundle();
 
@@ -55,7 +52,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param bundle a zip/jar/tar file or a directory.
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setBundle(File bundle);
 
@@ -63,7 +59,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns the target directory to be used for exploding the bundle.
      *
      * @return target directory to be used for exploding the bundle.
-     * @since 1.0
      */
     File getTargetDirectory();
 
@@ -72,7 +67,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param targetDirectory directory where bundle will be exploded
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setTargetDirectory(File targetDirectory);
 
@@ -80,7 +74,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns overlays to be applied over exploded bundle.
      *
      * @return overlays to be applied over exploded bundle, always a non null value (eventually empty)
-     * @since 1.0
      */
     List<FileTask> getOverlays();
 
@@ -91,7 +84,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param overlays overlays to be applied over exploded bundle. Can be null, case when an empty list will be
      *                 used
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setOverlays(List<FileTask> overlays);
 
@@ -101,7 +93,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param overlays overlays to be applied over exploded bundle
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setOverlays(FileTask... overlays);
 
@@ -110,7 +101,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param overlays overlays to be applied over exploded bundle
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T addOverlays(FileTask... overlays);
 
@@ -118,7 +108,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns the number of seconds to wait for application to start (boot).
      *
      * @return the number of seconds to wait for application to start (boot)
-     * @since 1.0
      */
     Integer getStartTimeout();
 
@@ -127,7 +116,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      *
      * @param timeout the number of seconds to wait for application to start (boot)
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setStartTimeout(Integer timeout);
 
@@ -135,7 +123,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns debugging port.
      *
      * @return debugging port if debugging is enabled, zero otherwise
-     * @since 1.0
      */
     Integer getDebugPort();
 
@@ -143,7 +130,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns debugging suspend status.
      *
      * @return true if debugging is enabled and it should suspend on start
-     * @since 1.0
      */
     Boolean isSuspendOnStart();
 
@@ -153,7 +139,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param debugPort      debugging port
      * @param suspendOnStart if debugging should suspend execution on start
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T enableDebugging(Integer debugPort, Boolean suspendOnStart);
 
@@ -161,7 +146,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Returns system properties.
      *
      * @return system properties map. Never null.
-     * @since 1.0
      */
     Map<String,String> getSystemProperties();
 
@@ -171,7 +155,6 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param key system property key
      * @param value system property value
      * @return itself, for usage in fluent api
-     * @since 1.0
      */
     T setSystemProperty(String key, String value);
 

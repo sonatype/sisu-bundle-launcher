@@ -66,7 +66,6 @@ public class DefaultPortReservationService implements PortReservationService {
     /**
      * Find a random free system port.
      *
-     * @param portNumber
      * @return a free system port at the time this method was called.
      */
     protected Integer findFreePort() {

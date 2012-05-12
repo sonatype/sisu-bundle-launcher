@@ -55,7 +55,6 @@ public class MavenBridgedBundleResolver
      * @param bundleCoordinates Maven artifact coordinates of bundle to be resolved. If injected will use the
      *                          coordinates bounded to {@link #BUNDLE_COORDINATES}
      * @param artifactResolver  artifact resolver to be used to resolve the bundle
-     * @since 1.0
      */
     @Inject
     public MavenBridgedBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
@@ -69,8 +68,6 @@ public class MavenBridgedBundleResolver
      * Resolves bundle specified by Maven artifact coordinates using provided {@link MavenArtifactResolver}.
      * <p/>
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     public File resolve() {

@@ -82,7 +82,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Constructor. Creates the bundle with a default configuration and a not running state.
      *
      * @param name application name
-     * @since 1.0
      */
     @Inject
     public DefaultBundle(final String name) {
@@ -97,7 +96,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * @throws Exception if a problem occurred during startup of application, wait period or it could not determine if
      *                   application is started in specified timeout
      * @see Bundle#start()
-     * @since 1.0
      */
     @Override
     public void doStart() {
@@ -118,7 +116,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * {@inheritDoc}
      *
      * @see Bundle#stop()
-     * @since 1.0
      */
     @Override
     public void doStop() {
@@ -142,8 +139,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * - applying overlays
      * <p/>
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     public void doPrepare() {
@@ -155,21 +150,11 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         applyOverlays();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public void doClean() {
         deleteTarget();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public BC getConfiguration() {
         if (this.configuration == null) {
@@ -181,22 +166,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         return configuration;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public B setConfiguration(BC configuration) {
         this.configuration = configuration;
         return (B) this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public boolean isRunning() {
         return running;
@@ -204,22 +179,16 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
     /**
      * Starts the application.
-     *
-     * @since 1.0
      */
     protected abstract void startApplication();
 
     /**
      * Stops the application.
-     *
-     * @since 1.0
      */
     protected abstract void stopApplication();
 
     /**
      * Template method for subclasses to perform configuration tasks when bundle is starting, if necessary.
-     *
-     * @since 1.0
      */
     protected void configure() {
         // template method
@@ -227,8 +196,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
     /**
      * Template method for subclasses to perform un-configuration tasks when bundle is stopping, if necessary.
-     *
-     * @since 1.0
      */
     protected void unconfigure() {
         // template method
@@ -238,7 +205,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Checks if application is alive.
      *
      * @return true if application is alive, false otherwise
-     * @since 1.0
      */
     protected boolean applicationAlive() {
         return true;
@@ -291,8 +257,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
     /**
      * Template method to eventually log the fact that application is alive.
-     *
-     * @since 1.0
      */
     protected void logApplicationIsAlive() {
         //template method
@@ -370,11 +334,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         onDirectory(config.getTargetDirectory()).apply(overlays);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

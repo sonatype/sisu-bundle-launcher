@@ -54,28 +54,17 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      * Constructor. Creates the bundle with a default configuration.
      *
      * @param name application name
-     * @since 1.0
      */
     @Inject
     public DefaultWebBundle(final String name) {
         super(name);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public int getPort() {
         return port;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public URL getUrl() {
         return url;
@@ -85,7 +74,6 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      * Checks if application is alive by accessing state provided URL and checking that it responds with 200 OK.
      *
      * @return true if application is alive, false otherwise
-     * @since 1.0
      */
     protected boolean applicationAlive() {
         try {
@@ -104,8 +92,6 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
      * Logs URL where application is running.
      * <p/>
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     protected void logApplicationIsAlive() {
@@ -142,10 +128,9 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
     }
 
     /**
-     * Composes application URL in format {@code http://localhost:<port>/<application-name>}.
+     * Composes application URL in format {@code http://localhost:<port>/<name>}.
      *
      * @return application URL
-     * @since 1.0
      */
     protected String composeApplicationURL() {
         return String.format("http://localhost:%s/%s/", port, getName());
@@ -153,8 +138,6 @@ public abstract class DefaultWebBundle<WB extends WebBundle, BC extends BundleCo
 
     /**
      * {@inheritDoc}
-     *
-     * @since 1.0
      */
     @Override
     public String toString() {

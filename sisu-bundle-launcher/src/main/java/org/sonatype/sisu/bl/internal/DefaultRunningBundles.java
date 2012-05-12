@@ -47,44 +47,24 @@ public class DefaultRunningBundles
         bundles = Collections.synchronizedSet( new HashSet<Bundle>() );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public void add( final Bundle bundle )
     {
         bundles.add( bundle );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public void remove( final Bundle bundle )
     {
         bundles.remove( bundle );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Bundle[] get()
     {
         return bundles.toArray( new Bundle[bundles.size()] );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.0
-     */
     @Override
     public Bundle[] get( final Class<?> bundleType )
     {

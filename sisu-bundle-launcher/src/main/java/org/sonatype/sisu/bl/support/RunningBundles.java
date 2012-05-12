@@ -26,7 +26,6 @@ public interface RunningBundles
      * Adds a running bundle to the list of running bundles.
      *
      * @param bundle to be added
-     * @since 1.0
      */
     void add( Bundle bundle );
 
@@ -35,7 +34,6 @@ public interface RunningBundles
      * If bundle was not previously added, returns silently.
      *
      * @param bundle to be removed
-     * @since 1.0
      */
     void remove( Bundle bundle );
 
@@ -43,7 +41,6 @@ public interface RunningBundles
      * Returns a copy of the list of running bundles at the time of call.
      *
      * @return running bundles
-     * @since 1.0
      */
     Bundle[] get();
 
@@ -52,7 +49,6 @@ public interface RunningBundles
      *
      * @param bundleType type of the bundles to be included
      * @return running bundles
-     * @since 1.0
      */
     Bundle[] get( Class<?> bundleType );
 

@@ -26,7 +26,6 @@ public interface WebBundle<WB extends WebBundle, BC extends BundleConfiguration>
      * Returns the port (random generated) application is running on. If bundle is not running return 0 (zero).
      *
      * @return the port (random generated) application is running on. 0 (zero) if bundle is not running.
-     * @since 1.0
      */
     int getPort();
 
@@ -34,7 +33,6 @@ public interface WebBundle<WB extends WebBundle, BC extends BundleConfiguration>
      * Returns the URL application is available at. If bundle is not running returns null.
      *
      * @return URL application is available at. Null if bundle is not running.
-     * @since 1.0
      */
     URL getUrl();
 

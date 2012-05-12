@@ -26,7 +26,6 @@ public interface BundleResolver {
      * Resolves bundle.
      *
      * @return a zip/jar/tar file or a directory
-     * @since 1.0
      */
     File resolve();
 
