@@ -13,6 +13,7 @@
 
 package org.sonatype.sisu.jsw.exec.internal;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
@@ -70,6 +71,8 @@ class JSWExecImpl
         throws RuntimeException
     {
         checkNotNull( bundle );
+        checkArgument( monitorPort > 0);
+
         this.appName = checkNotNull( appName );
         this.monitorPort = monitorPort;
         this.ant = checkNotNull( ant );
@@ -148,21 +151,10 @@ class JSWExecImpl
      */
     public JSWExecImpl start()
     {
-        if ( monitorPort > 0 )
-        {
-            CommandMonitorTalker.installStopShutdownHook( monitorPort );
-        }
+        CommandMonitorTalker.installStopShutdownHook( monitorPort );
 
-        boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
-        if ( windows )
-        {
-            //need console since on windows we would first need a service installed if start cmd was used
-            executeJSWScript( "console" );
-        }
-        else
-        {
-            executeJSWScript( "start" );
-        }
+        executeJSWScript( "console" );
+
         return this;
     }
 
@@ -173,22 +165,8 @@ class JSWExecImpl
      */
     public JSWExecImpl stop()
     {
-        boolean windows = Os.isFamily( Os.FAMILY_WINDOWS );
-        if ( windows )
-        {
-            if ( monitorPort > 0 )
-            {
-                new CommandMonitorTalker( monitorPort ).send( CommandMonitorThread.STOP_COMMAND );
-            }
-            else
-            {
-                logger.warn( "JSW not stopped as on windows a command monitor is used but monitor port was not set" );
-            }
-        }
-        else
-        {
-            executeJSWScript( "stop", false );
-        }
+        new CommandMonitorTalker( monitorPort ).send( CommandMonitorThread.STOP_COMMAND );
+
         return this;
     }
 

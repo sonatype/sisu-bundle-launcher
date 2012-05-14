@@ -62,14 +62,8 @@ class JSWExecFactoryImpl
     /**
      * {@inheritDoc}
      *
-     * @since 1.0
+     * @since 1.2
      */
-    @Override
-    public JSWExec create( final File binDir, final String appName )
-    {
-        return new JSWExecImpl( binDir, appName, 0, antHelper, fileTaskBuilder );
-    }
-
     @Override
     public JSWExec create( final File binDir, final String appName, final int monitorPort )
     {
