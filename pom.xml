@@ -68,6 +68,7 @@
     <module>sisu-bundle-launcher</module>
     <module>sisu-bundle-launcher-servlet</module>
     <module>sisu-bundle-launcher-tomcat</module>
+    <module>sisu-jsw-utils</module>
   </modules>
 
   <dependencyManagement>
@@ -113,6 +114,11 @@
         <artifactId>ant</artifactId>
         <version>1.8.2</version>
       </dependency>
+      <dependency>
+        <groupId>tanukisoft</groupId>
+        <artifactId>wrapper</artifactId>
+        <version>3.2.3</version>
+      </dependency>
 
       <dependency>
         <groupId>org.sonatype.sisu.litmus</groupId>
@@ -126,6 +132,7 @@
         <version>1.0.0</version>
         <scope>test</scope>
       </dependency>
+
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher</artifactId>
@@ -134,6 +141,16 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-servlet</artifactId>
+        <version>1.2-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.sisu</groupId>
+        <artifactId>sisu-file-tasks</artifactId>
+        <version>1.2-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.sisu</groupId>
+        <artifactId>sisu-jsw-utils</artifactId>
         <version>1.2-SNAPSHOT</version>
       </dependency>
     </dependencies>
