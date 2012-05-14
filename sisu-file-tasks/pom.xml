@@ -17,252 +17,38 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.forge</groupId>
-    <artifactId>forge-parent</artifactId>
-    <version>11</version>
+    <groupId>org.sonatype.sisu</groupId>
+    <artifactId>sisu-bundle-launcher-aggregator</artifactId>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.sonatype.sisu</groupId>
   <artifactId>sisu-file-tasks</artifactId>
   <name>Sisu File Tasks</name>
-  <version>1.1-SNAPSHOT</version>
-
-  <url>https://github.com/sonatype/sisu-file-tasks</url>
-
-  <organization>
-    <name>Sonatype, Inc.</name>
-    <url>http://www.sonatype.com/</url>
-  </organization>
-
-  <scm>
-    <connection>scm:git:git://github.com/sonatype/sisu-file-tasks.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/sonatype/sisu-file-tasks.git</developerConnection>
-    <url>https://github.com/sonatype/sisu-file-tasks</url>
-  </scm>
-
-  <ciManagement>
-    <system>Hudson</system>
-    <url>https://builds.sonatype.org/job/sisu-file-tasks</url>
-  </ciManagement>
-
-  <!--<issueManagement>-->
-  <!--<system>Jira</system>-->
-  <!--<url>https://issues.sonatype.org/browse/???</url>-->
-  <!--</issueManagement>-->
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-    <build.timestamp>${maven.build.timestamp}</build.timestamp>
-    <build.number />
-
-    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-  </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.2</version>
     </dependency>
-
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
       <artifactId>sisu-inject-bean</artifactId>
-      <version>2.2.3</version>
     </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>r09</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.8.2</version>
     </dependency>
 
     <dependency>
       <groupId>org.sonatype.sisu.litmus</groupId>
       <artifactId>litmus-testsupport</artifactId>
-      <version>1.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
-  <build>
-    <defaultGoal>install</defaultGoal>
-
-    <resources>
-      <resource>
-        <directory>${project.basedir}/src/main/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-
-      <resource>
-        <directory>${project.basedir}/src/main/filtered-resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-    </resources>
-
-    <testResources>
-      <testResource>
-        <directory>${project.basedir}/src/test/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </testResource>
-
-      <testResource>
-        <directory>${project.basedir}/src/test/filtered-resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </testResource>
-    </testResources>
-
-    <pluginManagement>
-      <plugins>
-        <!--
-        mvn license:format -N
-        If its a new year, update the year range in the header.txt file
-        -->
-        <plugin>
-          <groupId>com.mycila.maven-license-plugin</groupId>
-          <artifactId>maven-license-plugin</artifactId>
-          <configuration>
-            <aggregate>true</aggregate>
-            <strictCheck>true</strictCheck>
-            <header>${project.basedir}/header.txt</header>
-            <useDefaultExcludes>false</useDefaultExcludes>
-            <includes>
-              <include>**/pom.xml</include>
-              <include>**/*.xml</include>
-              <include>**/*.xsd</include>
-              <include>**/*.xjb</include>
-              <include>**/*.properties</include>
-              <include>**/*.ini</include>
-              <include>**/*.java</include>
-              <include>**/*.groovy</include>
-              <include>**/*.scala</include>
-              <include>**/*.aj</include>
-              <include>**/*.js</include>
-              <include>**/*.css</include>
-              <include>**/*.help</include>
-              <include>**/*.proto</include>
-              <include>**/*.sm</include>
-              <include>**/*.bat</include>
-            </includes>
-            <excludes>
-              <exclude>**/target/**</exclude>
-              <exclude>**/.*/**</exclude>
-              <exclude>**/Symlink.java</exclude>
-            </excludes>
-            <mapping>
-              <scala>SLASHSTAR_STYLE</scala>
-              <java>SLASHSTAR_STYLE</java>
-              <xjb>XML_STYLE</xjb>
-              <proto>DOUBLESLASH_STYLE</proto>
-              <sm>DOUBLESLASH_STYLE</sm>
-              <help>SCRIPT_STYLE</help>
-              <ini>SCRIPT_STYLE</ini>
-            </mapping>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <id>checks</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <version>[3.0,)</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>[1.6,)</version>
-                </requireJavaVersion>
-                <bannedDependencies>
-                  <searchTransitive>true</searchTransitive>
-                  <excludes>
-                    <!-- Keep junit out, use junit-dep instead -->
-                    <exclude>junit:junit</exclude>
-                    <!-- Keep all JCL out, use jcl-over-slf4j instead -->
-                    <exclude>commons-logging:commons-logging</exclude>
-                    <exclude>commons-logging:commons-logging-api</exclude>
-                  </excludes>
-                </bannedDependencies>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>sisu-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>main-index</goal>
-              <goal>test-index</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-            <configuration>
-              <includePom>true</includePom>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
