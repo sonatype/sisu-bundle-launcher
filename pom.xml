@@ -80,11 +80,6 @@
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
-        <artifactId>sisu-file-tasks</artifactId>
-        <version>1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-maven-bridge</artifactId>
         <version>2.1</version>
       </dependency>
