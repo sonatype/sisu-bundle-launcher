@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <name>Sisu Bundle Launcher :: Aggregator</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
 
   <url>https://github.com/sonatype/sisu-bundle-launcher</url>
 
@@ -58,7 +58,7 @@
 
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
-    <build.number/>
+    <build.number />
 
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
@@ -139,22 +139,22 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-servlet</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-file-tasks</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-jsw-utils</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
