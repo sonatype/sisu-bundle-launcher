@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.sonatype.sisu</groupId>
     <artifactId>sisu-bundle-launcher-aggregator</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>sisu-jsw-utils</artifactId>
