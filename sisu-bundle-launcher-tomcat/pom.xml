@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.sonatype.sisu</groupId>
     <artifactId>sisu-bundle-launcher-aggregator</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1</version>
   </parent>
 
   <artifactId>sisu-bundle-launcher-tomcat</artifactId>
