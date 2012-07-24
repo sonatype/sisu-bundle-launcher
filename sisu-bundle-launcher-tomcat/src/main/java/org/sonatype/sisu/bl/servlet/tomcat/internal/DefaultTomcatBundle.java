@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.codehaus.plexus.util.FileUtils;
@@ -28,6 +29,7 @@ import org.codehaus.plexus.util.io.InputStreamFacade;
 import org.sonatype.sisu.bl.servlet.internal.DefaultServletContainerBundle;
 import org.sonatype.sisu.bl.servlet.tomcat.TomcatBundle;
 import org.sonatype.sisu.bl.servlet.tomcat.TomcatBundleConfiguration;
+import org.sonatype.sisu.bl.support.RunningBundles;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.support.AntHelper;
@@ -48,11 +50,15 @@ public class DefaultTomcatBundle<TB extends TomcatBundle, TBC extends TomcatBund
     private int serverPort;
 
     @Inject
-    public DefaultTomcatBundle( final FileTaskBuilder fileTaskBuilder,
-                                final AntHelper ant,
-                                final PortReservationService portService )
+    public DefaultTomcatBundle( final Provider<TBC> configurationProvider,
+                                final RunningBundles runningBundles,
+                                final FileTaskBuilder fileTaskBuilder,
+                                final PortReservationService portReservationService,
+                                final AntHelper ant )
     {
-        super( "apache-tomcat", fileTaskBuilder, ant );
+        super(
+            "apache-tomcat", configurationProvider, runningBundles, fileTaskBuilder, portReservationService, ant
+        );
     }
 
     @Override
@@ -100,7 +106,7 @@ public class DefaultTomcatBundle<TB extends TomcatBundle, TBC extends TomcatBund
     private void makeScriptsExecutable()
     {
         final File binDir = new File( getConfiguration().getTargetDirectory(), getName() + "/bin" );
-        getFileTasksBuilder().chmod( file( binDir ) )
+        getFileTaskBuilder().chmod( file( binDir ) )
             .include( "**/*.sh" )
             .permissions( "u+x" )
             .run();
@@ -135,7 +141,7 @@ public class DefaultTomcatBundle<TB extends TomcatBundle, TBC extends TomcatBund
                 serverXml
             );
             onDirectory( config.getTargetDirectory() ).apply(
-                getFileTasksBuilder().copy()
+                getFileTaskBuilder().copy()
                     .file( file( serverXml ) )
                     .to().file( path( getName() + "/conf/server.xml" ) )
                     .filterUsing( "port.server", String.valueOf( serverPort ) )
