@@ -12,6 +12,7 @@
  */
 package org.sonatype.sisu.bl.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.bl.WebBundleConfiguration.RANDOM_PORT;
 
@@ -62,6 +63,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
                              final PortReservationService portReservationService )
     {
         super( name, configurationProvider, runningBundles, fileTaskBuilder );
+        this.portReservationService = checkNotNull( portReservationService );
     }
 
     @Override
