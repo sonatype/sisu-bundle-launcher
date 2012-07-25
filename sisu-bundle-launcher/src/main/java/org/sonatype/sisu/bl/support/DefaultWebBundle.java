@@ -12,20 +12,21 @@
  */
 package org.sonatype.sisu.bl.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.bl.WebBundleConfiguration.RANDOM_PORT;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.sonatype.sisu.bl.WebBundle;
 import org.sonatype.sisu.bl.WebBundleConfiguration;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import com.google.common.base.Throwables;
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
 
 /**
  * Default web bundle implementation.
@@ -34,15 +35,14 @@ import com.google.common.base.Throwables;
  */
 @Named
 public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBundleConfiguration>
-        extends DefaultBundle<WB, WBC>
-        implements WebBundle<WB, WBC> {
-
+    extends DefaultBundle<WB, WBC>
+    implements WebBundle<WB, WBC>
+{
 
     /**
      * Port reservation service used to generate an random port to be used by running application.
      * Cannot be null.
      */
-    @Inject
     private PortReservationService portReservationService;
 
     /**
@@ -55,23 +55,26 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      */
     private URL url;
 
-    /**
-     * Constructor. Creates the bundle with a default configuration.
-     *
-     * @param name application name
-     */
     @Inject
-    public DefaultWebBundle(final String name) {
-        super(name);
+    public DefaultWebBundle( final String name,
+                             final Provider<WBC> configurationProvider,
+                             final RunningBundles runningBundles,
+                             final FileTaskBuilder fileTaskBuilder,
+                             final PortReservationService portReservationService )
+    {
+        super( name, configurationProvider, runningBundles, fileTaskBuilder );
+        this.portReservationService = checkNotNull( portReservationService );
     }
 
     @Override
-    public int getPort() {
+    public int getPort()
+    {
         return port;
     }
 
     @Override
-    public URL getUrl() {
+    public URL getUrl()
+    {
         return url;
     }
 
@@ -80,15 +83,19 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      *
      * @return true if application is alive, false otherwise
      */
-    protected boolean applicationAlive() {
-        try {
+    protected boolean applicationAlive()
+    {
+        try
+        {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(0);
-            urlConnection.setReadTimeout(0);
-            urlConnection.setUseCaches(false);
+            urlConnection.setConnectTimeout( 0 );
+            urlConnection.setReadTimeout( 0 );
+            urlConnection.setUseCaches( false );
             urlConnection.connect();
             return urlConnection.getResponseCode() == 200;
-        } catch (IOException ignore) {
+        }
+        catch ( IOException ignore )
+        {
             return false;
         }
     }
@@ -99,7 +106,8 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      * {@inheritDoc}
      */
     @Override
-    protected void logApplicationIsAlive() {
+    protected void logApplicationIsAlive()
+    {
         log.info( "Application {} is running at {}", getName(), getUrl() );
     }
 
@@ -144,12 +152,14 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      *
      * @return application URL
      */
-    protected String composeApplicationURL() {
-        return String.format("http://localhost:%s/%s/", getPort(), getName());
+    protected String composeApplicationURL()
+    {
+        return String.format( "http://localhost:%s/%s/", getPort(), getName() );
     }
 
-    protected PortReservationService getPortReservationService() {
-        checkState(portReservationService != null);
+    protected PortReservationService getPortReservationService()
+    {
+        checkState( portReservationService != null );
         return portReservationService;
     }
 
@@ -157,14 +167,15 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        if (isRunning()) {
-            sb.append(" [").append(getUrl()).append("]");
+        sb.append( super.toString() );
+        if ( isRunning() )
+        {
+            sb.append( " [" ).append( getUrl() ).append( "]" );
         }
         return sb.toString();
     }
-
 
 }

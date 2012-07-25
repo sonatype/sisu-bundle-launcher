@@ -12,26 +12,25 @@
  */
 package org.sonatype.sisu.bl.support;
 
-import org.apache.tools.ant.DirectoryScanner;
-import org.sonatype.sisu.bl.Bundle;
-import org.sonatype.sisu.bl.BundleConfiguration;
-import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
-import org.sonatype.sisu.filetasks.FileTask;
-import org.sonatype.sisu.filetasks.FileTaskBuilder;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+
+import org.apache.tools.ant.DirectoryScanner;
+import org.sonatype.sisu.bl.Bundle;
+import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
+import org.sonatype.sisu.filetasks.FileTask;
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import com.google.common.base.Throwables;
 
 /**
@@ -41,8 +40,9 @@ import com.google.common.base.Throwables;
  */
 @Named
 public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfiguration>
-        extends BundleLifecycle<B, BC>
-        implements Bundle<B, BC> {
+    extends BundleLifecycle<B, BC>
+    implements Bundle<B, BC>
+{
 
     /**
      * Bundle name.
@@ -53,22 +53,19 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * File tasks builder used to manipulate files necessary to prepare bundle target directory.
      * Cannot be null.
      */
-    @Inject
-    private FileTaskBuilder fileTasksBuilder;
+    private final FileTaskBuilder fileTaskBuilder;
 
     /**
      * Configuration provider used to create default bundle configurations.
      * Cannot be null.
      */
-    @Inject
-    private Provider<BC> configurationProvider;
+    private final Provider<BC> configurationProvider;
 
     /**
      * List of running bundles.
      * Cannot be null.
      */
-    @Inject
-    private RunningBundles runningBundles;
+    private final RunningBundles runningBundles;
 
     /**
      * Bundle configuration.
@@ -84,11 +81,21 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     /**
      * Constructor. Creates the bundle with a default configuration and a not running state.
      *
-     * @param name application name
+     * @param name                  application name
+     * @param configurationProvider configuration provider
+     * @param runningBundles        running bundles
+     * @param fileTaskBuilder       file task builder
      */
     @Inject
-    public DefaultBundle(final String name) {
-        this.name = checkNotNull(name);
+    public DefaultBundle( final String name,
+                          final Provider<BC> configurationProvider,
+                          final RunningBundles runningBundles,
+                          final FileTaskBuilder fileTaskBuilder )
+    {
+        this.name = checkNotNull( name );
+        this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
+        this.configurationProvider = checkNotNull( configurationProvider );
+        this.runningBundles = checkNotNull( runningBundles );
     }
 
     /**
@@ -101,13 +108,17 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * @see Bundle#start()
      */
     @Override
-    public void doStart() {
-        try {
+    public void doStart()
+    {
+        try
+        {
             startApplication();
             running = true;
             getRunningBundles().add( this );
             waitForBoot();
-        } catch (RuntimeException e) {
+        }
+        catch ( RuntimeException e )
+        {
             doStop();
             throw e;
         }
@@ -121,11 +132,16 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * @see Bundle#stop()
      */
     @Override
-    public void doStop() {
-        if (running) {
-            try {
+    public void doStop()
+    {
+        if ( running )
+        {
+            try
+            {
                 stopApplication();
-            } finally {
+            }
+            finally
+            {
                 unconfigure();
                 running = false;
                 getRunningBundles().remove( this );
@@ -144,7 +160,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * {@inheritDoc}
      */
     @Override
-    public void doPrepare() {
+    public void doPrepare()
+    {
         log.debug( "Using configuration {}", getConfiguration() );
         validateConfiguration();
         createBundle();
@@ -161,41 +178,47 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     }
 
     @Override
-    public void doClean() {
+    public void doClean()
+    {
         deleteTarget();
     }
 
-
-    protected FileTaskBuilder getFileTasksBuilder() {
-        checkState(fileTasksBuilder != null);
-        return fileTasksBuilder;
+    protected FileTaskBuilder getFileTaskBuilder()
+    {
+        checkState( fileTaskBuilder != null );
+        return fileTaskBuilder;
     }
 
-    protected RunningBundles getRunningBundles() {
-        checkState(runningBundles != null);
+    protected RunningBundles getRunningBundles()
+    {
+        checkState( runningBundles != null );
         return runningBundles;
     }
 
     @Override
-    public BC getConfiguration() {
-        if (this.configuration == null) {
+    public BC getConfiguration()
+    {
+        if ( this.configuration == null )
+        {
             this.configuration = configurationProvider.get();
-            if (configuration.getId() == null) {
+            if ( configuration.getId() == null )
+            {
                 configuration.setId( generateId() );
             }
         }
         return configuration;
     }
 
-
     @Override
-    public B setConfiguration(BC configuration) {
+    public B setConfiguration( BC configuration )
+    {
         this.configuration = configuration;
         return (B) this;
     }
 
     @Override
-    public boolean isRunning() {
+    public boolean isRunning()
+    {
         return running;
     }
 
@@ -213,14 +236,16 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Template method for subclasses to perform configuration tasks when bundle is starting, if necessary.
      */
     protected void configure()
-        throws Exception {
+        throws Exception
+    {
         // template method
     }
 
     /**
      * Template method for subclasses to perform un-configuration tasks when bundle is stopping, if necessary.
      */
-    protected void unconfigure() {
+    protected void unconfigure()
+    {
         // template method
     }
 
@@ -229,14 +254,15 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      *
      * @return true if application is alive, false otherwise
      */
-    protected boolean applicationAlive() {
+    protected boolean applicationAlive()
+    {
         return true;
     }
 
     /**
      * Generates a random id for application.
-     * @return  generated id
      *
+     * @return generated id
      * @since 1.2
      */
     protected String generateId()
@@ -248,19 +274,21 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      * Renames application directory that usually has a name that contains the version to a name easy to be used in
      * overlays = application name.
      */
-    private void renameApplicationDirectory() {
+    private void renameApplicationDirectory()
+    {
         BundleConfiguration config = getConfiguration();
 
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(config.getTargetDirectory());
-        ds.setIncludes(new String[]{name + "-*"});
+        ds.setBasedir( config.getTargetDirectory() );
+        ds.setIncludes( new String[]{ name + "-*" } );
         ds.scan();
         String[] dirs = ds.getIncludedDirectories();
 
-        if (dirs.length == 1 && new File(config.getTargetDirectory(), dirs[0]).exists()) {
-            onDirectory(config.getTargetDirectory()).apply(
-                    getFileTasksBuilder().rename( path( dirs[0] ) )
-                            .to(name)
+        if ( dirs.length == 1 && new File( config.getTargetDirectory(), dirs[0] ).exists() )
+        {
+            onDirectory( config.getTargetDirectory() ).apply(
+                getFileTaskBuilder().rename( path( dirs[0] ) )
+                    .to( name )
             );
         }
     }
@@ -268,40 +296,48 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     /**
      * Waits for application to boot for configured timeout period.
      */
-    private void waitForBoot() {
+    private void waitForBoot()
+    {
         long start = System.currentTimeMillis();
         int startTimeout = getConfiguration().getStartTimeout();
 
         log.info( "Waiting for application to boot for {} seconds", startTimeout );
 
-        while (System.currentTimeMillis() < start + startTimeout * 1000) {
-            try {
-                if (applicationAlive()) {
+        while ( System.currentTimeMillis() < start + startTimeout * 1000 )
+        {
+            try
+            {
+                if ( applicationAlive() )
+                {
                     logApplicationIsAlive();
                     log.debug( "Application {} started in {} seconds", getName(),
                                ( System.currentTimeMillis() - start ) / 1000 );
                     return;
                 }
-                Thread.sleep(Math.min(startTimeout, 1000));
-            } catch (InterruptedException ignore) {
+                Thread.sleep( Math.min( startTimeout, 1000 ) );
+            }
+            catch ( InterruptedException ignore )
+            {
                 // ignore
             }
         }
-        throw new RuntimeException("Could not detect application running in the configured timeout of " + startTimeout + " seconds");
+        throw new RuntimeException(
+            "Could not detect application running in the configured timeout of " + startTimeout + " seconds" );
     }
 
     /**
      * Template method to eventually log the fact that application is alive.
      */
-    protected void logApplicationIsAlive() {
+    protected void logApplicationIsAlive()
+    {
         //template method
     }
 
     /**
-     *
      * @return the name this bundle was created with
      */
-    protected String getName() {
+    protected String getName()
+    {
         return name;
     }
 
@@ -310,21 +346,26 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      *
      * @since 1.2
      */
-    protected void createBundle() {
+    protected void createBundle()
+    {
         BundleConfiguration config = getConfiguration();
         File bundle = config.getBundle();
-        if (bundle == null) {
+        if ( bundle == null )
+        {
             return;
         }
-        if (bundle.isDirectory()) {
-            onDirectory(config.getTargetDirectory()).apply(
-                getFileTasksBuilder().copy().directory(file(bundle))
-                    .to().directory(path("/"))
+        if ( bundle.isDirectory() )
+        {
+            onDirectory( config.getTargetDirectory() ).apply(
+                getFileTaskBuilder().copy().directory( file( bundle ) )
+                    .to().directory( path( "/" ) )
             );
-        } else {
-            onDirectory(config.getTargetDirectory()).apply(
-                getFileTasksBuilder().expand( file( bundle ) )
-                    .to().directory(path("/"))
+        }
+        else
+        {
+            onDirectory( config.getTargetDirectory() ).apply(
+                getFileTaskBuilder().expand( file( bundle ) )
+                    .to().directory( path( "/" ) )
             );
         }
     }
@@ -337,46 +378,55 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      *
      * @throws RuntimeException if any of above is not true
      */
-    private void validateConfiguration() throws RuntimeException {
+    private void validateConfiguration()
+        throws RuntimeException
+    {
         BundleConfiguration config = getConfiguration();
-        if (config.getId() == null || config.getId().trim().length() == 0) {
-            throw new RuntimeException("Id must be set in bundle configuration");
+        if ( config.getId() == null || config.getId().trim().length() == 0 )
+        {
+            throw new RuntimeException( "Id must be set in bundle configuration" );
         }
-        if (config.getBundle() == null) {
+        if ( config.getBundle() == null )
+        {
             log.warn( "There is no bundle to be created." );
         }
-        if (config.getTargetDirectory() == null) {
-            throw new RuntimeException("Target directory must be set in bundle configuration");
+        if ( config.getTargetDirectory() == null )
+        {
+            throw new RuntimeException( "Target directory must be set in bundle configuration" );
         }
     }
 
     /**
      * Deletes target directory.
      */
-    private void deleteTarget() {
-        onDirectory(getConfiguration().getTargetDirectory()).apply(
-                getFileTasksBuilder().delete().directory(path("/"))
+    private void deleteTarget()
+    {
+        onDirectory( getConfiguration().getTargetDirectory() ).apply(
+            getFileTaskBuilder().delete().directory( path( "/" ) )
         );
     }
 
     /**
      * Applies overlays to target directory.
      */
-    private void applyOverlays() {
+    private void applyOverlays()
+    {
         BundleConfiguration config = getConfiguration();
         List<FileTask> overlays = config.getOverlays();
-        if (overlays == null) {
+        if ( overlays == null )
+        {
             return;
         }
-        onDirectory(config.getTargetDirectory()).apply(overlays);
+        onDirectory( config.getTargetDirectory() ).apply( overlays );
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append(" bundle");
-        sb.append(" [id: ").append(getConfiguration().getId()).append("]");
-        sb.append(isRunning() ? " [running]" : " [not running]");
+        sb.append( getName() ).append( " bundle" );
+        sb.append( " [id: " ).append( getConfiguration().getId() ).append( "]" );
+        sb.append( isRunning() ? " [running]" : " [not running]" );
         return sb.toString();
     }
 
