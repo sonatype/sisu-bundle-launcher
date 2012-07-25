@@ -20,6 +20,8 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Provider;
+
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
@@ -27,6 +29,8 @@ import org.sonatype.sisu.bl.servlet.ServletContainerBundle;
 import org.sonatype.sisu.bl.servlet.ServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.WAR;
 import org.sonatype.sisu.bl.support.DefaultWebBundle;
+import org.sonatype.sisu.bl.support.RunningBundles;
+import org.sonatype.sisu.bl.support.port.PortReservationService;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.support.AntHelper;
 
@@ -41,19 +45,19 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
 {
 
     /**
-     * File task builder.
+     * Ant Helper.
      * Cannot be null.
      */
-    private final FileTaskBuilder fileTaskBuilder;
-
     private final AntHelper ant;
 
     public DefaultServletContainerBundle( final String name,
+                                          final Provider<SCBC> configurationProvider,
+                                          final RunningBundles runningBundles,
                                           final FileTaskBuilder fileTaskBuilder,
-                                          final AntHelper ant )
+                                          final PortReservationService portReservationService,
+                                          final AntHelper ant)
     {
-        super( name );
-        this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
+        super( name, configurationProvider, runningBundles, fileTaskBuilder, portReservationService );
         this.ant = checkNotNull( ant );
     }
 
@@ -74,7 +78,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
             if ( war.getFile().isDirectory() )
             {
                 onDirectory( config.getTargetDirectory() ).apply(
-                    fileTaskBuilder.copy()
+                    getFileTaskBuilder().copy()
                         .directory( file( war.getFile() ) )
                         .to().directory( path( getName() + "/" + getWebAppPath() + "/" + war.getContext() ) )
                 );
@@ -82,7 +86,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
             else
             {
                 onDirectory( config.getTargetDirectory() ).apply(
-                    fileTaskBuilder.expand( file( war.getFile() ) )
+                    getFileTaskBuilder().expand( file( war.getFile() ) )
                         .to().directory( path( getName() + "/" + getWebAppPath() + "/" + war.getContext() ) )
                 );
             }
