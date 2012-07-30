@@ -13,19 +13,18 @@
 
 package org.sonatype.sisu.jsw.util;
 
+import static junit.framework.Assert.assertTrue;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.contains;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import junit.framework.Assert;
-
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonatype.sisu.jsw.monitor.Launcher;
@@ -63,10 +62,14 @@ public class JSWConfigTest
     @Test
     public void propertiesFromConfig()
     {
-        assertThat( jswConfig.getProperty( "wrapper.java.mainclass" ),
-                    is( equalTo( "org.tanukisoftware.wrapper.WrapperSimpleApp" ) ) );
-        assertThat( jswConfig.getProperty( "wrapper.java.classpath.2" ),
-                    is( equalTo( "etc/" ) ) );
+        assertThat(
+            jswConfig.getProperty( "wrapper.java.mainclass" ),
+            is( equalTo( "org.tanukisoftware.wrapper.WrapperSimpleApp" ) )
+        );
+        assertThat(
+            jswConfig.getProperty( "wrapper.java.classpath.2" ),
+            is( equalTo( "etc/" ) )
+        );
     }
 
     @Test
@@ -75,7 +78,10 @@ public class JSWConfigTest
     {
         jswConfig.setProperty( "wrapper.java.mainclass", "foo.Bar" );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains( "wrapper.java.mainclass=foo.Bar" ) );
+        assertThat(
+            config,
+            contains( "wrapper.java.mainclass=foo.Bar" )
+        );
     }
 
     @Test
@@ -84,7 +90,12 @@ public class JSWConfigTest
     {
         jswConfig.setProperty( "wrapper.java.classpath.2", "foo/*" );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.2=foo/*" ) );
+        assertThat(
+            config,
+            contains(
+                "wrapper.java.classpath.2=foo/*"
+            )
+        );
     }
 
     @Test
@@ -94,8 +105,13 @@ public class JSWConfigTest
         jswConfig.addIndexedProperty( "wrapper.java.classpath", "foo/*" );
         jswConfig.addIndexedProperty( "wrapper.java.classpath", "bar/*" );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.4=foo/*",
-                                                             "wrapper.java.classpath.5=bar/*" ) );
+        assertThat(
+            config,
+            contains(
+                "wrapper.java.classpath.4=foo/*",
+                "wrapper.java.classpath.5=bar/*"
+            )
+        );
     }
 
     @Test
@@ -104,7 +120,10 @@ public class JSWConfigTest
     {
         jswConfig.addIndexedProperty( "wrapper.java.additional", "-Dfoo=bar" );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains( "wrapper.java.additional.1=-Dfoo=bar" ) );
+        assertThat(
+            config,
+            contains( "wrapper.java.additional.1=-Dfoo=bar" )
+        );
     }
 
     @Test
@@ -113,12 +132,14 @@ public class JSWConfigTest
     {
         jswConfig.configureMonitor( 9001 );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains( JSWConfig.WRAPPER_JAVA_MAINCLASS + "="
-                                                                 + Launcher.class.getName(),
-                                                             JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
-                                                                 + Launcher.MONITOR_PORT + "=9001",
-                                                             JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4="
-                                                                 + getLauncherFile().getAbsolutePath() ) );
+        assertThat(
+            config,
+            contains(
+                JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
+                JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.MONITOR_PORT + "=9001",
+                JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4=" + getLauncherFile().getAbsolutePath()
+            )
+        );
     }
 
     @Test
@@ -127,13 +148,14 @@ public class JSWConfigTest
     {
         jswConfig.configureKeepAlive( 9001 );
         jswConfig.save();
-        assertThat( config, FileMatchers.contains(
-            JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
-                                                             JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
-                                                                 + Launcher.KEEP_ALIVE_PORT + "=9001",
-                                                             JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4="
-                                                                 + getLauncherFile().getAbsolutePath()
-        ) );
+        assertThat(
+            config,
+            contains(
+                JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
+                JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.KEEP_ALIVE_PORT + "=9001",
+                JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4=" + getLauncherFile().getAbsolutePath()
+            )
+        );
     }
 
     @Test
@@ -142,7 +164,9 @@ public class JSWConfigTest
     {
         URL url = new URL( "file:/path%20with%20spaces/and%20more%20spaces/launcher.jar" );
         File file = jswConfig.urlToFile( url );
-        Assert.assertTrue( file.getAbsolutePath().replace( '\\', '/' ).endsWith( "/path with spaces/and more spaces/launcher.jar" ) );
+        assertTrue(
+            file.getAbsolutePath().replace( '\\', '/' ).endsWith( "/path with spaces/and more spaces/launcher.jar" )
+        );
     }
 
     /**
@@ -168,11 +192,15 @@ public class JSWConfigTest
         assertThat( config, FileMatchers.matchSha1( saved ) );
 
         // check that original property is written
-        assertThat( config, FileMatchers.contains(
-            "wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp" )
+        assertThat(
+            config,
+            contains( "wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp" )
         );
         // check that overridden property is written
-        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.2=foo/*" ) );
+        assertThat(
+            config,
+            contains( "wrapper.java.classpath.2=foo/*" )
+        );
     }
 
     private File getLauncherFile()
