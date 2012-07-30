@@ -13,6 +13,8 @@
 
 package org.sonatype.sisu.jsw.util;
 
+import static org.apache.commons.io.FileUtils.readFileToString;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,6 +48,12 @@ public class JSWConfig
      * Never null.
      */
     private File config;
+
+    /**
+     * Original content of JSW configuration file.
+     * Null in case that JSW configuration file does not exist.
+     */
+    private String configContent;
 
     /**
      * Properties read from JSW configuration file.
@@ -113,17 +121,21 @@ public class JSWConfig
     public JSWConfig load()
         throws IOException
     {
-        InputStream in = null;
-        try
+        if ( config.exists() )
         {
-            in = new BufferedInputStream( new FileInputStream( config ) );
-            configProperties.load( in );
-        }
-        finally
-        {
-            if ( in != null )
+            InputStream in = null;
+            try
             {
-                in.close();
+                in = new BufferedInputStream( new FileInputStream( config ) );
+                configProperties.load( in );
+                configContent = readFileToString( config );
+            }
+            finally
+            {
+                if ( in != null )
+                {
+                    in.close();
+                }
             }
         }
         return this;
@@ -141,9 +153,18 @@ public class JSWConfig
         PrintWriter out = null;
         try
         {
-            out = new PrintWriter( new FileWriter( config, true ) );
+            if ( !config.getParentFile().mkdirs() && !config.getParentFile().exists() )
+            {
+                throw new IOException( "Cannot create parent directory " + config.getAbsolutePath() );
+            }
 
-            out.println();
+            out = new PrintWriter( new FileWriter( config ) );
+
+            if ( configContent != null )
+            {
+                out.println( configContent );
+                out.println();
+            }
             out.println( "# " + overrideComment );
 
             for ( String propertyName : overrideProperties.stringPropertyNames() )

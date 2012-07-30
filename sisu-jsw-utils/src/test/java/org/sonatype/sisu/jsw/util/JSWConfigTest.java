@@ -13,6 +13,7 @@
 
 package org.sonatype.sisu.jsw.util;
 
+import static org.apache.commons.io.FileUtils.copyFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -53,7 +54,7 @@ public class JSWConfigTest
         config = testMethod.getTargetDirMethodFile( "configs", "wrapper.conf" );
         config.delete();
 
-        FileUtils.copyFile( new File( conf.getFile()), config  );
+        copyFile( new File( conf.getFile() ), config );
 
         jswConfig = new JSWConfig( config );
         jswConfig.load();
@@ -142,6 +143,36 @@ public class JSWConfigTest
         URL url = new URL( "file:/path%20with%20spaces/and%20more%20spaces/launcher.jar" );
         File file = jswConfig.urlToFile( url );
         Assert.assertTrue( file.getAbsolutePath().replace( '\\', '/' ).endsWith( "/path with spaces/and more spaces/launcher.jar" ) );
+    }
+
+    /**
+     * Verify that calling write, multiple times, will not append overridden properties multiple times.
+     *
+     * @throws IOException unexpected
+     */
+    @Test
+    public void subsequentSavesProducesSameFile()
+        throws IOException
+    {
+        jswConfig.setProperty( "wrapper.java.classpath.2", "foo/*" );
+        jswConfig.save();
+
+        // copy written configuration file so we can compare
+        final File saved = testMethod.getTargetDirMethodFile( "configs", "wrapper-1.conf" );
+        copyFile( config, saved );
+
+        // save again
+        jswConfig.save();
+
+        // and check that the last save and previous saved are equal
+        assertThat( config, FileMatchers.matchSha1( saved ) );
+
+        // check that original property is written
+        assertThat( config, FileMatchers.contains(
+            "wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp" )
+        );
+        // check that overridden property is written
+        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.2=foo/*" ) );
     }
 
     private File getLauncherFile()
