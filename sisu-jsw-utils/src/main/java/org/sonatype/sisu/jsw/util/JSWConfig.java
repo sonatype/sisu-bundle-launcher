@@ -16,7 +16,6 @@ package org.sonatype.sisu.jsw.util;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,9 +41,7 @@ public class JSWConfig
 
     static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
 
-    File config;
-
-    private File override;
+    private File config;
 
     private Properties configProperties;
 
@@ -52,10 +49,25 @@ public class JSWConfig
 
     private Properties combinedProperties;
 
-    public JSWConfig( final File config, final File override )
+    private String overrideComment = "";
+
+    public JSWConfig( final File config )
+    {
+        this( config, null );
+    }
+
+    public JSWConfig( final File config, final String overrideComment )
     {
         this.config = config;
-        this.override = override;
+        if ( overrideComment != null )
+        {
+            this.overrideComment = overrideComment;
+        }
+        else
+        {
+            this.overrideComment =
+                "The following properties are added by sisu-jsw-utils as an override of properties already configured";
+        }
         configProperties = new Properties();
         overrideProperties = new Properties();
         combinedProperties = new Properties( configProperties );
@@ -64,61 +76,17 @@ public class JSWConfig
     public JSWConfig load()
         throws IOException
     {
+        InputStream in = null;
+        try
         {
-            InputStream in = null;
-            try
-            {
-                in = new BufferedInputStream( new FileInputStream( config ) );
-                configProperties.load( in );
-            }
-            finally
-            {
-                if ( in != null )
-                {
-                    in.close();
-                }
-            }
+            in = new BufferedInputStream( new FileInputStream( config ) );
+            configProperties.load( in );
         }
-
-        if ( override.exists() )
+        finally
         {
+            if ( in != null )
             {
-                InputStream in = null;
-                try
-                {
-                    in = new BufferedInputStream( new FileInputStream( override ) );
-                    overrideProperties.load( in );
-                }
-                catch ( FileNotFoundException ignore )
-                {
-                    // ignore
-                }
-                finally
-                {
-                    if ( in != null )
-                    {
-                        in.close();
-                    }
-                }
-            }
-            {
-                InputStream in = null;
-                try
-                {
-                    in = new BufferedInputStream( new FileInputStream( override ) );
-                    combinedProperties.load( in );
-                }
-                catch ( FileNotFoundException ignore )
-                {
-                    // ignore
-                }
-                finally
-                {
-                    if ( in != null )
-                    {
-                        in.close();
-                    }
-                }
+                in.close();
             }
         }
         return this;
@@ -130,11 +98,10 @@ public class JSWConfig
         PrintWriter out = null;
         try
         {
-            if ( !override.getParentFile().exists() && !override.getParentFile().mkdirs() )
-            {
-                throw new FileNotFoundException( "Could not create file " + override.getAbsolutePath() );
-            }
-            out = new PrintWriter( new FileWriter( override ) );
+            out = new PrintWriter( new FileWriter( config, true ) );
+
+            out.println();
+            out.println( "# " + overrideComment );
 
             for ( String propertyName : overrideProperties.stringPropertyNames() )
             {

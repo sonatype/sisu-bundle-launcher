@@ -24,6 +24,7 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonatype.sisu.jsw.monitor.Launcher;
@@ -41,18 +42,20 @@ public class JSWConfigTest
 
     private JSWConfig jswConfig;
 
-    private File additionalConfig;
+    private File config;
 
     @Before
     public void setUp()
         throws IOException
     {
-        URL conf = getClass().getResource( "/wrapper.conf" );
+        final URL conf = getClass().getResource( "/wrapper.conf" );
 
-        additionalConfig = testMethod.getTargetDirMethodFile( "configs", "wrapper-additional.conf" );
-        additionalConfig.delete();
+        config = testMethod.getTargetDirMethodFile( "configs", "wrapper.conf" );
+        config.delete();
 
-        jswConfig = new JSWConfig( new File( conf.getFile() ), additionalConfig );
+        FileUtils.copyFile( new File( conf.getFile()), config  );
+
+        jswConfig = new JSWConfig( config );
         jswConfig.load();
     }
 
@@ -71,7 +74,7 @@ public class JSWConfigTest
     {
         jswConfig.setProperty( "wrapper.java.mainclass", "foo.Bar" );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.mainclass=foo.Bar" ) );
+        assertThat( config, FileMatchers.contains( "wrapper.java.mainclass=foo.Bar" ) );
     }
 
     @Test
@@ -80,7 +83,7 @@ public class JSWConfigTest
     {
         jswConfig.setProperty( "wrapper.java.classpath.2", "foo/*" );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.classpath.2=foo/*" ) );
+        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.2=foo/*" ) );
     }
 
     @Test
@@ -90,7 +93,7 @@ public class JSWConfigTest
         jswConfig.addIndexedProperty( "wrapper.java.classpath", "foo/*" );
         jswConfig.addIndexedProperty( "wrapper.java.classpath", "bar/*" );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.classpath.4=foo/*",
+        assertThat( config, FileMatchers.contains( "wrapper.java.classpath.4=foo/*",
                                                              "wrapper.java.classpath.5=bar/*" ) );
     }
 
@@ -100,7 +103,7 @@ public class JSWConfigTest
     {
         jswConfig.addIndexedProperty( "wrapper.java.additional", "-Dfoo=bar" );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains( "wrapper.java.additional.1=-Dfoo=bar" ) );
+        assertThat( config, FileMatchers.contains( "wrapper.java.additional.1=-Dfoo=bar" ) );
     }
 
     @Test
@@ -109,7 +112,7 @@ public class JSWConfigTest
     {
         jswConfig.configureMonitor( 9001 );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains( JSWConfig.WRAPPER_JAVA_MAINCLASS + "="
+        assertThat( config, FileMatchers.contains( JSWConfig.WRAPPER_JAVA_MAINCLASS + "="
                                                                  + Launcher.class.getName(),
                                                              JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
                                                                  + Launcher.MONITOR_PORT + "=9001",
@@ -123,7 +126,7 @@ public class JSWConfigTest
     {
         jswConfig.configureKeepAlive( 9001 );
         jswConfig.save();
-        assertThat( additionalConfig, FileMatchers.contains(
+        assertThat( config, FileMatchers.contains(
             JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
                                                              JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D"
                                                                  + Launcher.KEEP_ALIVE_PORT + "=9001",
