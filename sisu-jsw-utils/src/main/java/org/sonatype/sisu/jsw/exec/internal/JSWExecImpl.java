@@ -71,7 +71,7 @@ class JSWExecImpl
         throws RuntimeException
     {
         checkNotNull( bundle );
-        checkArgument( monitorPort > 0);
+        checkArgument( monitorPort > 0 );
 
         this.appName = checkNotNull( appName );
         this.monitorPort = monitorPort;

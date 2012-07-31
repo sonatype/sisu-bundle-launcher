@@ -15,17 +15,17 @@
 -->
 <configuration>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <target>System.out</target>
-        <encoder>
-            <pattern>%date %level [%thread%X{DC}] %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <pattern>%date %level [%thread%X{DC}] %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
 
-    <logger name="org.sonatype.sisu.jsw.monitor" level="TRACE"/>
+  <logger name="org.sonatype.sisu.jsw.monitor" level="TRACE"/>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-    </root>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
 
 </configuration>

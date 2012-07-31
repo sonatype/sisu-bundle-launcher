@@ -13,10 +13,11 @@
 
 package org.sonatype.sisu.jsw.util;
 
+import static org.apache.commons.io.FileUtils.readFileToString;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,7 @@ import java.util.Properties;
 import org.sonatype.sisu.jsw.monitor.Launcher;
 
 /**
- * TODO
+ * JSW configurations file (wrapper.conf) reader/writer.
  *
  * @since 1.0
  */
@@ -42,34 +43,92 @@ public class JSWConfig
 
     static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
 
-    File config;
+    /**
+     * JSW configuration file.
+     * Never null.
+     */
+    private File config;
 
-    private File override;
+    /**
+     * Original content of JSW configuration file.
+     * Null in case that JSW configuration file does not exist.
+     */
+    private String configContent;
 
+    /**
+     * Properties read from JSW configuration file.
+     * Never null.
+     */
     private Properties configProperties;
 
+    /**
+     * Properties that are added/overrides.
+     * Never null.
+     */
     private Properties overrideProperties;
 
+    /**
+     * Combined config/override properties where override ones takes precedence.
+     * Never null.
+     */
     private Properties combinedProperties;
 
-    public JSWConfig( final File config, final File override )
+    /**
+     * Comment that is written out before the override properties are written.
+     * Never null.
+     */
+    private String overrideComment = "";
+
+    /**
+     * Constructor. It will use a default comment.
+     *
+     * @param config JSW configuration file to be read/written
+     */
+    public JSWConfig( final File config )
+    {
+        this( config, null );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param config          JSW configuration file to be read/written
+     * @param overrideComment comment that is written out before the override properties are written
+     */
+    public JSWConfig( final File config, final String overrideComment )
     {
         this.config = config;
-        this.override = override;
+        if ( overrideComment != null )
+        {
+            this.overrideComment = overrideComment;
+        }
+        else
+        {
+            this.overrideComment =
+                "The following properties are added by sisu-jsw-utils as an override of properties already configured";
+        }
         configProperties = new Properties();
         overrideProperties = new Properties();
         combinedProperties = new Properties( configProperties );
     }
 
+    /**
+     * Reads JSW configuration file.
+     *
+     * @return itself, for fluent API usage
+     * @throws IOException in case of reading configuration file fails
+     */
     public JSWConfig load()
         throws IOException
     {
+        if ( config.exists() )
         {
             InputStream in = null;
             try
             {
                 in = new BufferedInputStream( new FileInputStream( config ) );
                 configProperties.load( in );
+                configContent = readFileToString( config );
             }
             finally
             {
@@ -79,62 +138,34 @@ public class JSWConfig
                 }
             }
         }
-
-        if ( override.exists() )
-        {
-            {
-                InputStream in = null;
-                try
-                {
-                    in = new BufferedInputStream( new FileInputStream( override ) );
-                    overrideProperties.load( in );
-                }
-                catch ( FileNotFoundException ignore )
-                {
-                    // ignore
-                }
-                finally
-                {
-                    if ( in != null )
-                    {
-                        in.close();
-                    }
-                }
-            }
-            {
-                InputStream in = null;
-                try
-                {
-                    in = new BufferedInputStream( new FileInputStream( override ) );
-                    combinedProperties.load( in );
-                }
-                catch ( FileNotFoundException ignore )
-                {
-                    // ignore
-                }
-                finally
-                {
-                    if ( in != null )
-                    {
-                        in.close();
-                    }
-                }
-            }
-        }
         return this;
     }
 
+    /**
+     * Saves original + overridden JSW configuration to file provided in constructor.
+     *
+     * @return itself, for fluent API usage
+     * @throws IOException in case of writing configuration file fails
+     */
     public JSWConfig save()
         throws IOException
     {
         PrintWriter out = null;
         try
         {
-            if ( !override.getParentFile().exists() && !override.getParentFile().mkdirs() )
+            if ( !config.getParentFile().mkdirs() && !config.getParentFile().exists() )
             {
-                throw new FileNotFoundException( "Could not create file " + override.getAbsolutePath() );
+                throw new IOException( "Cannot create parent directory " + config.getAbsolutePath() );
             }
-            out = new PrintWriter( new FileWriter( override ) );
+
+            out = new PrintWriter( new FileWriter( config ) );
+
+            if ( configContent != null )
+            {
+                out.println( configContent );
+                out.println();
+            }
+            out.println( "# " + overrideComment );
 
             for ( String propertyName : overrideProperties.stringPropertyNames() )
             {
@@ -151,11 +182,24 @@ public class JSWConfig
         return this;
     }
 
+    /**
+     * Returns a JSW configuration property by its key.
+     *
+     * @param key key of property
+     * @return value of property or null if no such variable exists
+     */
     public String getProperty( String key )
     {
         return combinedProperties.getProperty( key );
     }
 
+    /**
+     * Sets value of a JSW configuration property that will be written out as an override property.
+     *
+     * @param key   key of property
+     * @param value value of property
+     * @return itself, for fluent API usage
+     */
     public JSWConfig setProperty( final String key, final String value )
     {
         overrideProperties.setProperty( key, value );
@@ -163,6 +207,13 @@ public class JSWConfig
         return this;
     }
 
+    /**
+     * Adds an indexed JSW configuration property that will be written out as an override property.
+     *
+     * @param key   key of property
+     * @param value value of property
+     * @return itself, for fluent API usage
+     */
     public JSWConfig addIndexedProperty( final String key, final String value )
     {
         int index = 0;

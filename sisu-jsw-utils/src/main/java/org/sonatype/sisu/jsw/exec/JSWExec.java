@@ -13,9 +13,6 @@
 
 package org.sonatype.sisu.jsw.exec;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Helper to perform operations on JSW bundle scripts.
  *
