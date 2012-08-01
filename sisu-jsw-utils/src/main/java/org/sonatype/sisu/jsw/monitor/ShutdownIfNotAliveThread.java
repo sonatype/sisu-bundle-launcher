@@ -64,7 +64,7 @@ public class ShutdownIfNotAliveThread
     @Override
     public void run()
     {
-        log.debug( "Shutdown thread pinging on port {} every {} milliseconds", port, pingInterval );
+        log.info( "Shutdown thread pinging on port {} every {} milliseconds", port, pingInterval );
 
         while ( running )
         {
@@ -103,7 +103,7 @@ public class ShutdownIfNotAliveThread
         }
         catch ( IOException e )
         {
-            // log.debug( "Skipped {}:{}", e.getClass().getName(), e.getMessage() );
+            log.info( "Skipping exception got while pinging {}:{}", e.getClass().getName(), e.getMessage() );
         }
         finally
         {
