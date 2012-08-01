@@ -142,7 +142,8 @@ public class JSWConfig
     }
 
     /**
-     * Saves original + overridden JSW configuration to file provided in constructor.
+     * Saves original + overridden JSW configuration to file provided in constructor, in case that there are any
+     * changes (overridden properties).
      *
      * @return itself, for fluent API usage
      * @throws IOException in case of writing configuration file fails
@@ -150,33 +151,36 @@ public class JSWConfig
     public JSWConfig save()
         throws IOException
     {
-        PrintWriter out = null;
-        try
+        if ( overrideProperties.size() > 0 )
         {
-            if ( !config.getParentFile().mkdirs() && !config.getParentFile().exists() )
+            PrintWriter out = null;
+            try
             {
-                throw new IOException( "Cannot create parent directory " + config.getAbsolutePath() );
-            }
+                if ( !config.getParentFile().mkdirs() && !config.getParentFile().exists() )
+                {
+                    throw new IOException( "Cannot create parent directory " + config.getAbsolutePath() );
+                }
 
-            out = new PrintWriter( new FileWriter( config ) );
+                out = new PrintWriter( new FileWriter( config ) );
 
-            if ( configContent != null )
-            {
-                out.println( configContent );
-                out.println();
-            }
-            out.println( "# " + overrideComment );
+                if ( configContent != null )
+                {
+                    out.println( configContent );
+                    out.println();
+                }
+                out.println( "# " + overrideComment );
 
-            for ( String propertyName : overrideProperties.stringPropertyNames() )
-            {
-                out.println( propertyName + "=" + overrideProperties.getProperty( propertyName ) );
+                for ( String propertyName : overrideProperties.stringPropertyNames() )
+                {
+                    out.println( propertyName + "=" + overrideProperties.getProperty( propertyName ) );
+                }
             }
-        }
-        finally
-        {
-            if ( out != null )
+            finally
             {
-                out.close();
+                if ( out != null )
+                {
+                    out.close();
+                }
             }
         }
         return this;
