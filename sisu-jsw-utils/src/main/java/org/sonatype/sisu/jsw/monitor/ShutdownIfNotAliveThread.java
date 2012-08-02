@@ -57,7 +57,7 @@ public class ShutdownIfNotAliveThread
         this.timeout = timeout;
         this.log = log;
 
-        talker = new CommandMonitorTalker( port );
+        talker = new CommandMonitorTalker( port, log );
 
         this.running = true;
         this.setDaemon( true );

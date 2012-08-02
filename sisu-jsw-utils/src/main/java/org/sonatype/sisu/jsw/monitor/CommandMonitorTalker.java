@@ -18,6 +18,7 @@ import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonatype.sisu.jsw.monitor.internal.log.LogProxy;
 
 /**
  * Talks to the command monitor.
@@ -28,15 +29,17 @@ import org.slf4j.LoggerFactory;
 public class CommandMonitorTalker
 {
 
-    private static Logger log = LoggerFactory.getLogger( CommandMonitorTalker.class );
-
     private final int port;
+
+    private final LogProxy log;
 
     private static final String host = "127.0.0.1";
 
-    public CommandMonitorTalker( final int port )
+    public CommandMonitorTalker( final int port,
+                                 final LogProxy log )
     {
         this.port = port;
+        this.log = log;
     }
 
     public void send( final String command )
