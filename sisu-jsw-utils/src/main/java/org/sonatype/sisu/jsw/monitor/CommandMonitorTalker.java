@@ -15,7 +15,6 @@ package org.sonatype.sisu.jsw.monitor;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,29 +57,6 @@ public class CommandMonitorTalker
         {
             socket.close();
         }
-    }
-
-    public static void installStopShutdownHook( final int commandPort )
-    {
-        Thread stopShutdownHook = new Thread( "JSW Sanity Stopper" )
-        {
-            @Override
-            public void run()
-            {
-                log.debug( "Sending server stop command" );
-                try
-                {
-                    new CommandMonitorTalker( commandPort ).send( CommandMonitorThread.STOP_COMMAND );
-                }
-                catch ( Exception e )
-                {
-                    // ignore
-                }
-            }
-        };
-
-        Runtime.getRuntime().addShutdownHook( stopShutdownHook );
-        log.debug( "Installed stop shutdown hook" );
     }
 
     private static <T> T[] $( final T... args )
