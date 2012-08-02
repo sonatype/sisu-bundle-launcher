@@ -37,11 +37,11 @@ import org.sonatype.sisu.jsw.monitor.Launcher;
 public class JSWConfig
 {
 
-    static final String WRAPPER_JAVA_MAINCLASS = "wrapper.java.mainclass";
+    public static final String WRAPPER_JAVA_MAINCLASS = "wrapper.java.mainclass";
 
-    static final String WRAPPER_JAVA_ADDITIONAL = "wrapper.java.additional";
+    public static final String WRAPPER_JAVA_ADDITIONAL = "wrapper.java.additional";
 
-    static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
+    public static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
 
     /**
      * JSW configuration file.
