@@ -28,10 +28,9 @@ public interface JSWExecFactory
      *
      * @param binDir      the bin directory where the jsw control scripts are located
      * @param appName     the app name managed by JSW
-     * @param monitorPort monitor port
      * @return created {@link JSWExec}
      * @since 1.2
      */
-    JSWExec create( File binDir, String appName, int monitorPort );
+    JSWExec create( File binDir, String appName );
 
 }

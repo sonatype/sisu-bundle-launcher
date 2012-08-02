@@ -13,7 +13,6 @@
 
 package org.sonatype.sisu.jsw.exec.internal;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
@@ -30,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.support.AntHelper;
 import org.sonatype.sisu.jsw.exec.JSWExec;
-import org.sonatype.sisu.jsw.monitor.CommandMonitorTalker;
-import org.sonatype.sisu.jsw.monitor.CommandMonitorThread;
 
 /**
  * Default {@link JSWExec} implementation.
@@ -54,27 +51,24 @@ class JSWExecImpl
 
     private String appName;
 
-    private final int monitorPort;
-
     /**
      * Constructor.
      *
      * @param bundle      bundle directory.
      * @param appName     app name managed by JSW
-     * @param monitorPort
      * @param ant         ANT helper  @throws NullPointerException if params are null
      * @throws RuntimeException if the JSW exec script cannot be found for this platform
      * @since 1.0
      */
-    public JSWExecImpl( final File bundle, final String appName, final int monitorPort, final AntHelper ant,
-                        FileTaskBuilder fileTaskBuilder )
+    public JSWExecImpl( final File bundle,
+                        final String appName,
+                        final AntHelper ant,
+                        final FileTaskBuilder fileTaskBuilder )
         throws RuntimeException
     {
         checkNotNull( bundle );
-        checkArgument( monitorPort > 0 );
 
         this.appName = checkNotNull( appName );
-        this.monitorPort = monitorPort;
         this.ant = checkNotNull( ant );
         this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
 
@@ -151,10 +145,7 @@ class JSWExecImpl
      */
     public JSWExecImpl start()
     {
-        CommandMonitorTalker.installStopShutdownHook( monitorPort );
-
         executeJSWScript( "console" );
-
         return this;
     }
 
@@ -165,9 +156,7 @@ class JSWExecImpl
      */
     public JSWExecImpl stop()
     {
-        new CommandMonitorTalker( monitorPort ).send( CommandMonitorThread.STOP_COMMAND );
-
-        return this;
+        throw new UnsupportedOperationException( "Stopping unsupported (must be done in application specific mode)" );
     }
 
     protected File getControlScript()
