@@ -15,6 +15,7 @@ package org.sonatype.sisu.jsw.monitor;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,27 +41,22 @@ public class CommandMonitorTalker
     }
 
     public void send( final String command )
+        throws Exception
     {
         log.info( "Sending {} command to {}:{}", $( command, host, port ) );
+
+        Socket socket = new Socket();
+        socket.setSoTimeout( 5000 );
+        socket.connect( new InetSocketAddress( host, port ) );
         try
         {
-            Socket socket = new Socket();
-            socket.setSoTimeout( 5000 );
-            socket.connect( new InetSocketAddress( host, port ) );
-            try
-            {
-                OutputStream output = socket.getOutputStream();
-                output.write( command.getBytes() );
-                output.close();
-            }
-            finally
-            {
-                socket.close();
-            }
+            OutputStream output = socket.getOutputStream();
+            output.write( command.getBytes() );
+            output.close();
         }
-        catch ( Exception e )
+        finally
         {
-            throw new RuntimeException( e );
+            socket.close();
         }
     }
 

@@ -15,7 +15,6 @@ package org.sonatype.sisu.jsw.monitor;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import org.sonatype.sisu.jsw.monitor.internal.log.LogProxy;
@@ -45,6 +44,8 @@ public class ShutdownIfNotAliveThread
 
     private Socket socket;
 
+    private final CommandMonitorTalker talker;
+
     public ShutdownIfNotAliveThread( final int port,
                                      final int pingInterval,
                                      final int timeout,
@@ -55,8 +56,10 @@ public class ShutdownIfNotAliveThread
         this.pingInterval = pingInterval;
         this.timeout = timeout;
         this.log = log;
-        this.running = true;
 
+        talker = new CommandMonitorTalker( port );
+
+        this.running = true;
         this.setDaemon( true );
         setName( "Shutdown if not alive" );
     }
@@ -88,9 +91,7 @@ public class ShutdownIfNotAliveThread
         {
             log.debug( "Pinging on port {} ...", port );
 
-            socket = new Socket();
-            socket.connect( new InetSocketAddress( LOCALHOST, port ), timeout );
-
+            talker.send( "PING" );
         }
         catch ( ConnectException e )
         {
@@ -99,7 +100,7 @@ public class ShutdownIfNotAliveThread
             running = false;
             shutdownJSW();
         }
-        catch ( IOException e )
+        catch ( Exception e )
         {
             log.info( "Skipping exception got while pinging {}:{}", e.getClass().getName(), e.getMessage() );
         }
