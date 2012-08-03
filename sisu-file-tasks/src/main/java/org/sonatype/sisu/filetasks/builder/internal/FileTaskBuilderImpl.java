@@ -17,6 +17,7 @@ import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
 import org.sonatype.sisu.filetasks.builder.CopyBuilder;
 import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
+import org.sonatype.sisu.filetasks.builder.ExecBuilder;
 import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
 import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
@@ -95,6 +96,11 @@ class FileTaskBuilderImpl
     private Provider<ChmodBuilderImpl> chmodBuilderProvider;
 
     /**
+     * Exec builder.
+     */
+    private ExecBuilder execBuilder;
+
+    /**
      * Constructor.
      *
      * @param copyBuilder               copy builder
@@ -104,6 +110,7 @@ class FileTaskBuilderImpl
      * @param expandBuilderProvider     expand builder provider
      * @param propertiesBuilderProvider properties builder provider
      * @param chmodBuilderProvider      chmod builder provider
+     * @param execBuilder               exec builder
      * @since 1.0
      */
     @Inject
@@ -116,7 +123,8 @@ class FileTaskBuilderImpl
                          final Provider<SymlinkBuilderImpl> symlinkBuilderProvider,
                          final Provider<ExpandBuilderImpl> expandBuilderProvider,
                          final Provider<PropertiesBuilderImpl> propertiesBuilderProvider,
-                         final Provider<ChmodBuilderImpl> chmodBuilderProvider )
+                         final Provider<ChmodBuilderImpl> chmodBuilderProvider,
+                         final ExecBuilder execBuilder)
     {
         this.copyBuilder = checkNotNull( copyBuilder );
         this.createBuilder = checkNotNull( createBuilder );
@@ -128,7 +136,7 @@ class FileTaskBuilderImpl
         this.expandBuilderProvider = checkNotNull( expandBuilderProvider );
         this.propertiesBuilderProvider = checkNotNull( propertiesBuilderProvider );
         this.chmodBuilderProvider = checkNotNull( chmodBuilderProvider );
-
+        this.execBuilder = checkNotNull( execBuilder );
     }
 
     /**
@@ -239,6 +247,17 @@ class FileTaskBuilderImpl
     public ChmodBuilder chmod( final FileRef directory )
     {
         return chmodBuilderProvider.get().directory( directory );
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
+    @Override
+    public ExecBuilder exec()
+    {
+        return execBuilder;
     }
 
 }

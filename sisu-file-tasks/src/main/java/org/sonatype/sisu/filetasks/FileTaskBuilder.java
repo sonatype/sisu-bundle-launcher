@@ -17,6 +17,7 @@ import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
 import org.sonatype.sisu.filetasks.builder.CopyBuilder;
 import org.sonatype.sisu.filetasks.builder.CreateBuilder;
 import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
+import org.sonatype.sisu.filetasks.builder.ExecBuilder;
 import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
 import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
@@ -122,5 +123,13 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     ChmodBuilder chmod( FileRef directory );
+
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.ExecSpawnTask} builder.
+     *
+     * @return ongoing exec task builder
+     * @since 1.3
+     */
+    ExecBuilder exec();
 
 }
