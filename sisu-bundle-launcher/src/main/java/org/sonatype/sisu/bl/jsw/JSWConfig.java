@@ -28,11 +28,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.sonatype.sisu.goodies.common.TestAccessible;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 
 /**
  * JSW configurations file (wrapper.conf) reader/writer.
@@ -175,7 +178,11 @@ public class JSWConfig
                 }
                 out.println( "# " + overrideComment );
 
-                for ( String propertyName : overrideProperties.stringPropertyNames() )
+                final List<String> propertiesNames = Lists.newArrayList();
+                propertiesNames.addAll( overrideProperties.stringPropertyNames() );
+                Collections.sort( propertiesNames );
+
+                for ( final String propertyName : propertiesNames )
                 {
                     out.println( propertyName + "=" + overrideProperties.getProperty( propertyName ) );
                 }
