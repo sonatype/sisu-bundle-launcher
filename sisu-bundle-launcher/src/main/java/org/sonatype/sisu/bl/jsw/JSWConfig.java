@@ -11,8 +11,10 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-package org.sonatype.sisu.jsw.util;
+package org.sonatype.sisu.bl.jsw;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 import static org.apache.commons.io.FileUtils.readFileToString;
 
 import java.io.BufferedInputStream;
@@ -25,9 +27,12 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
-import org.sonatype.sisu.jsw.monitor.Launcher;
+import org.sonatype.sisu.goodies.common.TestAccessible;
+import com.google.common.base.Throwables;
 
 /**
  * JSW configurations file (wrapper.conf) reader/writer.
@@ -116,7 +121,7 @@ public class JSWConfig
      * Reads JSW configuration file.
      *
      * @return itself, for fluent API usage
-     * @throws IOException in case of reading configuration file fails
+     * @throws java.io.IOException in case of reading configuration file fails
      */
     public JSWConfig load()
         throws IOException
@@ -146,7 +151,7 @@ public class JSWConfig
      * changes (overridden properties).
      *
      * @return itself, for fluent API usage
-     * @throws IOException in case of writing configuration file fails
+     * @throws java.io.IOException in case of writing configuration file fails
      */
     public JSWConfig save()
         throws IOException
@@ -237,68 +242,99 @@ public class JSWConfig
     }
 
     /**
-     * Configures JSW monitor that permits sending commands to running JSW process.
+     * Adds a Java system property.
      *
-     * @param port monitor port
-     * @return itself, for usage in fluent api
-     * @since 1.0
+     * @param key   key of system property
+     * @param value value of system property
+     * @return itself, for fluent API usage
      */
-    public JSWConfig configureMonitor( int port )
+    public JSWConfig addJavaSystemProperty( final String key, final String value )
     {
-        eventuallyConfigureLoader();
-
-        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.MONITOR_PORT + "=" + port );
-
-        return this;
+        return addJavaStartupParameter( format( "-D%s=%s", key, value ) );
     }
 
     /**
-     * Configures keep alive thread that pings a configured port to check if the running JSW process should stop itself.
+     * Adds a set of Java system property.
      *
-     * @param port keep alive port
-     * @return itself, for usage in fluent api
-     * @since 1.0
+     * @param systemProperties system properties to be added. Cannot be null.
+     * @return itself, for fluent API usage
      */
-    public JSWConfig configureKeepAlive( int port )
+    public JSWConfig addJavaSystemProperties( final Map<String, String> systemProperties )
     {
-        eventuallyConfigureLoader();
-
-        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.KEEP_ALIVE_PORT + "=" + port );
-
-        return this;
-    }
-
-    /**
-     * Configures monitored booter if not already configured
-     *
-     * @since 1.0
-     */
-    private void eventuallyConfigureLoader()
-    {
-        String mainClass = getProperty( WRAPPER_JAVA_MAINCLASS );
-        if ( Launcher.class.getName().equals( mainClass ) )
+        if ( !checkNotNull( systemProperties.isEmpty() ) )
         {
-            return;
+            for ( final Map.Entry<String, String> entry : systemProperties.entrySet() )
+            {
+                addJavaSystemProperty(
+                    entry.getKey(), entry.getValue() == null ? "true" : entry.getValue()
+                );
+            }
         }
-        setProperty( WRAPPER_JAVA_MAINCLASS, Launcher.class.getName() );
-        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LAUNCHER + "=" + mainClass );
-        addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, "-D" + Launcher.LOG_TO_SYSTEM_OUT + "=true" );
+        return this;
+    }
 
+    /**
+     * Adds an additional Java startup param.
+     *
+     * @param parameter value of startup param
+     * @return itself, for fluent API usage
+     */
+    public JSWConfig addJavaStartupParameter( final String parameter )
+    {
+        return addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, parameter );
+    }
+
+    /**
+     * Adds a set of Java startup parameters.
+     *
+     * @param parameters startup parameters. Cannot be null.
+     * @return itself, for fluent API usage
+     */
+    public JSWConfig addJavaStartupParameters( final Collection<String> parameters )
+    {
+        if ( !checkNotNull( parameters.isEmpty() ) )
+        {
+            for ( final String entry : parameters )
+            {
+                addJavaStartupParameter( entry );
+            }
+        }
+        return this;
+    }
+
+    public JSWConfig setJavaMainClass( final String mainClass )
+    {
+        return setProperty( WRAPPER_JAVA_MAINCLASS, mainClass );
+    }
+
+    public JSWConfig setJavaMainClass( final Class mainClass )
+    {
+        return setJavaMainClass( mainClass.getName() );
+    }
+
+    public JSWConfig addToJavaClassPath( final String entry )
+    {
+        return addIndexedProperty( WRAPPER_JAVA_CLASSPATH, entry );
+    }
+
+    public JSWConfig addToJavaClassPath( final Class clazz )
+    {
+        final URL jar = clazz.getProtectionDomain().getCodeSource().getLocation();
+        return addToJavaClassPath( urlToFile( jar ).getAbsolutePath() );
+    }
+
+    @TestAccessible
+    File urlToFile( final URL url )
+    {
         try
         {
-            URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
-            addIndexedProperty( WRAPPER_JAVA_CLASSPATH, urlToFile( location ).getAbsolutePath() );
+            final URI uri = url.toURI();
+            return new File( uri );
         }
         catch ( URISyntaxException e )
         {
-            throw new IllegalStateException( e.getMessage(), e );
+            throw Throwables.propagate( e );
         }
     }
 
-    File urlToFile( URL url )
-        throws URISyntaxException
-    {
-        URI uri = url.toURI();
-        return new File( uri );
-    }
 }

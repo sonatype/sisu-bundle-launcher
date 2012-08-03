@@ -11,7 +11,7 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-package org.sonatype.sisu.jsw.util;
+package org.sonatype.sisu.bl.jsw;
 
 import static junit.framework.Assert.assertTrue;
 import static org.apache.commons.io.FileUtils.copyFile;
@@ -22,12 +22,10 @@ import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.contain
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.sonatype.sisu.jsw.monitor.Launcher;
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
 
@@ -127,38 +125,6 @@ public class JSWConfigTest
     }
 
     @Test
-    public void configureMonitor()
-        throws Exception
-    {
-        jswConfig.configureMonitor( 9001 );
-        jswConfig.save();
-        assertThat(
-            config,
-            contains(
-                JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
-                JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.MONITOR_PORT + "=9001",
-                JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4=" + getLauncherFile().getAbsolutePath()
-            )
-        );
-    }
-
-    @Test
-    public void configureKeepAlive()
-        throws Exception
-    {
-        jswConfig.configureKeepAlive( 9001 );
-        jswConfig.save();
-        assertThat(
-            config,
-            contains(
-                JSWConfig.WRAPPER_JAVA_MAINCLASS + "=" + Launcher.class.getName(),
-                JSWConfig.WRAPPER_JAVA_ADDITIONAL + ".3=-D" + Launcher.KEEP_ALIVE_PORT + "=9001",
-                JSWConfig.WRAPPER_JAVA_CLASSPATH + ".4=" + getLauncherFile().getAbsolutePath()
-            )
-        );
-    }
-
-    @Test
     public void testLauncherPathWithSpaces()
         throws Exception
     {
@@ -203,10 +169,4 @@ public class JSWConfigTest
         );
     }
 
-    private File getLauncherFile()
-        throws URISyntaxException
-    {
-        URL url = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
-        return new File( url.toURI() );
-    }
 }
