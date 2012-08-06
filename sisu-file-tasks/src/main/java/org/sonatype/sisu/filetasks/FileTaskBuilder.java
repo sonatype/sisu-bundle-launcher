@@ -17,11 +17,13 @@ import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
 import org.sonatype.sisu.filetasks.builder.CopyBuilder;
 import org.sonatype.sisu.filetasks.builder.CreateBuilder;
 import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
+import org.sonatype.sisu.filetasks.builder.ExecBuilder;
 import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
 import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
 import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
 import org.sonatype.sisu.filetasks.builder.RenameBuilder;
+import org.sonatype.sisu.filetasks.builder.ReplaceBuilder;
 import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 import org.sonatype.sisu.filetasks.builder.WarBuilder;
 
@@ -122,5 +124,22 @@ public interface FileTaskBuilder
      * @since 1.0
      */
     ChmodBuilder chmod( FileRef directory );
+
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.ExecSpawnTask} builder.
+     *
+     * @return ongoing exec task builder
+     * @since 1.3
+     */
+    ExecBuilder exec();
+
+    /**
+     * {@link org.sonatype.sisu.filetasks.task.ReplaceInFilesFromDirectoryTask} or
+     * {@link org.sonatype.sisu.filetasks.builder.ReplaceInFileBuilder} builder.
+     *
+     * @return ongoing replace task builder
+     * @since 1.3
+     */
+    ReplaceBuilder replace();
 
 }

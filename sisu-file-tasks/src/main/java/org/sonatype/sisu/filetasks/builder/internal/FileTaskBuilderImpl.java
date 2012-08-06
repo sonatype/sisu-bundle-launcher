@@ -13,25 +13,27 @@
 
 package org.sonatype.sisu.filetasks.builder.internal;
 
-import org.sonatype.sisu.filetasks.FileTaskBuilder;
-import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
-import org.sonatype.sisu.filetasks.builder.CopyBuilder;
-import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
-import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
-import org.sonatype.sisu.filetasks.builder.FileRef;
-import org.sonatype.sisu.filetasks.builder.MoveBuilder;
-import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
-import org.sonatype.sisu.filetasks.builder.RenameBuilder;
-import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.filetasks.builder.ChmodBuilder;
+import org.sonatype.sisu.filetasks.builder.CopyBuilder;
 import org.sonatype.sisu.filetasks.builder.CreateBuilder;
+import org.sonatype.sisu.filetasks.builder.DeleteBuilder;
+import org.sonatype.sisu.filetasks.builder.ExecBuilder;
+import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
+import org.sonatype.sisu.filetasks.builder.FileRef;
+import org.sonatype.sisu.filetasks.builder.MoveBuilder;
+import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
+import org.sonatype.sisu.filetasks.builder.RenameBuilder;
+import org.sonatype.sisu.filetasks.builder.ReplaceBuilder;
+import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 import org.sonatype.sisu.filetasks.builder.WarBuilder;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO
@@ -95,6 +97,16 @@ class FileTaskBuilderImpl
     private Provider<ChmodBuilderImpl> chmodBuilderProvider;
 
     /**
+     * Exec builder.
+     */
+    private ExecBuilder execBuilder;
+
+    /**
+     * Replace builder.
+     */
+    private ReplaceBuilder replaceBuilder;
+
+    /**
      * Constructor.
      *
      * @param copyBuilder               copy builder
@@ -104,6 +116,7 @@ class FileTaskBuilderImpl
      * @param expandBuilderProvider     expand builder provider
      * @param propertiesBuilderProvider properties builder provider
      * @param chmodBuilderProvider      chmod builder provider
+     * @param execBuilder               exec builder
      * @since 1.0
      */
     @Inject
@@ -116,7 +129,9 @@ class FileTaskBuilderImpl
                          final Provider<SymlinkBuilderImpl> symlinkBuilderProvider,
                          final Provider<ExpandBuilderImpl> expandBuilderProvider,
                          final Provider<PropertiesBuilderImpl> propertiesBuilderProvider,
-                         final Provider<ChmodBuilderImpl> chmodBuilderProvider )
+                         final Provider<ChmodBuilderImpl> chmodBuilderProvider,
+                         final ExecBuilder execBuilder,
+                         final ReplaceBuilder replaceBuilder )
     {
         this.copyBuilder = checkNotNull( copyBuilder );
         this.createBuilder = checkNotNull( createBuilder );
@@ -128,7 +143,8 @@ class FileTaskBuilderImpl
         this.expandBuilderProvider = checkNotNull( expandBuilderProvider );
         this.propertiesBuilderProvider = checkNotNull( propertiesBuilderProvider );
         this.chmodBuilderProvider = checkNotNull( chmodBuilderProvider );
-
+        this.execBuilder = checkNotNull( execBuilder );
+        this.replaceBuilder = checkNotNull( replaceBuilder );
     }
 
     /**
@@ -159,9 +175,9 @@ class FileTaskBuilderImpl
      * @since 1.0
      */
     @Override
-    public WarBuilder war(final FileRef archive)
+    public WarBuilder war( final FileRef archive )
     {
-        return warBuilderProvider.get().archive(archive);
+        return warBuilderProvider.get().archive( archive );
     }
 
     /**
@@ -239,6 +255,28 @@ class FileTaskBuilderImpl
     public ChmodBuilder chmod( final FileRef directory )
     {
         return chmodBuilderProvider.get().directory( directory );
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
+    @Override
+    public ExecBuilder exec()
+    {
+        return execBuilder;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
+    @Override
+    public ReplaceBuilder replace()
+    {
+        return replaceBuilder;
     }
 
 }
