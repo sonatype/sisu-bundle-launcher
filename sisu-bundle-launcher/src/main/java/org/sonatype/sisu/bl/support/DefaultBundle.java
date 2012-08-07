@@ -303,26 +303,27 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
         log.info( "Waiting for application to boot for {} seconds", startTimeout );
 
-        while ( System.currentTimeMillis() < start + startTimeout * 1000 )
+        final boolean applicationAlive = new TimedCondition()
         {
-            try
+            @Override
+            protected boolean isSatisfied()
             {
-                if ( applicationAlive() )
-                {
-                    logApplicationIsAlive();
-                    log.debug( "Application {} started in {} seconds", getName(),
-                               ( System.currentTimeMillis() - start ) / 1000 );
-                    return;
-                }
-                Thread.sleep( Math.min( startTimeout, 1000 ) );
+                return applicationAlive();
             }
-            catch ( InterruptedException ignore )
-            {
-                // ignore
-            }
+        }.await( startTimeout * 1000 );
+
+        if ( applicationAlive )
+        {
+            log.debug(
+                "Application {} started in {} seconds", getName(), ( System.currentTimeMillis() - start ) / 1000
+            );
         }
-        throw new RuntimeException(
-            "Could not detect application running in the configured timeout of " + startTimeout + " seconds" );
+        else
+        {
+            throw new RuntimeException(
+                "Could not detect application running in the configured timeout of " + startTimeout + " seconds"
+            );
+        }
     }
 
     /**
