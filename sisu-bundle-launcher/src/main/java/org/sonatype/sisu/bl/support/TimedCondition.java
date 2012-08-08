@@ -12,6 +12,10 @@
  */
 package org.sonatype.sisu.bl.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.sonatype.sisu.goodies.common.Time;
+
 /**
  * Waits for a condition to become satisfied in a timed manner.
  *
@@ -33,16 +37,20 @@ public abstract class TimedCondition
     /**
      * Waits for this condition to become satisfied.
      *
-     * @param delay    before first check of condition (milliseconds)
-     * @param timeout  after which condition is considered unsatisfied (milliseconds)
-     * @param interval between checks that condition is satisfied (milliseconds)
+     * @param delay    before first check of condition
+     * @param timeout  after which condition is considered unsatisfied
+     * @param interval between checks that condition is satisfied
      * @return true if condition was satisfied before the specified timeout
      */
-    public boolean await( final long delay, final long timeout, final long interval )
+    public boolean await( final Time delay, final Time timeout, final Time interval )
     {
+        checkNotNull( delay );
+        checkNotNull( timeout );
+        checkNotNull( interval );
+
         sleep( delay );
         long start = System.currentTimeMillis();
-        while ( System.currentTimeMillis() < start + timeout )
+        while ( System.currentTimeMillis() < start + timeout.toMillis() )
         {
             try
             {
@@ -55,7 +63,7 @@ public abstract class TimedCondition
             {
                 // ignore
             }
-            sleep( Math.min( timeout, interval ) );
+            sleep( timeout.toMillis() < interval.toMillis() ? timeout : interval );
         }
         return false;
     }
@@ -63,38 +71,38 @@ public abstract class TimedCondition
     /**
      * Waits for this condition to become satisfied without a delay.
      *
-     * @param timeout  after which condition is considered unsatisfied (milliseconds)
-     * @param interval between checks that condition is satisfied (milliseconds)
+     * @param timeout  after which condition is considered unsatisfied
+     * @param interval between checks that condition is satisfied
      * @return true if condition was satisfied before the specified timeout
      */
-    public boolean await( final long timeout, final long interval )
+    public boolean await( final Time timeout, final Time interval )
     {
-        return await( 0, timeout, interval );
+        return await( Time.millis( 0 ), timeout, interval );
     }
 
     /**
      * Waits for this condition to become satisfied without a delay, checking the condition at each second.
      *
-     * @param timeout after which condition is considered unsatisfied (milliseconds)
+     * @param timeout after which condition is considered unsatisfied
      * @return true if condition was satisfied before the specified timeout
      */
-    public boolean await( final long timeout )
+    public boolean await( final Time timeout )
     {
-        return await( 0, timeout, 1000 );
+        return await( Time.millis( 0 ), timeout, Time.seconds( 1 ) );
     }
 
     /**
-     * Sleep for specified number of milliseconds.
+     * Sleep for specified time.
      *
-     * @param delay number of milliseconds to sleep
+     * @param delay time to sleep
      */
-    protected void sleep( final long delay )
+    protected void sleep( final Time delay )
     {
-        if ( delay > 0 )
+        if ( delay.toMillis() > 0 )
         {
             try
             {
-                Thread.sleep( delay );
+                Thread.sleep( delay.toMillis() );
             }
             catch ( InterruptedException ignore )
             {

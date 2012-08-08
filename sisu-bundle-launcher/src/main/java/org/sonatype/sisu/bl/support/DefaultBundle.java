@@ -31,6 +31,7 @@ import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.goodies.common.Time;
 import com.google.common.base.Throwables;
 
 /**
@@ -310,7 +311,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             {
                 return applicationAlive();
             }
-        }.await( startTimeout * 1000 );
+        }.await( Time.seconds( startTimeout ) );
 
         if ( applicationAlive )
         {
