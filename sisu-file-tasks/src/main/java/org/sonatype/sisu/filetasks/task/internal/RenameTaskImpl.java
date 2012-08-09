@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 1.0
  */
 @Named
-class RenameTaskImpl
+public class RenameTaskImpl
     extends AbstractAntTask<Move>
     implements RenameTask
 {

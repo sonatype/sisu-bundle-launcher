@@ -13,13 +13,12 @@
 
 package org.sonatype.sisu.filetasks.builder.internal;
 
-import org.sonatype.sisu.filetasks.builder.FileRef;
-import org.sonatype.sisu.filetasks.builder.RenameBuilder;
-import org.sonatype.sisu.filetasks.task.RenameTask;
-
+import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.File;
+
+import org.sonatype.sisu.filetasks.builder.FileRef;
+import org.sonatype.sisu.filetasks.task.internal.RenameTaskImpl;
 
 /**
  * TODO
@@ -29,13 +28,12 @@ import java.io.File;
 @Named
 public class RenameBuilderImpl
     extends BuilderImpl
-    implements RenameBuilder
 {
 
     /**
      * Task to be used.
      */
-    private RenameTask task;
+    private RenameTaskImpl task;
 
     /**
      * Re-target-able file/directory to be renamed.
@@ -45,11 +43,11 @@ public class RenameBuilderImpl
     /**
      * Constructor.
      *
-     * @param task {@link RenameTask} to be used
+     * @param task {@link RenameTaskImpl} to be used
      * @since 1.0
      */
     @Inject
-    RenameBuilderImpl( final RenameTask task )
+    RenameBuilderImpl( final RenameTaskImpl task )
     {
         this.task = task;
         target = addRetargetable( new Retargetable()
@@ -81,7 +79,6 @@ public class RenameBuilderImpl
      *
      * @since 1.0
      */
-    @Override
     public RenameBuilderImpl to( final String name )
     {
         task().setName( name );
@@ -94,7 +91,7 @@ public class RenameBuilderImpl
      * @since 1.0
      */
     @Override
-    RenameTask task()
+    RenameTaskImpl task()
     {
         return task;
     }

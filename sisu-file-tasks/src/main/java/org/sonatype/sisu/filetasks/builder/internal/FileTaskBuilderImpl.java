@@ -30,7 +30,6 @@ import org.sonatype.sisu.filetasks.builder.ExpandBuilder;
 import org.sonatype.sisu.filetasks.builder.FileRef;
 import org.sonatype.sisu.filetasks.builder.MoveBuilder;
 import org.sonatype.sisu.filetasks.builder.PropertiesBuilder;
-import org.sonatype.sisu.filetasks.builder.RenameBuilder;
 import org.sonatype.sisu.filetasks.builder.ReplaceBuilder;
 import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 import org.sonatype.sisu.filetasks.builder.WarBuilder;
@@ -197,7 +196,7 @@ class FileTaskBuilderImpl
      * @since 1.0
      */
     @Override
-    public RenameBuilder rename( final FileRef target )
+    public RenameBuilderImpl rename( final FileRef target )
     {
         return renameBuilderProvider.get().target( target );
     }

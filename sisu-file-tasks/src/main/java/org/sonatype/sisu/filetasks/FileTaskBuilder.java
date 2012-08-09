@@ -26,6 +26,7 @@ import org.sonatype.sisu.filetasks.builder.RenameBuilder;
 import org.sonatype.sisu.filetasks.builder.ReplaceBuilder;
 import org.sonatype.sisu.filetasks.builder.SymlinkBuilder;
 import org.sonatype.sisu.filetasks.builder.WarBuilder;
+import org.sonatype.sisu.filetasks.builder.internal.RenameBuilderImpl;
 
 /**
  * Helper for easy, fluent API building of {@link FileTask}s.
@@ -69,7 +70,7 @@ public interface FileTaskBuilder
      * @return ongoing rename task builder
      * @since 1.0
      */
-    RenameBuilder rename( FileRef target );
+    RenameBuilderImpl rename( FileRef target );
 
     /**
      * {@link org.sonatype.sisu.filetasks.task.MoveTask} builder.
