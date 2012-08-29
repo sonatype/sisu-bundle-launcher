@@ -53,14 +53,9 @@
   <!--</issueManagement>-->
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <build.number />
-
-    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
   <modules>
@@ -264,13 +259,6 @@
                     <exclude>commons-logging:commons-logging</exclude>
                     <exclude>commons-logging:commons-logging-api</exclude>
                   </excludes>
-                </bannedDependencies>
-                <bannedDependencies>
-                  <searchTransitive>true</searchTransitive>
-                  <excludes>
-                    <exclude>org.mockito:mockito-all</exclude>
-                  </excludes>
-                  <message>mockito-all includes third party classes within it - use mockito-core instead</message>
                 </bannedDependencies>
               </rules>
             </configuration>
