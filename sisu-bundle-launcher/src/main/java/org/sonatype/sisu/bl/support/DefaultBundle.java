@@ -403,7 +403,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     private void deleteTarget()
     {
-        onDirectory( getConfiguration().getTargetDirectory() ).apply(
+        final File targetDirectory = getConfiguration().getTargetDirectory();
+        if ( targetDirectory == null )
+        {
+            throw new RuntimeException( "Target directory must be set in bundle configuration" );
+        }
+        onDirectory( targetDirectory ).apply(
             getFileTaskBuilder().delete().directory( path( "/" ) )
         );
     }
