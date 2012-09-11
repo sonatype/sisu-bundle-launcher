@@ -89,7 +89,7 @@ public class JettyITSupport
         return testIndex;
     }
 
-    static Stopwatch startJetty( final JettyBundle jettyBundle )
+    protected static Stopwatch startJetty( final JettyBundle jettyBundle )
     {
         final Stopwatch stopwatch = new Stopwatch();
         if ( jettyBundle != null && !jettyBundle.isRunning() )
@@ -109,7 +109,7 @@ public class JettyITSupport
         return stopwatch;
     }
 
-    static void stopJetty( final JettyBundle jettyBundle )
+    protected static void stopJetty( final JettyBundle jettyBundle )
     {
         if ( jettyBundle != null && jettyBundle.isRunning() )
         {
@@ -127,20 +127,23 @@ public class JettyITSupport
 
     protected void recordLogs( final JettyBundle jetty )
     {
-        final File logs = new File( jetty.getConfiguration().getTargetDirectory(), "jetty/logs" );
-        final File[] logFiles = logs.listFiles(new FilenameFilter()
+        if ( jetty != null )
         {
-            @Override
-            public boolean accept( final File parentDir, final String name )
+            final File logs = new File( jetty.getConfiguration().getTargetDirectory(), "jetty/logs" );
+            final File[] logFiles = logs.listFiles( new FilenameFilter()
             {
-                return name.contains( "log" );
-            }
-        });
-        if ( logFiles != null && logFiles.length > 0 )
-        {
-            for ( File logFile : logFiles )
+                @Override
+                public boolean accept( final File parentDir, final String name )
+                {
+                    return name.contains( "log" );
+                }
+            } );
+            if ( logFiles != null && logFiles.length > 0 )
             {
-                testIndex().recordLink( logFile.getName(), logFile );
+                for ( File logFile : logFiles )
+                {
+                    testIndex().recordLink( logFile.getName(), logFile );
+                }
             }
         }
     }

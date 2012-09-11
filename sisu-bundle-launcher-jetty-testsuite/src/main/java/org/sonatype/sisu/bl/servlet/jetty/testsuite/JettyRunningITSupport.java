@@ -14,14 +14,18 @@ package org.sonatype.sisu.bl.servlet.jetty.testsuite;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy;
+import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy.EACH_METHOD;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBundle;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBundleConfiguration;
+import org.sonatype.sisu.bl.support.RunningBundles;
 import com.google.common.base.Stopwatch;
 
 /**
@@ -44,6 +48,8 @@ public class JettyRunningITSupport
      */
     private JettyBundle jetty;
 
+    private static JettyBundle staticJetty;
+
     @Before
     public void beforeTestIsRunning()
     {
@@ -58,8 +64,26 @@ public class JettyRunningITSupport
     @After
     public void afterTestWasRunning()
     {
-        stopJetty( jetty );
         recordLogs( jetty );
+
+        final Strategy strategy = getStartAndStopStrategy();
+        if ( EACH_METHOD.equals( strategy ) )
+        {
+            stopJetty( jetty );
+            jetty = null;
+            staticJetty = null;
+        }
+        else
+        {
+            staticJetty = jetty;
+        }
+    }
+
+    @AfterClass
+    public static void afterAllTestsWereRun()
+    {
+        stopJetty( staticJetty );
+        staticJetty = null;
     }
 
     /**
@@ -71,13 +95,20 @@ public class JettyRunningITSupport
     {
         if ( jetty == null )
         {
-            jetty = jettyProvider.get();
-            final JettyBundleConfiguration config = configureJetty(
-                applyDefaultConfiguration( jetty ).getConfiguration()
-            );
-            if ( config != null )
+            if ( staticJetty == null )
             {
-                jetty.setConfiguration( config );
+                jetty = jettyProvider.get();
+                final JettyBundleConfiguration config = configureJetty(
+                    applyDefaultConfiguration( jetty ).getConfiguration()
+                );
+                if ( config != null )
+                {
+                    jetty.setConfiguration( config );
+                }
+            }
+            else
+            {
+                jetty = staticJetty;
             }
         }
         return jetty;
@@ -105,6 +136,21 @@ public class JettyRunningITSupport
     protected JettyBundleConfiguration configureJetty( JettyBundleConfiguration configuration )
     {
         return configuration;
+    }
+
+    /**
+     * Determines the start and stop strategy by looking up {@link JettyStartAndStopStrategy} annotation.
+     *
+     * @return start and stop strategy to pe used. If null, Jetty will be started and stopped for each test method.
+     */
+    protected Strategy getStartAndStopStrategy()
+    {
+        final JettyStartAndStopStrategy strategy = getClass().getAnnotation( JettyStartAndStopStrategy.class );
+        if ( strategy != null )
+        {
+            return strategy.value();
+        }
+        return EACH_METHOD;
     }
 
 }
