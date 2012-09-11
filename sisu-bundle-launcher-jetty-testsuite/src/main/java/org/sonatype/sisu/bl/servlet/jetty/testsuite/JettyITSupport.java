@@ -13,6 +13,7 @@
 package org.sonatype.sisu.bl.servlet.jetty.testsuite;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import org.junit.Rule;
 import org.slf4j.Logger;
@@ -120,6 +121,26 @@ public class JettyITSupport
             catch ( Exception e )
             {
                 throw Throwables.propagate( e );
+            }
+        }
+    }
+
+    protected void recordLogs( final JettyBundle jetty )
+    {
+        final File logs = new File( jetty.getConfiguration().getTargetDirectory(), "jetty/logs" );
+        final File[] logFiles = logs.listFiles(new FilenameFilter()
+        {
+            @Override
+            public boolean accept( final File parentDir, final String name )
+            {
+                return name.contains( "log" );
+            }
+        });
+        if ( logFiles != null && logFiles.length > 0 )
+        {
+            for ( File logFile : logFiles )
+            {
+                testIndex().recordLink( logFile.getName(), logFile );
             }
         }
     }

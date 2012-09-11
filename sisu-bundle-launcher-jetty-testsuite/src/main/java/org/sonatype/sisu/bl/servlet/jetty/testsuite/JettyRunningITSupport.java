@@ -59,6 +59,7 @@ public class JettyRunningITSupport
     public void afterTestWasRunning()
     {
         stopJetty( jetty );
+        recordLogs( jetty );
     }
 
     /**
