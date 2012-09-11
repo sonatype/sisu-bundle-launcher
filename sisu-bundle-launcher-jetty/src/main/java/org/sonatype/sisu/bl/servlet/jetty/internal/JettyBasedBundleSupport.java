@@ -24,6 +24,7 @@ import javax.inject.Provider;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.io.InputStreamFacade;
+import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.servlet.internal.DefaultServletContainerBundle;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBasedBundle;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBasedBundleConfiguration;
@@ -76,6 +77,36 @@ public abstract class JettyBasedBundleSupport<TB extends JettyBasedBundle, TBC e
         {
             getPortReservationService().cancelPort( httpsPort );
             httpsPort = 0;
+        }
+    }
+
+    @Override
+    protected void createBundle()
+    {
+        BundleConfiguration config = getConfiguration();
+        File bundle = config.getBundle();
+        if ( bundle == null )
+        {
+            return;
+        }
+        if ( bundle.isDirectory() )
+        {
+            onDirectory( config.getTargetDirectory() ).apply(
+                getFileTaskBuilder().copy().directory( file( bundle ) )
+                    .to().directory( path( "/" ) )
+            );
+        }
+        else
+        {
+            onDirectory( config.getTargetDirectory() ).apply(
+                getFileTaskBuilder().expand( file( bundle ) )
+                    .exclude( "*/contexts/**" )
+                    .exclude( "*/contexts-available/**" )
+                    .exclude( "*/javadoc/**" )
+                    .exclude( "*/overlays/**" )
+                    .exclude( "*/webapps/**" )
+                    .to().directory( path( "/" ) )
+            );
         }
     }
 
