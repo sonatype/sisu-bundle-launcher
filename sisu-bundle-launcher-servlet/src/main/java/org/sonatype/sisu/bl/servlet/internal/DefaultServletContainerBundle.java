@@ -19,7 +19,6 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 
 import java.io.File;
 import java.util.List;
-
 import javax.inject.Provider;
 
 import org.apache.tools.ant.taskdefs.ExecTask;
@@ -55,7 +54,7 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
                                           final RunningBundles runningBundles,
                                           final FileTaskBuilder fileTaskBuilder,
                                           final PortReservationService portReservationService,
-                                          final AntHelper ant)
+                                          final AntHelper ant )
     {
         super( name, configurationProvider, runningBundles, fileTaskBuilder, portReservationService );
         this.ant = checkNotNull( ant );
@@ -114,10 +113,13 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
             exec.setFailonerror( true );
         }
 
-        for ( String argument : arguments )
+        if ( arguments != null )
         {
-            Commandline.Argument arg = exec.createArg();
-            arg.setValue( argument );
+            for ( String argument : arguments )
+            {
+                Commandline.Argument arg = exec.createArg();
+                arg.setValue( argument );
+            }
         }
 
         exec.setDir( new File( getConfiguration().getTargetDirectory(), getName() ) );
@@ -128,7 +130,14 @@ public abstract class DefaultServletContainerBundle<SCB extends ServletContainer
         javaHome.setValue( System.getProperty( "java.home" ) );
         exec.addEnv( javaHome );
 
-        log.debug( "Executing {} with arguments: ", script, arguments );
+        if ( arguments != null && arguments.length > 0 )
+        {
+            log.debug( "Executing {} with arguments: {}", script, arguments );
+        }
+        else
+        {
+            log.debug( "Executing {}", script );
+        }
 
         exec.execute();
     }
