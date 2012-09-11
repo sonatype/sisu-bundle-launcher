@@ -19,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBundle;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
+import org.sonatype.sisu.litmus.testsupport.TestData;
 import org.sonatype.sisu.litmus.testsupport.TestIndex;
 import org.sonatype.sisu.litmus.testsupport.inject.InjectedTestSupport;
+import org.sonatype.sisu.litmus.testsupport.junit.TestDataRule;
 import org.sonatype.sisu.litmus.testsupport.junit.TestIndexRule;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
@@ -37,8 +39,19 @@ public class JettyITSupport
 
     static final Logger LOGGER = LoggerFactory.getLogger( JettyITSupport.class );
 
+    /**
+     * Test index.
+     * Never null.
+     */
     @Rule
     public TestIndexRule testIndex = new TestIndexRule( util.resolveFile( "target/its" ) );
+
+    /**
+     * Test data.
+     * Never null.
+     */
+    @Rule
+    public TestDataRule testData = new TestDataRule( util.resolveFile( "src/test/it-resources" ) );
 
     @Override
     public void configure( final Binder binder )
@@ -53,6 +66,16 @@ public class JettyITSupport
                 }
             }
         );
+    }
+
+    /**
+     * Returns test data accessor.
+     *
+     * @return test data accessor. Never null.
+     */
+    public TestData testData()
+    {
+        return testData;
     }
 
     /**

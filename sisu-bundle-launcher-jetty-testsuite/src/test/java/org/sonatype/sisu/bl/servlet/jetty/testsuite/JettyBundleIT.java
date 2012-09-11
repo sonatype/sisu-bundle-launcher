@@ -17,7 +17,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import org.junit.Test;
+import org.sonatype.sisu.bl.servlet.WAR;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBundle;
+import org.sonatype.sisu.bl.servlet.jetty.JettyBundleConfiguration;
 
 /**
  * {@link JettyBundle} ITs.
@@ -35,4 +37,9 @@ public class JettyBundleIT
         assertThat( jetty().isRunning(), is( true ) );
     }
 
+    @Override
+    protected JettyBundleConfiguration configureJetty( final JettyBundleConfiguration configuration )
+    {
+        return configuration.addWARs( WAR.war( "", testData().resolveFile( "spdy.war" ) ) );
+    }
 }
