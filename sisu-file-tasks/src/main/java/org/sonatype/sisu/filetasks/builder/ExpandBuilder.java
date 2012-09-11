@@ -50,6 +50,24 @@ public interface ExpandBuilder
     ExpandBuilder cutDirectories( int directoriesToCut );
 
     /**
+     * Adds an include pattern (ANT style) to filter the files to be expanded.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.4
+     */
+    ExpandBuilder include( String pattern );
+
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to be expanded.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.4
+     */
+    ExpandBuilder exclude( String pattern );
+
+    /**
      * Ongoing destination builder.
      *
      * @return ongoing destination builder.

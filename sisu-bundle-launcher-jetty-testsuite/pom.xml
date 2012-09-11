@@ -18,23 +18,54 @@
     <version>1.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>sisu-bundle-launcher-tomcat</artifactId>
+  <artifactId>sisu-bundle-launcher-jetty-testsuite</artifactId>
 
-  <name>Sisu Bundle Launcher :: Tomcat</name>
+  <name>Sisu Bundle Launcher :: Jetty Test Suite</name>
 
   <properties>
-    <tomcat.version>7.0.27</tomcat.version>
+    <jetty.version>7.0.27</jetty.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
-      <artifactId>sisu-bundle-launcher-servlet</artifactId>
+      <artifactId>sisu-bundle-launcher-jetty</artifactId>
+      <version>1.4-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
+      <groupId>org.sonatype.sisu.litmus</groupId>
+      <artifactId>litmus-testsupport</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>it</id>
+      <activation>
+        <property>
+          <name>it</name>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

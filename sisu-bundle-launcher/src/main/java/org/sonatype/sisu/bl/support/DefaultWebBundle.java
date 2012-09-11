@@ -92,7 +92,8 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
             urlConnection.setReadTimeout( 0 );
             urlConnection.setUseCaches( false );
             urlConnection.connect();
-            return urlConnection.getResponseCode() == 200;
+            // if connect does not result in an exception, the application is alive
+            return true;
         }
         catch ( IOException ignore )
         {

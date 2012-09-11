@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <name>Sisu Bundle Launcher :: Aggregator</name>
-  <version>1.3.1-SNAPSHOT</version>
+  <version>1.4-SNAPSHOT</version>
 
   <url>https://github.com/sonatype/sisu-bundle-launcher</url>
 
@@ -56,6 +56,9 @@
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <build.number />
+
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+    <test.log.pattern>%date %level [%thread%X{DC}] %logger - %msg%n</test.log.pattern>
   </properties>
 
   <modules>
@@ -63,6 +66,8 @@
     <module>sisu-bundle-launcher</module>
     <module>sisu-bundle-launcher-servlet</module>
     <module>sisu-bundle-launcher-tomcat</module>
+    <module>sisu-bundle-launcher-jetty</module>
+    <module>sisu-bundle-launcher-jetty-testsuite</module>
   </modules>
 
   <dependencyManagement>
@@ -112,7 +117,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.litmus</groupId>
         <artifactId>litmus-testsupport</artifactId>
-        <version>1.4</version>
+        <version>1.4.1-SNAPSHOT</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -132,17 +137,17 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.4-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-servlet</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.4-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-file-tasks</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.4-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -223,6 +228,37 @@
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagNameFormat>sisu-bundle-launcher-@{version}</tagNameFormat>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.12</version>
+          <configuration>
+            <failIfNoTests>false</failIfNoTests>
+            <redirectTestOutputToFile>${maven.test.redirectTestOutputToFile}</redirectTestOutputToFile>
+            <!-- force use of property -->
+            <forkMode>once</forkMode>
+            <argLine>-ea</argLine>
+            <workingDirectory>${project.build.directory}</workingDirectory>
+            <systemPropertyVariables>
+              <java.awt.headless>true</java.awt.headless>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.12</version>
+          <configuration>
+            <failIfNoTests>false</failIfNoTests>
+            <redirectTestOutputToFile>${maven.test.redirectTestOutputToFile}</redirectTestOutputToFile>
+            <forkMode>always</forkMode>
+            <argLine>-ea</argLine>
+            <workingDirectory>${project.build.directory}</workingDirectory>
+            <systemPropertyVariables>
+              <java.awt.headless>true</java.awt.headless>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
       </plugins>

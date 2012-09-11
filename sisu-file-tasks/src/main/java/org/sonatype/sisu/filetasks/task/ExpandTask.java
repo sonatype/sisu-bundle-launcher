@@ -13,9 +13,9 @@
 
 package org.sonatype.sisu.filetasks.task;
 
-import org.sonatype.sisu.filetasks.FileTask;
-
 import java.io.File;
+
+import org.sonatype.sisu.filetasks.FileTask;
 
 /**
  * Expands an archive.
@@ -61,5 +61,23 @@ public interface ExpandTask
      * @since 1.0
      */
     ExpandTask setDirectoriesToCut( int directoriesToCut );
+
+    /**
+     * Adds an include pattern (ANT style) to filter the files to be expanded.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.4
+     */
+    ExpandTask addIncludePattern( String pattern );
+
+    /**
+     * Adds an exclude pattern (ANT style) to filter the files to be expanded.
+     *
+     * @param pattern ANT style file pattern
+     * @return itself, for fluent API usage
+     * @since 1.4
+     */
+    ExpandTask addExcludePattern( String pattern );
 
 }

@@ -18,13 +18,9 @@
     <version>1.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>sisu-bundle-launcher-tomcat</artifactId>
+  <artifactId>sisu-bundle-launcher-jetty</artifactId>
 
-  <name>Sisu Bundle Launcher :: Tomcat</name>
-
-  <properties>
-    <tomcat.version>7.0.27</tomcat.version>
-  </properties>
+  <name>Sisu Bundle Launcher :: Jetty</name>
 
   <dependencies>
     <dependency>
