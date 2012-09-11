@@ -44,12 +44,17 @@ public class MavenBridgedBundleResolver
     /**
      * Maven coordinates of the bundle artifact to be resolved.
      */
-    private String bundleCoordinates;
+    private final String bundleCoordinates;
 
     /**
      * Artifact resolver.
      */
-    private MavenArtifactResolver artifactResolver;
+    private final MavenArtifactResolver artifactResolver;
+
+    /**
+     *  Name of property used to lookup bundle coordinates.
+     */
+    private final String bundleCoordinatesProperty;
 
     /**
      * Constructor.
@@ -62,7 +67,23 @@ public class MavenBridgedBundleResolver
     public MavenBridgedBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
                                       final MavenArtifactResolver artifactResolver) {
 
+        this(bundleCoordinates, BUNDLE_COORDINATES, artifactResolver);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param bundleCoordinates Maven artifact coordinates of bundle to be resolved. If injected will use the
+     *                          coordinates bounded to {@link #BUNDLE_COORDINATES}
+     * @param bundleCoordinatesProperty name of property used to lookup bundle coordinates
+     * @param artifactResolver  artifact resolver to be used to resolve the bundle
+     */
+    public MavenBridgedBundleResolver(final String bundleCoordinates,
+                                      final String bundleCoordinatesProperty,
+                                      final MavenArtifactResolver artifactResolver) {
+
         this.bundleCoordinates = bundleCoordinates;
+        this.bundleCoordinatesProperty = bundleCoordinatesProperty;
         this.artifactResolver = checkNotNull(artifactResolver);
     }
 
@@ -74,7 +95,8 @@ public class MavenBridgedBundleResolver
     @Override
     public File resolve() {
         if (bundleCoordinates == null) {
-            throw new RuntimeException("Bundle coordinates must be set. Did you set '" + BUNDLE_COORDINATES + "' configuration property?");
+            throw new RuntimeException(
+                "Bundle coordinates must be set. Did you set '" + bundleCoordinatesProperty + "' configuration property?");
         }
         try {
             Artifact artifact = artifactResolver.resolveArtifact(
