@@ -54,7 +54,7 @@ public interface ExpandBuilder
      *
      * @param pattern ANT style file pattern
      * @return itself, for fluent API usage
-     * @since 1.0
+     * @since 1.4
      */
     ExpandBuilder include( String pattern );
 
@@ -63,7 +63,7 @@ public interface ExpandBuilder
      *
      * @param pattern ANT style file pattern
      * @return itself, for fluent API usage
-     * @since 1.0
+     * @since 1.4
      */
     ExpandBuilder exclude( String pattern );
 
