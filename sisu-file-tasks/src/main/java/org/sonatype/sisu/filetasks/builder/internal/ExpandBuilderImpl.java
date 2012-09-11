@@ -127,6 +127,20 @@ public class ExpandBuilderImpl
 
     }
 
+    @Override
+    public ExpandBuilder include( final String pattern )
+    {
+        task().addIncludePattern( pattern );
+        return this;
+    }
+
+    @Override
+    public ExpandBuilder exclude( final String pattern )
+    {
+        task().addExcludePattern( pattern );
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      *

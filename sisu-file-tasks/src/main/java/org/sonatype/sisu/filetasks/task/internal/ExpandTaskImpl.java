@@ -13,16 +13,19 @@
 
 package org.sonatype.sisu.filetasks.task.internal;
 
-import org.apache.tools.ant.taskdefs.Expand;
-import org.apache.tools.ant.taskdefs.Untar;
-import org.apache.tools.ant.types.mappers.CutDirsMapper;
-import org.sonatype.sisu.filetasks.task.ExpandTask;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.File;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.apache.tools.ant.taskdefs.Expand;
+import org.apache.tools.ant.taskdefs.Untar;
+import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.mappers.CutDirsMapper;
+import org.sonatype.sisu.filetasks.task.ExpandTask;
 
 /**
  * ANT based {@link ExpandTask} implementation.
@@ -56,6 +59,18 @@ class ExpandTaskImpl
     private int directoriesToCut;
 
     /**
+     * Include patterns to filter files that will be expanded.
+     * Never null.
+     */
+    private final List<String> includes;
+
+    /**
+     * Exclude patterns to filter files that will be expanded.
+     * Never null.
+     */
+    private final List<String> excludes;
+
+    /**
      * Constructor.
      *
      * @since 1.0
@@ -65,6 +80,8 @@ class ExpandTaskImpl
     {
         overwriteNewer = true;
         directoriesToCut = 0;
+        includes = new ArrayList<String>();
+        excludes = new ArrayList<String>();
     }
 
     /**
@@ -91,6 +108,30 @@ class ExpandTaskImpl
         expand.setSrc( checkNotNull( archive ) );
         expand.setDest( checkNotNull( toDirectory ) );
         expand.setOverwrite( overwriteNewer );
+        PatternSet patternSet = null;
+        if ( includes.size() > 0 )
+        {
+            patternSet = new PatternSet();
+            for ( String include : includes )
+            {
+                patternSet.createInclude().setName( include );
+            }
+        }
+        if ( excludes.size() > 0 )
+        {
+            if ( patternSet == null )
+            {
+                patternSet = new PatternSet();
+            }
+            for ( String exclude : excludes )
+            {
+                patternSet.createExclude().setName( exclude );
+            }
+        }
+        if ( patternSet != null )
+        {
+            expand.addPatternset( patternSet );
+        }
         if ( directoriesToCut > 0 )
         {
             expand.add( new CutDirsMapper()
@@ -148,6 +189,20 @@ class ExpandTaskImpl
     public ExpandTask setDirectoriesToCut( final int directoriesToCut )
     {
         this.directoriesToCut = directoriesToCut;
+        return this;
+    }
+
+    @Override
+    public ExpandTask addIncludePattern( final String pattern )
+    {
+        this.includes.add( pattern );
+        return this;
+    }
+
+    @Override
+    public ExpandTask addExcludePattern( final String pattern )
+    {
+        this.excludes.add( pattern );
         return this;
     }
 
