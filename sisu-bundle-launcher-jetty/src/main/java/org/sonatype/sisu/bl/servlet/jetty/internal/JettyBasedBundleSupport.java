@@ -19,6 +19,7 @@ import static org.sonatype.sisu.filetasks.builder.FileRef.path;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import javax.inject.Provider;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -167,12 +168,25 @@ public abstract class JettyBasedBundleSupport<TB extends JettyBasedBundle, TBC e
                 },
                 serverXml
             );
+
+            // HACK: Build up jetty.xml configuration to set system properties
+            StringBuilder buff = new StringBuilder();
+            Map<String,String> props = getConfiguration().getSystemProperties();
+            for ( Map.Entry<String,String> entry : props.entrySet() )
+            {
+                buff.append( "<Call class=\"java.lang.System\" name=\"setProperty\"><Arg>" +
+                    entry.getKey() + "</Arg><Arg>" + entry.getValue() + "</Arg></Call>\n" );
+            }
+
             onDirectory( config.getTargetDirectory() ).apply(
                 getFileTaskBuilder().copy()
                     .file( file( serverXml ) )
                     .to().file( path( getName() + "/etc/jetty.xml" ) )
                     .filterUsing( "port.https", String.valueOf( httpsPort ) )
                     .filterUsing( "port.http", String.valueOf( getPort() ) )
+
+                    // HACK: Pass jetty.xml configuration in for filtering
+                    .filterUsing( "system.properties", buff.toString() )
             );
             serverXml.delete();
         }
