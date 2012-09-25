@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.sonatype.sisu</groupId>
     <artifactId>sisu-bundle-launcher-aggregator</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>sisu-bundle-launcher-jetty-testsuite</artifactId>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
       <artifactId>sisu-bundle-launcher-jetty</artifactId>
-      <version>1.4</version>
+      <version>1.5-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <name>Sisu Bundle Launcher :: Aggregator</name>
-  <version>1.4</version>
+  <version>1.5-SNAPSHOT</version>
 
   <url>https://github.com/sonatype/sisu-bundle-launcher</url>
 
@@ -137,17 +137,17 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher</artifactId>
-        <version>1.4</version>
+        <version>1.5-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-servlet</artifactId>
-        <version>1.4</version>
+        <version>1.5-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-file-tasks</artifactId>
-        <version>1.4</version>
+        <version>1.5-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
