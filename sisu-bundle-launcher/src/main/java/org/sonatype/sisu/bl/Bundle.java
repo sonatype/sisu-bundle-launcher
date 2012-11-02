@@ -71,4 +71,12 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      */
     boolean isRunning();
 
+    /**
+     * Returns statistics about this bundle.
+     * @return statistics
+     *
+     * @since 1.5
+     */
+    BundleStatistics statistics();
+
 }

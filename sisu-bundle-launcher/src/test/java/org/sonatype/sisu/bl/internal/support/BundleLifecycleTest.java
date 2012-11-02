@@ -15,6 +15,7 @@ package org.sonatype.sisu.bl.internal.support;
 import org.junit.Test;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.BundleStatistics;
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 
 /**
@@ -113,6 +114,12 @@ public class BundleLifecycleTest
         @Override
         public boolean isRunning() {
             return false;
+        }
+
+        @Override
+        public BundleStatistics statistics()
+        {
+            return null;
         }
 
     }

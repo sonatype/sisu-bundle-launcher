@@ -14,9 +14,13 @@ package org.sonatype.sisu.bl.internal.support;
 
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.BundleStatistics;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
 import org.sonatype.sisu.goodies.common.Mutex;
+import org.sonatype.sisu.goodies.common.Time;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
+import com.sun.corba.se.spi.monitoring.StatisticsAccumulator;
 
 /**
  * TODO
@@ -31,10 +35,21 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
     private final LifecycleHandlerContext state;
 
+    protected Time cleanupTime;
+
+    protected Time preparationTime;
+
+    protected Time startupTime;
+
+    protected Time stoppingTime;
 
     public BundleLifecycle() {
         mutex = new Mutex();
         state = new LifecycleHandlerContext(new Handler());
+        cleanupTime = Time.millis( 0 );
+        preparationTime = Time.millis( 0 );
+        startupTime = Time.millis( 0 );
+        stoppingTime = Time.millis( 0 );
     }
 
     @Override
@@ -114,42 +129,60 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
         @Override
         public void doPrepare() {
+            final Stopwatch stopwatch = new Stopwatch().start();
             try {
                 failure = null;
                 BundleLifecycle.this.doPrepare();
             } catch (Throwable e) {
                 failure = e;
             }
+            stopwatch.stop();
+            preparationTime = Time.millis( stopwatch.elapsedMillis() );
+            startupTime = Time.millis( 0 );
+            stoppingTime = Time.millis( 0 );
         }
 
         @Override
         public void doClean() {
+            final Stopwatch stopwatch = new Stopwatch().start();
             try {
                 failure = null;
                 BundleLifecycle.this.doClean();
             } catch (Throwable e) {
                 failure = e;
             }
+            stopwatch.stop();
+            cleanupTime = Time.millis( stopwatch.elapsedMillis() );
+            preparationTime = Time.millis( 0 );
+            startupTime = Time.millis( 0 );
+            stoppingTime = Time.millis( 0 );
         }
 
         @Override
         public void doStart() {
+            final Stopwatch stopwatch = new Stopwatch().start();
             try {
                 failure = null;
                 BundleLifecycle.this.doStart();
             } catch (Throwable e) {
                 failure = e;
             }
+            stopwatch.stop();
+            startupTime = Time.millis( stopwatch.elapsedMillis() );
+            stoppingTime = Time.millis( 0 );
         }
 
         @Override
         public void doStop() {
+            final Stopwatch stopwatch = new Stopwatch().start();
             try {
                 failure = null;
                 BundleLifecycle.this.doStop();
             } catch (Throwable e) {
                 failure = e;
             }
+            stopwatch.stop();
+            stoppingTime = Time.millis( stopwatch.elapsedMillis() );
         }
     }
 

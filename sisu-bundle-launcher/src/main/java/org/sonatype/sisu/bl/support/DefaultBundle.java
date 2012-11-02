@@ -28,10 +28,12 @@ import javax.inject.Provider;
 import org.apache.tools.ant.DirectoryScanner;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.BundleStatistics;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.goodies.common.Time;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 
 /**
@@ -80,6 +82,16 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     private boolean running;
 
     /**
+     * Bundle statistics.
+     */
+    private final BundleStatistics statistics;
+
+    /**
+     * Time it took to boot the application.
+     */
+    protected Time bootingTime;
+
+    /**
      * Constructor. Creates the bundle with a default configuration and a not running state.
      *
      * @param name                  application name
@@ -97,6 +109,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
         this.configurationProvider = checkNotNull( configurationProvider );
         this.runningBundles = checkNotNull( runningBundles );
+        bootingTime = Time.millis( 0 );
+        statistics = new Statistics();
     }
 
     /**
@@ -111,17 +125,25 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     @Override
     public void doStart()
     {
+        bootingTime = Time.millis( 0 );
+        final Stopwatch bootingWatch = new Stopwatch();
         try
         {
             startApplication();
             running = true;
             getRunningBundles().add( this );
+            bootingWatch.start();
             waitForBoot();
         }
         catch ( RuntimeException e )
         {
             doStop();
             throw e;
+        }
+        finally
+        {
+            bootingWatch.stop();
+            bootingTime = Time.millis( bootingWatch.elapsedMillis() );
         }
     }
 
@@ -163,6 +185,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     @Override
     public void doPrepare()
     {
+        bootingTime = Time.millis( 0 );
         log.debug( "Using configuration {}", getConfiguration() );
         validateConfiguration();
         createBundle();
@@ -181,7 +204,14 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     @Override
     public void doClean()
     {
+        bootingTime = Time.millis( 0 );
         deleteTarget();
+    }
+
+    @Override
+    public BundleStatistics statistics()
+    {
+        return statistics;
     }
 
     protected FileTaskBuilder getFileTaskBuilder()
@@ -315,7 +345,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
         if ( applicationAlive )
         {
-            log.debug(
+            log.info(
                 "Application {} started in {} seconds", getName(), ( System.currentTimeMillis() - start ) / 1000
             );
         }
@@ -435,6 +465,41 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         sb.append( " [id: " ).append( getConfiguration().getId() ).append( "]" );
         sb.append( isRunning() ? " [running]" : " [not running]" );
         return sb.toString();
+    }
+
+    private class Statistics
+        implements BundleStatistics
+    {
+
+        @Override
+        public Time cleanupTime()
+        {
+            return cleanupTime;
+        }
+
+        @Override
+        public Time preparationTime()
+        {
+            return preparationTime;
+        }
+
+        @Override
+        public Time startupTime()
+        {
+            return startupTime;
+        }
+
+        @Override
+        public Time bootingTime()
+        {
+            return bootingTime;
+        }
+
+        @Override
+        public Time stoppingTime()
+        {
+            return stoppingTime;
+        }
     }
 
 }
