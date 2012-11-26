@@ -24,8 +24,6 @@
 
   <artifactId>sisu-bundle-launcher</artifactId>
 
-  <name>Sisu Bundle Launcher</name>
-
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>

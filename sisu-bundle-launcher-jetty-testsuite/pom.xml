@@ -25,8 +25,6 @@
 
   <artifactId>sisu-bundle-launcher-jetty-testsuite</artifactId>
 
-  <name>Sisu Bundle Launcher :: Jetty Test Suite</name>
-
   <properties>
     <jetty.version>7.0.27</jetty.version>
   </properties>

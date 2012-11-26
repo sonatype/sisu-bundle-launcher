@@ -23,7 +23,6 @@
   </parent>
 
   <artifactId>sisu-file-tasks</artifactId>
-  <name>Sisu File Tasks</name>
 
   <dependencies>
     <dependency>

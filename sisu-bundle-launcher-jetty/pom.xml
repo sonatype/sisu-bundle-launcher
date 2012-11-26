@@ -25,8 +25,6 @@
 
   <artifactId>sisu-bundle-launcher-jetty</artifactId>
 
-  <name>Sisu Bundle Launcher :: Jetty</name>
-
   <dependencies>
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
