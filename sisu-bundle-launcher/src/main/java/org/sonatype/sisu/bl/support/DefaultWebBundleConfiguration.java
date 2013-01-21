@@ -14,8 +14,10 @@ package org.sonatype.sisu.bl.support;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.sonatype.sisu.bl.WebBundleConfiguration;
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 
 /**
  * Default {@link WebBundleConfiguration} implementation.
@@ -34,8 +36,9 @@ public class DefaultWebBundleConfiguration<T extends WebBundleConfiguration>
     private int port;
 
     @Inject
-    public DefaultWebBundleConfiguration()
+    public DefaultWebBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
     {
+        super( jmxConfigurationProvider );
         setPort( RANDOM_PORT );
     }
 

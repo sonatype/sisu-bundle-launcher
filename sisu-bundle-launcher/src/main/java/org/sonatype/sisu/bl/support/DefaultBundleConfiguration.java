@@ -15,12 +15,14 @@ package org.sonatype.sisu.bl.support;
 import com.google.common.collect.Maps;
 import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.support.resolver.BundleResolver;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
 import org.sonatype.sisu.filetasks.FileTask;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Named
 public class DefaultBundleConfiguration<T extends BundleConfiguration>
-        implements BundleConfiguration<T> {
+    implements BundleConfiguration<T>
+{
 
     /**
      * Start timeout configuration property key.
@@ -48,6 +51,12 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * Default start timeout.
      */
     public static final int START_TIMEOUT_DEFAULT = 60;
+
+    /**
+     * System properties.
+     * Should never be null.
+     */
+    private final Map<String, String> systemProperties;
 
     /**
      * Bundle identity.
@@ -99,27 +108,34 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     private TargetDirectoryResolver targetDirectoryResolver;
 
     /**
-     * System properties.
-     * Should never be null.
+     * Lazy provider of JMX configuration.
      */
-    private final Map<String,String> systemProperties;
+    private Provider<JMXConfiguration> jmxConfigurationProvider;
+
+    /**
+     * How JMX should be configured on this bundle.
+     */
+    private JMXConfiguration jmxConfiguration;
 
     @Inject
-    public DefaultBundleConfiguration() {
+    public DefaultBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
+    {
+        this.jmxConfigurationProvider = checkNotNull( jmxConfigurationProvider );
         setOverlays();
-
         debugPort = 0;
         suspendOnStart = false;
         systemProperties = Maps.newHashMap();
     }
 
     @Override
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
     @Override
-    public T setId(final String id) {
+    public T setId( final String id )
+    {
         this.id = id;
         return self();
     }
@@ -130,15 +146,18 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * {@inheritDoc}
      */
     @Override
-    public File getBundle() {
-        if (bundle == null && bundleResolver != null) {
+    public File getBundle()
+    {
+        if ( bundle == null && bundleResolver != null )
+        {
             bundle = bundleResolver.resolve();
         }
         return bundle;
     }
 
     @Override
-    public T setBundle(File bundle) {
+    public T setBundle( File bundle )
+    {
         this.bundle = bundle;
         return self();
     }
@@ -149,51 +168,61 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * {@inheritDoc}
      */
     @Override
-    public File getTargetDirectory() {
-        if (targetDirectory == null && targetDirectoryResolver != null) {
-            targetDirectory = new File(targetDirectoryResolver.resolve(), getId());
+    public File getTargetDirectory()
+    {
+        if ( targetDirectory == null && targetDirectoryResolver != null )
+        {
+            targetDirectory = new File( targetDirectoryResolver.resolve(), getId() );
         }
         return targetDirectory;
     }
 
     @Override
-    public T setTargetDirectory(File targetDirectory) {
+    public T setTargetDirectory( File targetDirectory )
+    {
         this.targetDirectory = targetDirectory;
         return self();
     }
 
     @Override
-    public List<FileTask> getOverlays() {
+    public List<FileTask> getOverlays()
+    {
         return overlays;
     }
 
     @Override
-    public T setOverlays(List<FileTask> overlays) {
+    public T setOverlays( List<FileTask> overlays )
+    {
         this.overlays = new ArrayList<FileTask>();
-        if (overlays != null) {
-            this.overlays.addAll(overlays);
+        if ( overlays != null )
+        {
+            this.overlays.addAll( overlays );
         }
         return self();
     }
 
     @Override
-    public T setOverlays(FileTask... overlays) {
-        return setOverlays(Arrays.asList(overlays));
+    public T setOverlays( FileTask... overlays )
+    {
+        return setOverlays( Arrays.asList( overlays ) );
     }
 
     @Override
-    public T addOverlays(FileTask... overlays) {
-        this.overlays.addAll(Arrays.asList(overlays));
+    public T addOverlays( FileTask... overlays )
+    {
+        this.overlays.addAll( Arrays.asList( overlays ) );
         return self();
     }
 
     @Override
-    public Integer getStartTimeout() {
+    public Integer getStartTimeout()
+    {
         return startTimeout;
     }
 
     @Override
-    public T setStartTimeout(final Integer startTimeout) {
+    public T setStartTimeout( final Integer startTimeout )
+    {
         this.startTimeout = startTimeout;
         return self();
     }
@@ -203,36 +232,53 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * {@link #START_TIMEOUT} with a default of {@link #START_TIMEOUT_DEFAULT} seconds.
      */
     @Inject
-    protected void configureStartTimeout(final @Named("${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}") Integer startTimeout) {
-        setStartTimeout(startTimeout);
+    protected void configureStartTimeout(
+        final @Named( "${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}" ) Integer startTimeout )
+    {
+        setStartTimeout( startTimeout );
     }
 
     @Override
-    public Integer getDebugPort() {
+    public Integer getDebugPort()
+    {
         return debugPort;
     }
 
     @Override
-    public Boolean isSuspendOnStart() {
+    public Boolean isSuspendOnStart()
+    {
         return suspendOnStart;
     }
 
     @Override
-    public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
-        this.debugPort = checkNotNull(debugPort);
-        this.suspendOnStart = checkNotNull(suspendOnStart);
+    public T enableDebugging( final Integer debugPort, final Boolean suspendOnStart )
+    {
+        this.debugPort = checkNotNull( debugPort );
+        this.suspendOnStart = checkNotNull( suspendOnStart );
         return self();
     }
 
     @Override
-    public Map<String, String> getSystemProperties() {
+    public Map<String, String> getSystemProperties()
+    {
         return systemProperties;
     }
 
     @Override
-    public T setSystemProperty(String key, String value) {
-        systemProperties.put(key,value);
+    public T setSystemProperty( String key, String value )
+    {
+        systemProperties.put( key, value );
         return self();
+    }
+
+    @Override
+    public JMXConfiguration getJmxConfiguration()
+    {
+        if ( this.jmxConfiguration == null )
+        {
+            this.jmxConfiguration = jmxConfigurationProvider.get();
+        }
+        return this.jmxConfiguration;
     }
 
     /**
@@ -241,7 +287,8 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * @param bundleResolver optional bundle resolver to be used to resolve application bundle if bundle not set
      */
     @Inject
-    protected void setBundleResolver(final @Nullable BundleResolver bundleResolver) {
+    protected void setBundleResolver( final @Nullable BundleResolver bundleResolver )
+    {
         this.bundleResolver = bundleResolver;
     }
 
@@ -252,24 +299,26 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      *                                application bundle is exploded if target directory is not set
      */
     @Inject
-    protected void setTargetDirectoryResolver(final @Nullable TargetDirectoryResolver targetDirectoryResolver) {
+    protected void setTargetDirectoryResolver( final @Nullable TargetDirectoryResolver targetDirectoryResolver )
+    {
         this.targetDirectoryResolver = targetDirectoryResolver;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected T self()
     {
         return (T) this;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         final StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append("{id=").append(getId());
-        sb.append(", bundle=").append(getBundle());
-        sb.append(", targetDirectory=").append(getTargetDirectory());
-        sb.append('}');
+        sb.append( getClass().getSimpleName() );
+        sb.append( "{id=" ).append( getId() );
+        sb.append( ", bundle=" ).append( getBundle() );
+        sb.append( ", targetDirectory=" ).append( getTargetDirectory() );
+        sb.append( '}' );
         return sb.toString();
     }
 
