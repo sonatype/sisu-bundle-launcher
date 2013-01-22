@@ -14,8 +14,10 @@ package org.sonatype.sisu.bl.servlet.tomcat.internal;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.sonatype.inject.Nullable;
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.servlet.internal.DefaultServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.tomcat.TomcatBundleConfiguration;
 import org.sonatype.sisu.bl.support.resolver.BundleResolver;
@@ -30,6 +32,13 @@ public class DefaultTomcatBundleConfiguration<TBC extends TomcatBundleConfigurat
     extends DefaultServletContainerBundleConfiguration<TBC>
     implements TomcatBundleConfiguration<TBC>
 {
+
+    @Inject
+    public DefaultTomcatBundleConfiguration(
+        final Provider<JMXConfiguration> jmxConfigurationProvider )
+    {
+        super( jmxConfigurationProvider );
+    }
 
     @Inject
     protected void setBundleResolver( final @Nullable TomcatBundleResolver bundleResolver )

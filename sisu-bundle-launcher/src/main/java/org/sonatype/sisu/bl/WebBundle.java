@@ -20,7 +20,8 @@ import java.net.URL;
  * @since 1.0
  */
 public interface WebBundle<WB extends WebBundle, BC extends BundleConfiguration>
-    extends Bundle<WB,BC>{
+    extends Bundle<WB,BC>
+{
 
     /**
      * Returns the port (random generated) application is running on. If bundle is not running return 0 (zero).

@@ -12,12 +12,6 @@
  */
 package org.sonatype.sisu.bl;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
-import org.sonatype.sisu.filetasks.FileTask;
-
 /**
  * An web bundle configuration.
  *
@@ -25,11 +19,6 @@ import org.sonatype.sisu.filetasks.FileTask;
  */
 public interface WebBundleConfiguration<T extends WebBundleConfiguration>
     extends BundleConfiguration<T> {
-
-    /**
-     * Port value when port should be randomly generated.
-     */
-    int RANDOM_PORT = 0;
 
     /**
      * Returns the port on which the application will be accessible.

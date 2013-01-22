@@ -12,8 +12,6 @@
  */
 package org.sonatype.sisu.bl.support;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.bl.WebBundleConfiguration.RANDOM_PORT;
 
 import java.io.IOException;
@@ -40,12 +38,6 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
 {
 
     /**
-     * Port reservation service used to generate an random port to be used by running application.
-     * Cannot be null.
-     */
-    private PortReservationService portReservationService;
-
-    /**
      * Port on which application is running. Should be 0 (zero) if application is not running.
      */
     private int port;
@@ -55,6 +47,15 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      */
     private URL url;
 
+    /**
+     * Creates the bundle with a default configuration and a not running state.
+     *
+     * @param name                   application name
+     * @param configurationProvider  configuration provider
+     * @param runningBundles         running bundles
+     * @param fileTaskBuilder        file task builder
+     * @param portReservationService service to reserve ports to be used by this bundle
+     */
     @Inject
     public DefaultWebBundle( final String name,
                              final Provider<WBC> configurationProvider,
@@ -62,8 +63,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
                              final FileTaskBuilder fileTaskBuilder,
                              final PortReservationService portReservationService )
     {
-        super( name, configurationProvider, runningBundles, fileTaskBuilder );
-        this.portReservationService = checkNotNull( portReservationService );
+        super( name, configurationProvider, runningBundles, fileTaskBuilder, portReservationService );
     }
 
     @Override
@@ -113,11 +113,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
     }
 
     /**
-     * Reserves a port form port reservation service and add creates a JSW configuration file specifying jetty port as
-     * a system property.
-     *
-     * @throws RuntimeException if a problem occurred during reading of JSW configuration or writing the additional JSW
-     *                          configuration file
+     * Reserves a port from the {@link PortReservationService}.
      */
     @Override
     protected void configure()
@@ -156,12 +152,6 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
     protected String composeApplicationURL()
     {
         return String.format( "http://localhost:%s/%s/", getPort(), getName() );
-    }
-
-    protected PortReservationService getPortReservationService()
-    {
-        checkState( portReservationService != null );
-        return portReservationService;
     }
 
     /**

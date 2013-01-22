@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Provider;
+
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.servlet.ServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.WAR;
 import org.sonatype.sisu.bl.support.DefaultWebBundleConfiguration;
@@ -32,8 +35,9 @@ public class DefaultServletContainerBundleConfiguration<SCBC extends ServletCont
 
     private List<WAR> wars;
 
-    public DefaultServletContainerBundleConfiguration()
+    public DefaultServletContainerBundleConfiguration(final Provider<JMXConfiguration> jmxConfigurationProvider )
     {
+        super( jmxConfigurationProvider );
         this.wars = new ArrayList<WAR>();
     }
 

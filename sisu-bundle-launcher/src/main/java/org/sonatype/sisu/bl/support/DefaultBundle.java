@@ -30,6 +30,8 @@ import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.BundleStatistics;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
+import org.sonatype.sisu.bl.support.port.PortReservationService;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
 import org.sonatype.sisu.goodies.common.Time;
@@ -46,11 +48,6 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     extends BundleLifecycle<B, BC>
     implements Bundle<B, BC>
 {
-
-    /**
-     * Bundle name.
-     */
-    private String name;
 
     /**
      * File tasks builder used to manipulate files necessary to prepare bundle target directory.
@@ -71,6 +68,27 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     private final RunningBundles runningBundles;
 
     /**
+     * Bundle statistics.
+     */
+    private final BundleStatistics statistics;
+
+    /**
+     * Port reservation service used to generate an random port to be used by running application.
+     * Cannot be null.
+     */
+    protected PortReservationService portReservationService;
+
+    /**
+     * Time it took to boot the application.
+     */
+    protected Time bootingTime;
+
+    /**
+     * Bundle name.
+     */
+    private String name;
+
+    /**
      * Bundle configuration.
      * Cannot be null.
      */
@@ -81,15 +99,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     private boolean running;
 
-    /**
-     * Bundle statistics.
-     */
-    private final BundleStatistics statistics;
-
-    /**
-     * Time it took to boot the application.
-     */
-    protected Time bootingTime;
+    private Integer jmxRemotePort;
 
     /**
      * Constructor. Creates the bundle with a default configuration and a not running state.
@@ -103,12 +113,14 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     public DefaultBundle( final String name,
                           final Provider<BC> configurationProvider,
                           final RunningBundles runningBundles,
-                          final FileTaskBuilder fileTaskBuilder )
+                          final FileTaskBuilder fileTaskBuilder,
+                          final PortReservationService portReservationService )
     {
         this.name = checkNotNull( name );
-        this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
         this.configurationProvider = checkNotNull( configurationProvider );
         this.runningBundles = checkNotNull( runningBundles );
+        this.fileTaskBuilder = checkNotNull( fileTaskBuilder );
+        this.portReservationService = checkNotNull( portReservationService );
         bootingTime = Time.millis( 0 );
         statistics = new Statistics();
     }
@@ -269,7 +281,11 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     protected void configure()
         throws Exception
     {
-        // template method
+        JMXConfiguration jmxConfig = getConfiguration().getJmxConfiguration();
+        if ( JMXConfiguration.RANDOM_JMX_REMOTE_PORT.equals( jmxConfig.getRemotePort() ) )
+        {
+            this.jmxRemotePort = getPortReservationService().reservePort();
+        }
     }
 
     /**
@@ -277,7 +293,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     protected void unconfigure()
     {
-        // template method
+        JMXConfiguration jmxConfig = getConfiguration().getJmxConfiguration();
+        if ( JMXConfiguration.RANDOM_JMX_REMOTE_PORT.equals( jmxConfig.getRemotePort() ) && this.jmxRemotePort != null )
+        {
+            getPortReservationService().cancelPort( this.jmxRemotePort );
+        }
+        this.jmxRemotePort = null;
     }
 
     /**
@@ -374,6 +395,15 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     }
 
     /**
+     * Bundle specific jmx port, possibly altered from what may have been originally configured as part of
+     * {@link JMXConfiguration}.
+     */
+    protected Integer getJmxRemotePort()
+    {
+        return jmxRemotePort == null ? getConfiguration().getJmxConfiguration().getRemotePort() : this.jmxRemotePort;
+    }
+
+    /**
      * Creates application in target directory by unpacking the bundle or coping it if bundle is a directory.
      *
      * @since 1.2
@@ -465,6 +495,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         sb.append( " [id: " ).append( getConfiguration().getId() ).append( "]" );
         sb.append( isRunning() ? " [running]" : " [not running]" );
         return sb.toString();
+    }
+
+    protected PortReservationService getPortReservationService()
+    {
+        checkState( portReservationService != null );
+        return portReservationService;
     }
 
     private class Statistics

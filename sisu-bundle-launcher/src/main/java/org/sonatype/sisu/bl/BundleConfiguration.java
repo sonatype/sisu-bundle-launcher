@@ -12,6 +12,7 @@
  */
 package org.sonatype.sisu.bl;
 
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.filetasks.FileTask;
 
 import java.io.File;
@@ -23,7 +24,13 @@ import java.util.Map;
  *
  * @since 1.0
  */
-public interface BundleConfiguration<T extends BundleConfiguration> {
+public interface BundleConfiguration<T extends BundleConfiguration>
+{
+
+    /**
+     * Port value when a port should be randomly generated.
+     */
+    int RANDOM_PORT = 0;
 
     /**
      * Returns bundle identity.
@@ -38,7 +45,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param id bundle identity
      * @return itself, for usage in fluent api
      */
-    T setId(String id);
+    T setId( String id );
 
     /**
      * Returns the bundle assembly (zip or tar).
@@ -53,7 +60,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param bundle a zip/jar/tar file or a directory.
      * @return itself, for usage in fluent api
      */
-    T setBundle(File bundle);
+    T setBundle( File bundle );
 
     /**
      * Returns the target directory to be used for exploding the bundle.
@@ -68,7 +75,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param targetDirectory directory where bundle will be exploded
      * @return itself, for usage in fluent api
      */
-    T setTargetDirectory(File targetDirectory);
+    T setTargetDirectory( File targetDirectory );
 
     /**
      * Returns overlays to be applied over exploded bundle.
@@ -81,20 +88,20 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * Sets overlays. Provided overlays will overwrite existing overlays.
      * Overlays are applied in provided order.
      *
-     * @param overlays overlays to be applied over exploded bundle. Can be null, case when an empty list will be
-     *                 used
+     * @param overlays overlays to be applied over exploded bundle
      * @return itself, for usage in fluent api
      */
-    T setOverlays(List<FileTask> overlays);
+    T setOverlays( FileTask... overlays );
 
     /**
      * Sets overlays. Provided overlays will overwrite existing overlays.
      * Overlays are applied in provided order.
      *
-     * @param overlays overlays to be applied over exploded bundle
+     * @param overlays overlays to be applied over exploded bundle. Can be null, case when an empty list will be
+     *                 used
      * @return itself, for usage in fluent api
      */
-    T setOverlays(FileTask... overlays);
+    T setOverlays( List<FileTask> overlays );
 
     /**
      * Append overlays to existing set of overlays.
@@ -102,7 +109,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param overlays overlays to be applied over exploded bundle
      * @return itself, for usage in fluent api
      */
-    T addOverlays(FileTask... overlays);
+    T addOverlays( FileTask... overlays );
 
     /**
      * Returns the number of seconds to wait for application to start (boot).
@@ -117,7 +124,7 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param timeout the number of seconds to wait for application to start (boot)
      * @return itself, for usage in fluent api
      */
-    T setStartTimeout(Integer timeout);
+    T setStartTimeout( Integer timeout );
 
     /**
      * Returns debugging port.
@@ -140,22 +147,23 @@ public interface BundleConfiguration<T extends BundleConfiguration> {
      * @param suspendOnStart if debugging should suspend execution on start
      * @return itself, for usage in fluent api
      */
-    T enableDebugging(Integer debugPort, Boolean suspendOnStart);
+    T enableDebugging( Integer debugPort, Boolean suspendOnStart );
 
     /**
      * Returns system properties.
      *
      * @return system properties map. Never null.
      */
-    Map<String,String> getSystemProperties();
+    Map<String, String> getSystemProperties();
 
     /**
      * Sets a system property.
      *
-     * @param key system property key
+     * @param key   system property key
      * @param value system property value
      * @return itself, for usage in fluent api
      */
-    T setSystemProperty(String key, String value);
+    T setSystemProperty( String key, String value );
 
+    JMXConfiguration getJmxConfiguration();
 }
