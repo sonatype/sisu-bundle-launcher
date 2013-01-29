@@ -24,18 +24,23 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
+import org.sonatype.sisu.litmus.testsupport.junit.TestIndexRule;
 
 /**
- * TODO
+ * Tests for {@link JSWConfig}
  *
  * @since 1.0
  */
 public class JSWConfigTest
     extends TestSupport
 {
+
+    @Rule
+    public TestIndexRule testIndex = new TestIndexRule( util.getTargetDir() );
 
     private JSWConfig jswConfig;
 
@@ -47,7 +52,8 @@ public class JSWConfigTest
     {
         final URL conf = getClass().getResource( "/wrapper.conf" );
 
-        config = testMethod.getTargetDirMethodFile( "configs", "wrapper.conf" );
+        config = new File( testIndex.getDirectory( "configs" ), "wrapper.conf" );
+
         config.delete();
 
         copyFile( new File( conf.getFile() ), config );
@@ -147,7 +153,7 @@ public class JSWConfigTest
         jswConfig.save();
 
         // copy written configuration file so we can compare
-        final File saved = testMethod.getTargetDirMethodFile( "configs", "wrapper-1.conf" );
+        final File saved = new File( testIndex.getDirectory( "configs" ), "wrapper-1.conf" );
         copyFile( config, saved );
 
         // save again

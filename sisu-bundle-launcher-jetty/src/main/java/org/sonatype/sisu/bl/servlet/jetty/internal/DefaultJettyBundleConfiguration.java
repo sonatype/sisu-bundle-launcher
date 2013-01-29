@@ -14,8 +14,10 @@ package org.sonatype.sisu.bl.servlet.jetty.internal;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.sonatype.inject.Nullable;
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.servlet.internal.DefaultServletContainerBundleConfiguration;
 import org.sonatype.sisu.bl.servlet.jetty.JettyBundleConfiguration;
 
@@ -30,4 +32,10 @@ public class DefaultJettyBundleConfiguration
     implements JettyBundleConfiguration
 {
 
+    @Inject
+    public DefaultJettyBundleConfiguration(
+        final Provider<JMXConfiguration> jmxConfigurationProvider )
+    {
+        super( jmxConfigurationProvider );
+    }
 }
