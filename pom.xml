@@ -27,7 +27,6 @@
   <packaging>pom</packaging>
   <version>1.5.1-SNAPSHOT</version>
 
-  <name>${project.artifactId}</name>
   <inceptionYear>2008</inceptionYear>
   <url>https://github.com/sonatype/sisu-bundle-launcher</url>
 
@@ -152,43 +151,6 @@
   </dependencyManagement>
 
   <build>
-    <defaultGoal>install</defaultGoal>
-
-    <resources>
-      <resource>
-        <directory>${project.basedir}/src/main/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-
-      <resource>
-        <directory>${project.basedir}/src/main/filtered-resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-    </resources>
-
-    <testResources>
-      <testResource>
-        <directory>${project.basedir}/src/test/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </testResource>
-
-      <testResource>
-        <directory>${project.basedir}/src/test/filtered-resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </testResource>
-    </testResources>
 
     <pluginManagement>
       <plugins>
@@ -203,25 +165,14 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <failIfNoTests>false</failIfNoTests>
-            <!-- force use of property -->
-            <forkMode>once</forkMode>
             <workingDirectory>${project.build.directory}</workingDirectory>
-            <systemPropertyVariables>
-              <java.awt.headless>true</java.awt.headless>
-            </systemPropertyVariables>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
-            <failIfNoTests>false</failIfNoTests>
-            <forkMode>always</forkMode>
             <workingDirectory>${project.build.directory}</workingDirectory>
-            <systemPropertyVariables>
-              <java.awt.headless>true</java.awt.headless>
-            </systemPropertyVariables>
           </configuration>
         </plugin>
       </plugins>
@@ -285,20 +236,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-            <configuration>
-              <includePom>true</includePom>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
