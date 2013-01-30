@@ -404,7 +404,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     }
 
     /**
-     * Creates application in target directory by unpacking the bundle or coping it if bundle is a directory.
+     * Creates application in target directory by unpacking the bundle or copying it if bundle is a directory.
      *
      * @since 1.2
      */
