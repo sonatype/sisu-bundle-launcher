@@ -12,6 +12,10 @@
  */
 package org.sonatype.sisu.bl.support.port;
 
+import com.google.common.collect.Range;
+
+import java.util.Set;
+
 /**
  * Service that reserves free system ports.
  * <p/>
@@ -33,5 +37,24 @@ public interface PortReservationService {
      * @throws IllegalArgumentException if the specified port has not been reserved
      */
     void cancelPort(int port);
+
+    /**
+     * Adds a range of ports to be blocked.
+     *
+     * <p />
+     * If the provided range is connected to a previously added range, the span of the ranges forms a new blocked
+     * range of ports. If the provided range is not connected to the existing range of blocked ports, it is simply
+     * treated as an additional range of ports to be blocked.
+     *
+     * @param blockedRange a range of ports that are to be blocked from future reservation.
+     */
+    void addBlockedPorts(Range<Integer> blockedRange);
+
+    /**
+     * Adds the set of blocked ports to any existing set of blocked ports.
+     *
+     * @param blockedSet a set of ports that are to be blocked from future reservation
+     */
+    void addBlockedPorts(Set<Integer> blockedSet);
 
 }
