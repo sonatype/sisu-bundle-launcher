@@ -83,6 +83,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
      *
      * @return true if application is alive, false otherwise
      */
+    @Override
     protected boolean applicationAlive()
     {
         try
@@ -109,11 +110,11 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
     @Override
     protected void logApplicationIsAlive()
     {
-        log.info( "Application {} is running at {}", getName(), getUrl() );
+        log.info( "{} ({}) is running at {}", getName(), getConfiguration().getId(), getUrl() );
     }
 
     /**
-     * Reserves a port from the {@link PortReservationService}.
+     * Reserves a port from the {@link PortReservationService} and composes the application url.
      */
     @Override
     protected void configure()
@@ -145,13 +146,13 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
     }
 
     /**
-     * Composes application URL in format {@code http://localhost:<port>/<name>}.
+     * Composes application URL in format {@code http://<hostName>:<port>/<name>}.
      *
      * @return application URL
      */
     protected String composeApplicationURL()
     {
-        return String.format( "http://localhost:%s/%s/", getPort(), getName() );
+        return String.format( "http://%s:%s/%s/", getConfiguration().getHostName(), getPort(), getName() );
     }
 
     /**
