@@ -165,5 +165,8 @@ public interface BundleConfiguration<T extends BundleConfiguration>
      */
     T setSystemProperty( String key, String value );
 
+    /**
+     * @return JMXConfiguration for the bundle or null if JMX is not configured
+     */
     JMXConfiguration getJmxConfiguration();
 }
