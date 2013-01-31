@@ -34,6 +34,7 @@ import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
 import org.sonatype.sisu.filetasks.FileTask;
 import org.sonatype.sisu.filetasks.FileTaskBuilder;
+import org.sonatype.sisu.goodies.common.SimpleFormat;
 import org.sonatype.sisu.goodies.common.Time;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
@@ -100,6 +101,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     private boolean running;
 
     private Integer jmxRemotePort;
+
+    /**
+     * temp holder of the time in seconds until application became alive
+     */
+    private long secondsUntilAlive = 0;
+
 
     /**
      * Constructor. Creates the bundle with a default configuration and a not running state.
@@ -353,7 +360,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         long start = System.currentTimeMillis();
         int startTimeout = getConfiguration().getStartTimeout();
 
-        log.info( "Waiting for application to boot for {} seconds", startTimeout );
+        log.info( "{} ({}) waiting to boot for {} seconds", startTimeout );
 
         final boolean applicationAlive = new TimedCondition()
         {
@@ -363,17 +370,15 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
                 return applicationAlive();
             }
         }.await( Time.seconds( startTimeout ) );
-
+        this.secondsUntilAlive = ( System.currentTimeMillis() - start ) / 1000;
         if ( applicationAlive )
         {
-            log.info(
-                "Application {} started in {} seconds", getName(), ( System.currentTimeMillis() - start ) / 1000
-            );
+            logApplicationIsAlive();
         }
         else
         {
             throw new RuntimeException(
-                "Could not detect application running in the configured timeout of " + startTimeout + " seconds"
+                SimpleFormat.format("Did not detect %s (%s) running in the configured timeout of %s seconds", getName(), getConfiguration().getId(), startTimeout)
             );
         }
     }
@@ -383,7 +388,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
      */
     protected void logApplicationIsAlive()
     {
-        //template method
+        log.info( "{} ({}) started in {} seconds", getName(), getConfiguration().getId(), secondsUntilAlive);
     }
 
     /**
