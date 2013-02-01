@@ -360,7 +360,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         long start = System.currentTimeMillis();
         int startTimeout = getConfiguration().getStartTimeout();
 
-        log.info( "{} ({}) waiting to boot for {} seconds", startTimeout );
+        log.info( "{} ({}) waiting to boot for {} seconds", getName(), getConfiguration().getId(), startTimeout );
 
         final boolean applicationAlive = new TimedCondition()
         {
