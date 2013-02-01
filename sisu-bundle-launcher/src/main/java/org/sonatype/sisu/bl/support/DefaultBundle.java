@@ -161,7 +161,9 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         }
         finally
         {
-            bootingWatch.stop();
+            if(bootingWatch.isRunning()){
+                bootingWatch.stop();
+            }
             bootingTime = Time.millis( bootingWatch.elapsedMillis() );
         }
     }
