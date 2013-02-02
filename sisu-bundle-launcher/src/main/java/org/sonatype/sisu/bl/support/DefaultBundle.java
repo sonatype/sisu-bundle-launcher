@@ -178,7 +178,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     @Override
     public void doStop()
     {
-        if ( running )
+        if ( isRunning() )
         {
             try
             {
