@@ -255,6 +255,10 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     {
         this.debugPort = checkNotNull( debugPort );
         this.suspendOnStart = checkNotNull( suspendOnStart );
+        // suspending Nexus while debugging could cause bundle startup monitoring to fail if we do not increase time
+        if( suspendOnStart && getStartTimeout() == START_TIMEOUT_DEFAULT ) {
+            setStartTimeout( 1000 );
+        }
         return self();
     }
 
