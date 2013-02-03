@@ -64,10 +64,12 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
      */
     B setConfiguration(BC configuration);
 
-    /**
-     * Returns true if application is running and false otherwise.
+
+    // TODO Use {@link #isStarted} or {@link #isReady} concepts instead, because running is vague
+     /**
+     * Indicate if application has started it's boot cycle.
      *
-     * @return true if application is running and false otherwise.
+     * @return true if application has started it's boot cycle.
      */
     boolean isRunning();
 
