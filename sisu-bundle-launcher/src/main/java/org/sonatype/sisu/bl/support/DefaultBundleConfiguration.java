@@ -57,6 +57,10 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      */
     public static final int START_SUSPENDED_TIMEOUT_DEFAULT = 5*60;
 
+    /**
+     * Default host name value is 127.0.0.1, which may prove more reliable than 'localhost'
+     */
+    public static final String HOSTNAME_DEFAULT = "127.0.0.1";
 
     /**
      * System properties.
@@ -123,6 +127,11 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      */
     private JMXConfiguration jmxConfiguration;
 
+    /**
+     * Host name to access web bundle with
+     */
+    private String hostName;
+
     @Inject
     public DefaultBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
     {
@@ -131,6 +140,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         debugPort = 0;
         suspendOnStart = false;
         systemProperties = Maps.newHashMap();
+        setHostName(HOSTNAME_DEFAULT);
     }
 
     @Override
@@ -321,11 +331,26 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     }
 
     @Override
+    public T setHostName( String hostName ) {
+        this.hostName = checkNotNull(hostName);
+        return self();
+    }
+
+    /**
+     * @return configured hostname or {@link #HOSTNAME_DEFAULT} if not set
+     */
+    @Override
+    public String getHostName() {
+        return this.hostName;
+    }
+
+    @Override
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
         sb.append( getClass().getSimpleName() );
         sb.append( "{id=" ).append( getId() );
+        sb.append( ", hostName=" ).append( getHostName() );
         sb.append( ", bundle=" ).append( getBundle() );
         sb.append( ", targetDirectory=" ).append( getTargetDirectory() );
         sb.append( '}' );

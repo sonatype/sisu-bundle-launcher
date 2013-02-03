@@ -38,17 +38,11 @@ public class DefaultWebBundleConfiguration<T extends WebBundleConfiguration>
      */
     private int port;
 
-    /**
-     * Host name to access web bundle with
-     */
-    private String hostName;
-
     @Inject
     public DefaultWebBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
     {
         super( jmxConfigurationProvider );
         setPort( RANDOM_PORT );
-        setHostName("localhost");
     }
 
     @Override
@@ -65,27 +59,12 @@ public class DefaultWebBundleConfiguration<T extends WebBundleConfiguration>
     }
 
     @Override
-    public T setHostName(String hostName) {
-        this.hostName = checkNotNull(hostName);
-        return self();
-    }
-
-    /**
-     * @return "localhost" host name if not set
-     */
-    @Override
-    public String getHostName() {
-        return this.hostName;
-    }
-
-    @Override
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
         sb.append( getClass().getSimpleName() );
         sb.append( "{" ).append( super.toString() );
         sb.append( ", port=" ).append( getPort() );
-        sb.append( ", hostName=" ).append( getHostName() );
         sb.append( '}' );
         return sb.toString();
     }

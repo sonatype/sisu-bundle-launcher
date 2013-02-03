@@ -37,19 +37,4 @@ public interface WebBundleConfiguration<T extends WebBundleConfiguration>
      */
     T setPort( int port );
 
-    /**
-     * Set the hostname that should be used when accessing the web bundle.
-     *
-     * @param hostName the host name to set
-     * @return the host name that should be used when accessing the web bundle
-     */
-    T setHostName(String hostName);
-
-    /**
-     * Returns the host name that should be used when accessing the web bundle, for example 'localhost'.
-     *
-     * @return the host name that should be used when accessing the web bundle
-     */
-    String getHostName();
-
 }

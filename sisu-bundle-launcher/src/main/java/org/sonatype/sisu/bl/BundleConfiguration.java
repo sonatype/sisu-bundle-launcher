@@ -169,4 +169,19 @@ public interface BundleConfiguration<T extends BundleConfiguration>
      * @return JMXConfiguration for the bundle or null if JMX is not configured
      */
     JMXConfiguration getJmxConfiguration();
+
+    /**
+     * Set the hostname that should be used when accessing the bundle.
+     *
+     * @param hostName the not null host name to configure
+     * @return the host name that should be used when accessing the web bundle
+     */
+    T setHostName( String hostName );
+
+    /**
+     * Returns the host name that should be used when accessing the bundle, for example '127.0.0.1' or 'localhost'.
+     *
+     * @return the configured host name, never null
+     */
+    String getHostName();
 }
