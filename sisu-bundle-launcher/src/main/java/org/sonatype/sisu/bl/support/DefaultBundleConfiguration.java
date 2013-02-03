@@ -43,7 +43,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
 {
 
     /**
-     * Start timeout configuration property key.
+     * Start(boot) timeout in seconds configuration property key.
      */
     public static final String START_TIMEOUT = "DefaultBundleConfiguration.startTimeout";
 
@@ -51,6 +51,12 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
      * Default start timeout.
      */
     public static final int START_TIMEOUT_DEFAULT = 60;
+
+    /**
+     * Default start timeout in seconds, while suspended waiting for debugger attachment.
+     */
+    public static final int START_SUSPENDED_TIMEOUT_DEFAULT = 5*60;
+
 
     /**
      * System properties.
@@ -257,7 +263,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
         this.suspendOnStart = checkNotNull( suspendOnStart );
         // suspending Nexus while debugging could cause bundle startup monitoring to fail if we do not increase time
         if( suspendOnStart && getStartTimeout() == START_TIMEOUT_DEFAULT ) {
-            setStartTimeout( 1000 );
+            setStartTimeout( START_SUSPENDED_TIMEOUT_DEFAULT );
         }
         return self();
     }
