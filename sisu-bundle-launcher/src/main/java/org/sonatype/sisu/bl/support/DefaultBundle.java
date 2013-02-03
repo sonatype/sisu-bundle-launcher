@@ -369,7 +369,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
             @Override
             protected boolean isSatisfied()
             {
-                return applicationAlive();
+                return applicationAlive(); // meaning application is finished booting and ready for work
             }
         }.await( Time.seconds( startTimeout ) );
         this.secondsUntilAlive = ( System.currentTimeMillis() - start ) / 1000;
@@ -379,8 +379,10 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
         }
         else
         {
+            // FIXME throw new BootTimeoutException()
             throw new RuntimeException(
-                SimpleFormat.format("Did not detect %s (%s) running in the configured timeout of %s seconds", getName(), getConfiguration().getId(), startTimeout)
+                SimpleFormat.format("%s (%s) did not finish booting within %s seconds - possibly suspended? : %s",
+                                    getName(), getConfiguration().getId(), startTimeout, getConfiguration().isSuspendOnStart())
             );
         }
     }
