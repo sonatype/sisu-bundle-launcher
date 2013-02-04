@@ -119,12 +119,12 @@
       </properties>
     </profile>
     <profile>
-      <id>osx_16_tools</id>
+      <!-- mac java 7 uses regular tools.jar from what I can tell -->
+      <id>mac_16_tools</id>
       <activation>
-        <os>
-          <family>mac</family>
-        </os>
-        <jdk>1.6</jdk>
+        <file>
+          <exists>${java.home}/../Classes/classes.jar</exists>
+        </file>
       </activation>
       <properties>
         <toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
