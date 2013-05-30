@@ -341,7 +341,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir( config.getTargetDirectory() );
-        ds.setIncludes( new String[]{ name + "-*" } );
+        ds.setIncludes( new String[]{ name + "*" } );
         ds.scan();
         String[] dirs = ds.getIncludedDirectories();
 
