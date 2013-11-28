@@ -18,11 +18,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.contains;
+import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.doesNotContain;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
 
+import com.google.common.collect.Maps;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,8 +87,12 @@ public class JSWConfigTest
         jswConfig.save();
         assertThat(
             config,
-            contains( "wrapper.java.mainclass=foo.Bar" )
+            contains( "#  explicit overrides" )
         );
+        assertThat(
+              config,
+              contains( "wrapper.java.mainclass=foo.Bar" )
+          );
     }
 
     @Test
@@ -174,4 +182,132 @@ public class JSWConfigTest
         );
     }
 
+
+    @Test
+    public void setJavaCommand() throws Exception {
+      jswConfig.setJavaCommand("/foo/bis/baz/java");
+      jswConfig.save();
+
+      assertThat(
+          config,
+          contains("wrapper.java.command=/foo/bis/baz/java")
+      );
+    }
+
+    @Test
+    public void wrapperCommentsPerTypeOfOverride() throws Exception {
+
+        // backup system properties
+        Properties backup = new Properties();
+        backup.putAll(System.getProperties());
+
+        // setup sys props
+        Map<String,String> testProps = Maps.newHashMap();
+        testProps.put("wrapper.system.prop", "bar");
+        System.getProperties().putAll(testProps);
+
+        jswConfig.load(); // loads system properties
+
+        // set an explicit property as well
+        jswConfig.setProperty("wrapper.explicit.prop", "baz");
+
+        // save again to write out config with system properties
+        jswConfig.save();
+
+        // check that overridden properties are written
+        assertThat(
+            config,
+            contains("#  system overrides")
+        );
+
+        assertThat(
+            config,
+            contains("#  explicit overrides")
+        );
+
+        assertThat(
+            config,
+            contains("wrapper.explicit.prop=baz")
+        );
+
+        assertThat(
+            config,
+            contains("wrapper.system.prop=bar")
+        );
+
+        // reset system properties
+        System.setProperties(backup);
+
+    }
+
+  @Test
+  public void wrapperSystemPropertiesOverride() throws Exception {
+      Properties backup = new Properties();
+      backup.putAll(System.getProperties());
+
+      // test setup
+      Map<String,String> testProps = Maps.newHashMap();
+      testProps.put(JSWConfig.WRAPPER_JAVA_COMMAND,"/my/custom/java");
+      testProps.put("nonwrapper.prop","special");
+      testProps.put("wrapper.prop","something");
+     System.getProperties().putAll(testProps);
+
+      // load and then save capture system properties
+      jswConfig.load();
+      jswConfig.save();
+
+      // check that overridden properties are written
+      assertThat(
+          config,
+          contains("#  system overrides")
+      );
+
+      assertThat(
+          config,
+          contains("wrapper.java.command=/my/custom/java")
+      );
+
+      assertThat(
+          config,
+          contains("wrapper.prop=something")
+      );
+
+      assertThat(
+          config,
+          doesNotContain("nonwrapper.prop=special")
+      );
+
+      // reset system properties
+      System.setProperties(backup);
+
+  }
+
+  @Test
+  public void wrapperSystemPropertiesOverrideDisabled() throws Exception {
+    Properties backup = new Properties();
+    backup.putAll(System.getProperties());
+
+    Map<String,String> testProps = Maps.newHashMap();
+    testProps.put("wrapper.prop","something");
+    System.getProperties().putAll(testProps);
+
+    jswConfig.setWrapperSystemOverridesEnabled(false);
+    jswConfig.load();
+
+    jswConfig.save();
+
+    // check that overridden properties are written
+    assertThat(
+        config,
+        doesNotContain("#  system overrides")
+    );
+    assertThat(
+        config,
+        doesNotContain("wrapper.prop=something")
+    );
+
+    // reset system properties
+    System.setProperties(backup);
+
+  }
 }

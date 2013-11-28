@@ -12,10 +12,6 @@
  */
 package org.sonatype.sisu.bl.jsw;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.String.format;
-import static org.apache.commons.io.FileUtils.readFileToString;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,14 +23,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.sonatype.sisu.goodies.common.Properties2;
 import org.sonatype.sisu.goodies.common.TestAccessible;
+
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
+import static org.apache.commons.io.FileUtils.readFileToString;
 
 /**
  * JSW configurations file (wrapper.conf) reader/writer.
@@ -50,6 +49,8 @@ public class JSWConfig
 
     public static final String WRAPPER_JAVA_CLASSPATH = "wrapper.java.classpath";
 
+    public static final String WRAPPER_JAVA_COMMAND = "wrapper.java.command";
+
     /**
      * JSW configuration file.
      * Never null.
@@ -61,6 +62,11 @@ public class JSWConfig
      * Null in case that JSW configuration file does not exist.
      */
     private String configContent;
+
+    /**
+     * Properties that are loaded from System, just before the configuration file is loaded.
+     */
+    private Properties wrapperSystemOverrides;
 
     /**
      * Properties read from JSW configuration file.
@@ -87,6 +93,11 @@ public class JSWConfig
     private String overrideComment = "";
 
     /**
+     * Flag to allow using system properties to override wrapper.* properties
+     */
+    private boolean wrapperSystemOverridesEnabled = true;
+
+    /**
      * Constructor. It will use a default comment.
      *
      * @param config JSW configuration file to be read/written
@@ -111,8 +122,7 @@ public class JSWConfig
         }
         else
         {
-            this.overrideComment =
-                "The following properties are added by sisu-jsw-utils as an override of properties already configured";
+            this.overrideComment = "Added by sisu-bundle-launcher";
         }
         configProperties = new Properties();
         overrideProperties = new Properties();
@@ -130,6 +140,10 @@ public class JSWConfig
     {
         if ( config.exists() )
         {
+            if(isWrapperSystemOverridesEnabled()){
+              wrapperSystemOverrides = wrapperPropertiesFromSystem();
+            }
+
             InputStream in = null;
             try
             {
@@ -158,7 +172,7 @@ public class JSWConfig
     public JSWConfig save()
         throws IOException
     {
-        if ( overrideProperties.size() > 0 )
+        if ( !overrideProperties.isEmpty() || !wrapperSystemOverrides.isEmpty() )
         {
             PrintWriter out = null;
             try
@@ -177,14 +191,24 @@ public class JSWConfig
                 }
                 out.println( "# " + overrideComment );
 
-                final List<String> propertiesNames = Lists.newArrayList();
-                propertiesNames.addAll( overrideProperties.stringPropertyNames() );
-                Collections.sort( propertiesNames );
-
-                for ( final String propertyName : propertiesNames )
-                {
-                    out.println( propertyName + "=" + overrideProperties.getProperty( propertyName ) );
+                if(!wrapperSystemOverrides.isEmpty()){
+                  out.println("#  system overrides");
+                  Collection<String> propNames = Properties2.sortKeys(wrapperSystemOverrides);
+                  for ( final String propName :propNames )
+                  {
+                      out.println( propName + "=" + wrapperSystemOverrides.getProperty( propName ) );
+                  }
                 }
+
+                if (!overrideProperties.isEmpty()){
+                  out.println("#  explicit overrides");
+                  Collection<String> propNames = Properties2.sortKeys(overrideProperties);
+                  for ( final String propName :propNames )
+                  {
+                      out.println( propName + "=" + overrideProperties.getProperty( propName ) );
+                  }
+                }
+
             }
             finally
             {
@@ -256,7 +280,7 @@ public class JSWConfig
      */
     public JSWConfig addJavaSystemProperty( final String key, final String value )
     {
-        return addJavaStartupParameter( format( "-D%s=%s", key, value ) );
+        return addJavaStartupParameter(format("-D%s=%s", key, value));
     }
 
     /**
@@ -287,7 +311,7 @@ public class JSWConfig
      */
     public JSWConfig addJavaStartupParameter( final String parameter )
     {
-        return addIndexedProperty( WRAPPER_JAVA_ADDITIONAL, parameter );
+        return addIndexedProperty(WRAPPER_JAVA_ADDITIONAL, parameter);
     }
 
     /**
@@ -308,25 +332,56 @@ public class JSWConfig
         return this;
     }
 
+    /**
+     * Sets the value of the wrapper.java.command property which should be an explicit path to a java executable.
+     *
+     * @param pathToJavaExecutable the value to set
+     * @return  itself, for fluent API
+     */
+    public JSWConfig setJavaCommand( final String pathToJavaExecutable )
+    {
+      return setProperty( WRAPPER_JAVA_COMMAND, pathToJavaExecutable );
+    }
+
     public JSWConfig setJavaMainClass( final String mainClass )
     {
-        return setProperty( WRAPPER_JAVA_MAINCLASS, mainClass );
+        return setProperty(WRAPPER_JAVA_MAINCLASS, mainClass);
     }
 
     public JSWConfig setJavaMainClass( final Class mainClass )
     {
-        return setJavaMainClass( mainClass.getName() );
+        return setJavaMainClass(mainClass.getName());
     }
 
     public JSWConfig addToJavaClassPath( final String entry )
     {
-        return addIndexedProperty( WRAPPER_JAVA_CLASSPATH, entry );
+        return addIndexedProperty(WRAPPER_JAVA_CLASSPATH, entry);
     }
 
     public JSWConfig addToJavaClassPath( final Class clazz )
     {
         final URL jar = clazz.getProtectionDomain().getCodeSource().getLocation();
-        return addToJavaClassPath( urlToFile( jar ).getAbsolutePath() );
+        return addToJavaClassPath(urlToFile(jar).getAbsolutePath());
+    }
+
+    /**
+     * Indicates if System properties will be checked at load time for wrapper properties.
+     *
+     * @return true (default) if during {@link #load()} properties starting with {@code wrapper.*} will be extracted from
+     * {@link System#getProperties()}
+     */
+    public boolean isWrapperSystemOverridesEnabled()
+    {
+      return wrapperSystemOverridesEnabled;
+    }
+
+    /**
+     * Configure if during {@link #load()} properties starting with {@code wrapper.*} will be extracted from
+     * {@link System#getProperties()}
+     */
+    public void setWrapperSystemOverridesEnabled(final boolean wrapperSystemOverridesEnabled)
+    {
+      this.wrapperSystemOverridesEnabled = wrapperSystemOverridesEnabled;
     }
 
     @TestAccessible
@@ -341,6 +396,23 @@ public class JSWConfig
         {
             throw Throwables.propagate( e );
         }
+    }
+
+    /**
+     * @return all system properties that start with "wrapper."
+     */
+    private Properties wrapperPropertiesFromSystem()
+    {
+      Properties props = new Properties();
+      props.putAll(System.getProperties());
+      Collection<String> propNames = Properties2.sortKeys(props);
+      for(final String propName : propNames)
+      {
+        if(!propName.startsWith("wrapper.")){
+              props.remove(propName);
+          }
+      }
+      return props;
     }
 
 }
