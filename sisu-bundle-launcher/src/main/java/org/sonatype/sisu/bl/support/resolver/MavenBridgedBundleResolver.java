@@ -15,12 +15,12 @@ package org.sonatype.sisu.bl.support.resolver;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
-import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 import com.google.common.base.Throwables;

@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.sonatype.sisu</groupId>
     <artifactId>sisu-bundle-launcher-aggregator</artifactId>
-    <version>1.5.4-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>sisu-bundle-launcher</artifactId>
@@ -30,8 +30,12 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.inject</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.sonatype.sisu</groupId>
-      <artifactId>sisu-inject-bean</artifactId>
+      <artifactId>sisu-guice</artifactId>
     </dependency>
     <dependency>
       <groupId>org.sonatype.sisu</groupId>

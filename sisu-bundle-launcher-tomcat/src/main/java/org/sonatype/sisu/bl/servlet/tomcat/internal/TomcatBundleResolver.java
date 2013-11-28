@@ -12,10 +12,10 @@
  */
 package org.sonatype.sisu.bl.servlet.tomcat.internal;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.support.resolver.MavenBridgedBundleResolver;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
