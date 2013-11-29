@@ -10,22 +10,24 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.internal.support.guice;
 
-import com.google.inject.AbstractModule;
+import javax.inject.Named;
+
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 import org.sonatype.sisu.maven.bridge.support.artifact.RemoteMavenArtifactResolverUsingSettings;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import com.google.inject.AbstractModule;
 
 @Named
 public class GuiceModule
-    extends AbstractModule {
+    extends AbstractModule
+{
 
-    @Override
-    protected void configure() {
-        bind(MavenArtifactResolver.class).to(RemoteMavenArtifactResolverUsingSettings.class);
-    }
+  @Override
+  protected void configure() {
+    bind(MavenArtifactResolver.class).to(RemoteMavenArtifactResolverUsingSettings.class);
+  }
 
 }

@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.internal.support;
 
 /**
@@ -18,12 +19,13 @@ package org.sonatype.sisu.bl.internal.support;
  * @since 1.0
  */
 public interface LifecycleHandler
-        extends Lifecycle {
+    extends Lifecycle
+{
 
-    void log(String message);
+  void log(String message);
 
-    boolean success();
+  boolean success();
 
-    void throwFailureIfFailed();
+  void throwFailureIfFailed();
 
 }

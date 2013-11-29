@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl;
 
 import org.sonatype.sisu.goodies.common.Time;
@@ -22,14 +23,14 @@ import org.sonatype.sisu.goodies.common.Time;
 public interface BundleStatistics
 {
 
-    Time cleanupTime();
+  Time cleanupTime();
 
-    Time preparationTime();
+  Time preparationTime();
 
-    Time startupTime();
+  Time startupTime();
 
-    Time bootingTime();
+  Time bootingTime();
 
-    Time stoppingTime();
+  Time stoppingTime();
 
 }

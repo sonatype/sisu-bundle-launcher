@@ -10,9 +10,19 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+
 import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.jmx.JMXConfiguration;
@@ -20,14 +30,7 @@ import org.sonatype.sisu.bl.support.resolver.BundleResolver;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
 import org.sonatype.sisu.filetasks.FileTask;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,319 +45,294 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
     implements BundleConfiguration<T>
 {
 
-    /**
-     * Start(boot) timeout in seconds configuration property key.
-     */
-    public static final String START_TIMEOUT = "DefaultBundleConfiguration.startTimeout";
+  /**
+   * Start(boot) timeout in seconds configuration property key.
+   */
+  public static final String START_TIMEOUT = "DefaultBundleConfiguration.startTimeout";
 
-    /**
-     * Default start timeout.
-     */
-    public static final int START_TIMEOUT_DEFAULT = 60;
+  /**
+   * Default start timeout.
+   */
+  public static final int START_TIMEOUT_DEFAULT = 60;
 
-    /**
-     * Default start timeout in seconds, while suspended waiting for debugger attachment.
-     */
-    public static final int START_SUSPENDED_TIMEOUT_DEFAULT = 5*60;
+  /**
+   * Default start timeout in seconds, while suspended waiting for debugger attachment.
+   */
+  public static final int START_SUSPENDED_TIMEOUT_DEFAULT = 5 * 60;
 
-    /**
-     * Default host name value is 127.0.0.1, which may prove more reliable than 'localhost'
-     */
-    public static final String HOSTNAME_DEFAULT = "127.0.0.1";
+  /**
+   * Default host name value is 127.0.0.1, which may prove more reliable than 'localhost'
+   */
+  public static final String HOSTNAME_DEFAULT = "127.0.0.1";
 
-    /**
-     * System properties.
-     * Should never be null.
-     */
-    private final Map<String, String> systemProperties;
+  /**
+   * System properties.
+   * Should never be null.
+   */
+  private final Map<String, String> systemProperties;
 
-    /**
-     * Bundle identity.
-     */
-    private String id;
+  /**
+   * Bundle identity.
+   */
+  private String id;
 
-    /**
-     * Application bundle zip/jar/tar or directory.
-     */
-    private File bundle;
+  /**
+   * Application bundle zip/jar/tar or directory.
+   */
+  private File bundle;
 
-    /**
-     * Application target directory, where bundle will be exploded.
-     */
-    private File targetDirectory;
+  /**
+   * Application target directory, where bundle will be exploded.
+   */
+  private File targetDirectory;
 
-    /**
-     * List of overlays to be applied to exploded bundle. Should never be null.
-     */
-    private List<FileTask> overlays;
+  /**
+   * List of overlays to be applied to exploded bundle. Should never be null.
+   */
+  private List<FileTask> overlays;
 
-    /**
-     * Number of seconds to wait for application to boot.
-     */
-    private Integer startTimeout;
+  /**
+   * Number of seconds to wait for application to boot.
+   */
+  private Integer startTimeout;
 
-    /**
-     * Debugging port if debug is enabled. Zero (0) otherwise;
-     * Should never be null.
-     */
-    private Integer debugPort;
+  /**
+   * Debugging port if debug is enabled. Zero (0) otherwise;
+   * Should never be null.
+   */
+  private Integer debugPort;
 
-    /**
-     * True if debugging is enabled and it should suspend execution on start, false otherwise.
-     * Should never be null.
-     */
-    private Boolean suspendOnStart;
+  /**
+   * True if debugging is enabled and it should suspend execution on start, false otherwise.
+   * Should never be null.
+   */
+  private Boolean suspendOnStart;
 
-    /**
-     * Resolver to be used to resolve application bundle file. Can be null.
-     * Lazy used (if not null) when bundle file is requested.
-     */
-    private BundleResolver bundleResolver;
+  /**
+   * Resolver to be used to resolve application bundle file. Can be null.
+   * Lazy used (if not null) when bundle file is requested.
+   */
+  private BundleResolver bundleResolver;
 
-    /**
-     * Resolver to be used to resolve application target directory. Can be null.
-     * Lazy used (if not null) when target directory is requested.
-     */
-    private TargetDirectoryResolver targetDirectoryResolver;
+  /**
+   * Resolver to be used to resolve application target directory. Can be null.
+   * Lazy used (if not null) when target directory is requested.
+   */
+  private TargetDirectoryResolver targetDirectoryResolver;
 
-    /**
-     * Lazy provider of JMX configuration.
-     */
-    private Provider<JMXConfiguration> jmxConfigurationProvider;
+  /**
+   * Lazy provider of JMX configuration.
+   */
+  private Provider<JMXConfiguration> jmxConfigurationProvider;
 
-    /**
-     * How JMX should be configured on this bundle.
-     */
-    private JMXConfiguration jmxConfiguration;
+  /**
+   * How JMX should be configured on this bundle.
+   */
+  private JMXConfiguration jmxConfiguration;
 
-    /**
-     * Host name to access web bundle with
-     */
-    private String hostName;
+  /**
+   * Host name to access web bundle with
+   */
+  private String hostName;
 
-    @Inject
-    public DefaultBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
-    {
-        this.jmxConfigurationProvider = checkNotNull( jmxConfigurationProvider );
-        setOverlays();
-        debugPort = 0;
-        suspendOnStart = false;
-        systemProperties = Maps.newHashMap();
-        setHostName(HOSTNAME_DEFAULT);
+  @Inject
+  public DefaultBundleConfiguration(final Provider<JMXConfiguration> jmxConfigurationProvider) {
+    this.jmxConfigurationProvider = checkNotNull(jmxConfigurationProvider);
+    setOverlays();
+    debugPort = 0;
+    suspendOnStart = false;
+    systemProperties = Maps.newHashMap();
+    setHostName(HOSTNAME_DEFAULT);
+  }
+
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public T setId(final String id) {
+    this.id = id;
+    return self();
+  }
+
+  /**
+   * Resolves the bundle (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.BundleResolver} (if
+   * present).
+   * <p/>
+   * {@inheritDoc}
+   */
+  @Override
+  public File getBundle() {
+    if (bundle == null && bundleResolver != null) {
+      bundle = bundleResolver.resolve();
     }
+    return bundle;
+  }
 
-    @Override
-    public String getId()
-    {
-        return id;
-    }
+  @Override
+  public T setBundle(File bundle) {
+    this.bundle = bundle;
+    return self();
+  }
 
-    @Override
-    public T setId( final String id )
-    {
-        this.id = id;
-        return self();
+  /**
+   * Resolves the target directory (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver}
+   * (if present).
+   * <p/>
+   * {@inheritDoc}
+   */
+  @Override
+  public File getTargetDirectory() {
+    if (targetDirectory == null && targetDirectoryResolver != null) {
+      targetDirectory = new File(targetDirectoryResolver.resolve(), getId());
     }
+    return targetDirectory;
+  }
 
-    /**
-     * Resolves the bundle (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.BundleResolver} (if present).
-     * <p/>
-     * {@inheritDoc}
-     */
-    @Override
-    public File getBundle()
-    {
-        if ( bundle == null && bundleResolver != null )
-        {
-            bundle = bundleResolver.resolve();
-        }
-        return bundle;
-    }
+  @Override
+  public T setTargetDirectory(File targetDirectory) {
+    this.targetDirectory = targetDirectory;
+    return self();
+  }
 
-    @Override
-    public T setBundle( File bundle )
-    {
-        this.bundle = bundle;
-        return self();
-    }
+  @Override
+  public List<FileTask> getOverlays() {
+    return overlays;
+  }
 
-    /**
-     * Resolves the target directory (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver} (if present).
-     * <p/>
-     * {@inheritDoc}
-     */
-    @Override
-    public File getTargetDirectory()
-    {
-        if ( targetDirectory == null && targetDirectoryResolver != null )
-        {
-            targetDirectory = new File( targetDirectoryResolver.resolve(), getId() );
-        }
-        return targetDirectory;
+  @Override
+  public T setOverlays(List<FileTask> overlays) {
+    this.overlays = new ArrayList<FileTask>();
+    if (overlays != null) {
+      this.overlays.addAll(overlays);
     }
+    return self();
+  }
 
-    @Override
-    public T setTargetDirectory( File targetDirectory )
-    {
-        this.targetDirectory = targetDirectory;
-        return self();
-    }
+  @Override
+  public T setOverlays(FileTask... overlays) {
+    return setOverlays(Arrays.asList(overlays));
+  }
 
-    @Override
-    public List<FileTask> getOverlays()
-    {
-        return overlays;
-    }
+  @Override
+  public T addOverlays(FileTask... overlays) {
+    this.overlays.addAll(Arrays.asList(overlays));
+    return self();
+  }
 
-    @Override
-    public T setOverlays( List<FileTask> overlays )
-    {
-        this.overlays = new ArrayList<FileTask>();
-        if ( overlays != null )
-        {
-            this.overlays.addAll( overlays );
-        }
-        return self();
-    }
+  @Override
+  public Integer getStartTimeout() {
+    return startTimeout;
+  }
 
-    @Override
-    public T setOverlays( FileTask... overlays )
-    {
-        return setOverlays( Arrays.asList( overlays ) );
-    }
+  @Override
+  public T setStartTimeout(final Integer startTimeout) {
+    this.startTimeout = startTimeout;
+    return self();
+  }
 
-    @Override
-    public T addOverlays( FileTask... overlays )
-    {
-        this.overlays.addAll( Arrays.asList( overlays ) );
-        return self();
-    }
+  /**
+   * Sets number of seconds to wait for application to boot. If injected will use the timeout bounded to
+   * {@link #START_TIMEOUT} with a default of {@link #START_TIMEOUT_DEFAULT} seconds.
+   */
+  @Inject
+  protected void configureStartTimeout(
+      final @Named("${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}") Integer startTimeout)
+  {
+    setStartTimeout(startTimeout);
+  }
 
-    @Override
-    public Integer getStartTimeout()
-    {
-        return startTimeout;
-    }
+  @Override
+  public Integer getDebugPort() {
+    return debugPort;
+  }
 
-    @Override
-    public T setStartTimeout( final Integer startTimeout )
-    {
-        this.startTimeout = startTimeout;
-        return self();
-    }
+  @Override
+  public Boolean isSuspendOnStart() {
+    return suspendOnStart;
+  }
 
-    /**
-     * Sets number of seconds to wait for application to boot. If injected will use the timeout bounded to
-     * {@link #START_TIMEOUT} with a default of {@link #START_TIMEOUT_DEFAULT} seconds.
-     */
-    @Inject
-    protected void configureStartTimeout(
-        final @Named( "${" + START_TIMEOUT + ":-" + START_TIMEOUT_DEFAULT + "}" ) Integer startTimeout )
-    {
-        setStartTimeout( startTimeout );
+  @Override
+  public T enableDebugging(final Integer debugPort, final Boolean suspendOnStart) {
+    this.debugPort = checkNotNull(debugPort);
+    this.suspendOnStart = checkNotNull(suspendOnStart);
+    // suspending Nexus while debugging could cause bundle startup monitoring to fail if we do not increase time
+    if (suspendOnStart && getStartTimeout() == START_TIMEOUT_DEFAULT) {
+      setStartTimeout(START_SUSPENDED_TIMEOUT_DEFAULT);
     }
+    return self();
+  }
 
-    @Override
-    public Integer getDebugPort()
-    {
-        return debugPort;
-    }
+  @Override
+  public Map<String, String> getSystemProperties() {
+    return systemProperties;
+  }
 
-    @Override
-    public Boolean isSuspendOnStart()
-    {
-        return suspendOnStart;
-    }
+  @Override
+  public T setSystemProperty(String key, String value) {
+    systemProperties.put(key, value);
+    return self();
+  }
 
-    @Override
-    public T enableDebugging( final Integer debugPort, final Boolean suspendOnStart )
-    {
-        this.debugPort = checkNotNull( debugPort );
-        this.suspendOnStart = checkNotNull( suspendOnStart );
-        // suspending Nexus while debugging could cause bundle startup monitoring to fail if we do not increase time
-        if( suspendOnStart && getStartTimeout() == START_TIMEOUT_DEFAULT ) {
-            setStartTimeout( START_SUSPENDED_TIMEOUT_DEFAULT );
-        }
-        return self();
+  @Override
+  public JMXConfiguration getJmxConfiguration() {
+    if (this.jmxConfiguration == null) {
+      this.jmxConfiguration = jmxConfigurationProvider.get();
     }
+    return this.jmxConfiguration;
+  }
 
-    @Override
-    public Map<String, String> getSystemProperties()
-    {
-        return systemProperties;
-    }
+  /**
+   * Sets an optional bundle resolver.
+   *
+   * @param bundleResolver optional bundle resolver to be used to resolve application bundle if bundle not set
+   */
+  @Inject
+  protected void setBundleResolver(final @Nullable BundleResolver bundleResolver) {
+    this.bundleResolver = bundleResolver;
+  }
 
-    @Override
-    public T setSystemProperty( String key, String value )
-    {
-        systemProperties.put( key, value );
-        return self();
-    }
+  /**
+   * Sets an optional target directory resolver.
+   *
+   * @param targetDirectoryResolver optional target directory resolver to be used to resolve directory where
+   *                                application bundle is exploded if target directory is not set
+   */
+  @Inject
+  protected void setTargetDirectoryResolver(final @Nullable TargetDirectoryResolver targetDirectoryResolver) {
+    this.targetDirectoryResolver = targetDirectoryResolver;
+  }
 
-    @Override
-    public JMXConfiguration getJmxConfiguration()
-    {
-        if ( this.jmxConfiguration == null )
-        {
-            this.jmxConfiguration = jmxConfigurationProvider.get();
-        }
-        return this.jmxConfiguration;
-    }
+  @SuppressWarnings("unchecked")
+  protected T self() {
+    return (T) this;
+  }
 
-    /**
-     * Sets an optional bundle resolver.
-     *
-     * @param bundleResolver optional bundle resolver to be used to resolve application bundle if bundle not set
-     */
-    @Inject
-    protected void setBundleResolver( final @Nullable BundleResolver bundleResolver )
-    {
-        this.bundleResolver = bundleResolver;
-    }
+  @Override
+  public T setHostName(String hostName) {
+    this.hostName = checkNotNull(hostName);
+    return self();
+  }
 
-    /**
-     * Sets an optional target directory resolver.
-     *
-     * @param targetDirectoryResolver optional target directory resolver to be used to resolve directory where
-     *                                application bundle is exploded if target directory is not set
-     */
-    @Inject
-    protected void setTargetDirectoryResolver( final @Nullable TargetDirectoryResolver targetDirectoryResolver )
-    {
-        this.targetDirectoryResolver = targetDirectoryResolver;
-    }
+  /**
+   * @return configured hostname or {@link #HOSTNAME_DEFAULT} if not set
+   */
+  @Override
+  public String getHostName() {
+    return this.hostName;
+  }
 
-    @SuppressWarnings( "unchecked" )
-    protected T self()
-    {
-        return (T) this;
-    }
-
-    @Override
-    public T setHostName( String hostName ) {
-        this.hostName = checkNotNull(hostName);
-        return self();
-    }
-
-    /**
-     * @return configured hostname or {@link #HOSTNAME_DEFAULT} if not set
-     */
-    @Override
-    public String getHostName() {
-        return this.hostName;
-    }
-
-    @Override
-    public String toString()
-    {
-        final StringBuilder sb = new StringBuilder();
-        sb.append( getClass().getSimpleName() );
-        sb.append( "{id=" ).append( getId() );
-        sb.append( ", hostName=" ).append( getHostName() );
-        sb.append( ", bundle=" ).append( getBundle() );
-        sb.append( ", targetDirectory=" ).append( getTargetDirectory() );
-        sb.append( '}' );
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    sb.append(getClass().getSimpleName());
+    sb.append("{id=").append(getId());
+    sb.append(", hostName=").append(getHostName());
+    sb.append(", bundle=").append(getBundle());
+    sb.append(", targetDirectory=").append(getTargetDirectory());
+    sb.append('}');
+    return sb.toString();
+  }
 
 }

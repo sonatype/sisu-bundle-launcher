@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl;
 
 /**
@@ -17,68 +18,70 @@ package org.sonatype.sisu.bl;
  *
  * @since 1.0
  */
-public interface Bundle<B extends Bundle, BC extends BundleConfiguration> {
+public interface Bundle<B extends Bundle, BC extends BundleConfiguration>
+{
 
-    /**
-     * Starts application created from this bundle, waiting for application to boot for a period of time specified by
-     * configuration.
-     *
-     * @return itself, for usage in fluent api
-     */
-    B start();
+  /**
+   * Starts application created from this bundle, waiting for application to boot for a period of time specified by
+   * configuration.
+   *
+   * @return itself, for usage in fluent api
+   */
+  B start();
 
-    /**
-     * Stops a running application created from this bundle.
-     *
-     * @return itself, for usage in fluent api
-     */
-    B stop();
+  /**
+   * Stops a running application created from this bundle.
+   *
+   * @return itself, for usage in fluent api
+   */
+  B stop();
 
-    /**
-     * Prepare file system to run by unpacking the configured bundle in target directory, applying
-     * overlays. The resulted directory should be able to just be started by bundle specific launcher.
-     *
-     * @return itself, for usage in fluent api
-     */
-    B prepare();
+  /**
+   * Prepare file system to run by unpacking the configured bundle in target directory, applying
+   * overlays. The resulted directory should be able to just be started by bundle specific launcher.
+   *
+   * @return itself, for usage in fluent api
+   */
+  B prepare();
 
-    /**
-     * Cleans up filesystem, basically removing the target directory.
-     *
-     * @return itself, for usage in fluent api
-     */
-    B cleanup() throws Exception;
+  /**
+   * Cleans up filesystem, basically removing the target directory.
+   *
+   * @return itself, for usage in fluent api
+   */
+  B cleanup() throws Exception;
 
-    /**
-     * Returns bundle configuration.
-     *
-     * @return bundle configuration, always a non null value
-     */
-    BC getConfiguration();
+  /**
+   * Returns bundle configuration.
+   *
+   * @return bundle configuration, always a non null value
+   */
+  BC getConfiguration();
 
-    /**
-     * Sets bundle configuration.
-     *
-     * @param configuration configuration to be used. Can be null, case when a default configuration will be used
-     * @return itself, for usage in fluent api
-     */
-    B setConfiguration(BC configuration);
+  /**
+   * Sets bundle configuration.
+   *
+   * @param configuration configuration to be used. Can be null, case when a default configuration will be used
+   * @return itself, for usage in fluent api
+   */
+  B setConfiguration(BC configuration);
 
 
-    // TODO Use {@link #isStarted} or {@link #isReady} concepts instead, because running is vague
-     /**
-     * Indicate if application has started it's boot cycle.
-     *
-     * @return true if application has started it's boot cycle.
-     */
-    boolean isRunning();
+  // TODO Use {@link #isStarted} or {@link #isReady} concepts instead, because running is vague
 
-    /**
-     * Returns statistics about this bundle.
-     * @return statistics
-     *
-     * @since 1.5
-     */
-    BundleStatistics statistics();
+  /**
+   * Indicate if application has started it's boot cycle.
+   *
+   * @return true if application has started it's boot cycle.
+   */
+  boolean isRunning();
+
+  /**
+   * Returns statistics about this bundle.
+   *
+   * @return statistics
+   * @since 1.5
+   */
+  BundleStatistics statistics();
 
 }

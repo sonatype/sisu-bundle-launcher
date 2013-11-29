@@ -10,17 +10,15 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-import com.google.common.base.Preconditions;
 import org.sonatype.sisu.bl.WebBundleConfiguration;
 import org.sonatype.sisu.bl.jmx.JMXConfiguration;
-
-import static com.google.common.base.Preconditions.*;
 
 /**
  * Default {@link WebBundleConfiguration} implementation.
@@ -33,40 +31,36 @@ public class DefaultWebBundleConfiguration<T extends WebBundleConfiguration>
     implements WebBundleConfiguration<T>
 {
 
-    /**
-     * Port on which the application will be accessible.
-     */
-    private int port;
+  /**
+   * Port on which the application will be accessible.
+   */
+  private int port;
 
-    @Inject
-    public DefaultWebBundleConfiguration( final Provider<JMXConfiguration> jmxConfigurationProvider )
-    {
-        super( jmxConfigurationProvider );
-        setPort( RANDOM_PORT );
-    }
+  @Inject
+  public DefaultWebBundleConfiguration(final Provider<JMXConfiguration> jmxConfigurationProvider) {
+    super(jmxConfigurationProvider);
+    setPort(RANDOM_PORT);
+  }
 
-    @Override
-    public int getPort()
-    {
-        return port;
-    }
+  @Override
+  public int getPort() {
+    return port;
+  }
 
-    @Override
-    public T setPort( final int port )
-    {
-        this.port = port;
-        return self();
-    }
+  @Override
+  public T setPort(final int port) {
+    this.port = port;
+    return self();
+  }
 
-    @Override
-    public String toString()
-    {
-        final StringBuilder sb = new StringBuilder();
-        sb.append( getClass().getSimpleName() );
-        sb.append( "{" ).append( super.toString() );
-        sb.append( ", port=" ).append( getPort() );
-        sb.append( '}' );
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    sb.append(getClass().getSimpleName());
+    sb.append("{").append(super.toString());
+    sb.append(", port=").append(getPort());
+    sb.append('}');
+    return sb.toString();
+  }
 
 }

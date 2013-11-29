@@ -10,14 +10,15 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package org.sonatype.sisu.bl;
 
-import org.sonatype.sisu.bl.jmx.JMXConfiguration;
-import org.sonatype.sisu.filetasks.FileTask;
+package org.sonatype.sisu.bl;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import org.sonatype.sisu.bl.jmx.JMXConfiguration;
+import org.sonatype.sisu.filetasks.FileTask;
 
 /**
  * An bundle configuration.
@@ -27,161 +28,161 @@ import java.util.Map;
 public interface BundleConfiguration<T extends BundleConfiguration>
 {
 
-    /**
-     * Port value when a port should be randomly generated.
-     */
-    int RANDOM_PORT = 0;
+  /**
+   * Port value when a port should be randomly generated.
+   */
+  int RANDOM_PORT = 0;
 
-    /**
-     * Returns bundle identity.
-     *
-     * @return bundle identity
-     */
-    String getId();
+  /**
+   * Returns bundle identity.
+   *
+   * @return bundle identity
+   */
+  String getId();
 
-    /**
-     * Sets bundle identity.
-     *
-     * @param id bundle identity
-     * @return itself, for usage in fluent api
-     */
-    T setId( String id );
+  /**
+   * Sets bundle identity.
+   *
+   * @param id bundle identity
+   * @return itself, for usage in fluent api
+   */
+  T setId(String id);
 
-    /**
-     * Returns the bundle assembly (zip or tar).
-     *
-     * @return bundle assembly file
-     */
-    File getBundle();
+  /**
+   * Returns the bundle assembly (zip or tar).
+   *
+   * @return bundle assembly file
+   */
+  File getBundle();
 
-    /**
-     * Sets bundle assembly.
-     *
-     * @param bundle a zip/jar/tar file or a directory.
-     * @return itself, for usage in fluent api
-     */
-    T setBundle( File bundle );
+  /**
+   * Sets bundle assembly.
+   *
+   * @param bundle a zip/jar/tar file or a directory.
+   * @return itself, for usage in fluent api
+   */
+  T setBundle(File bundle);
 
-    /**
-     * Returns the target directory to be used for exploding the bundle.
-     *
-     * @return target directory to be used for exploding the bundle.
-     */
-    File getTargetDirectory();
+  /**
+   * Returns the target directory to be used for exploding the bundle.
+   *
+   * @return target directory to be used for exploding the bundle.
+   */
+  File getTargetDirectory();
 
-    /**
-     * Sets target directory.
-     *
-     * @param targetDirectory directory where bundle will be exploded
-     * @return itself, for usage in fluent api
-     */
-    T setTargetDirectory( File targetDirectory );
+  /**
+   * Sets target directory.
+   *
+   * @param targetDirectory directory where bundle will be exploded
+   * @return itself, for usage in fluent api
+   */
+  T setTargetDirectory(File targetDirectory);
 
-    /**
-     * Returns overlays to be applied over exploded bundle.
-     *
-     * @return overlays to be applied over exploded bundle, always a non null value (eventually empty)
-     */
-    List<FileTask> getOverlays();
+  /**
+   * Returns overlays to be applied over exploded bundle.
+   *
+   * @return overlays to be applied over exploded bundle, always a non null value (eventually empty)
+   */
+  List<FileTask> getOverlays();
 
-    /**
-     * Sets overlays. Provided overlays will overwrite existing overlays.
-     * Overlays are applied in provided order.
-     *
-     * @param overlays overlays to be applied over exploded bundle
-     * @return itself, for usage in fluent api
-     */
-    T setOverlays( FileTask... overlays );
+  /**
+   * Sets overlays. Provided overlays will overwrite existing overlays.
+   * Overlays are applied in provided order.
+   *
+   * @param overlays overlays to be applied over exploded bundle
+   * @return itself, for usage in fluent api
+   */
+  T setOverlays(FileTask... overlays);
 
-    /**
-     * Sets overlays. Provided overlays will overwrite existing overlays.
-     * Overlays are applied in provided order.
-     *
-     * @param overlays overlays to be applied over exploded bundle. Can be null, case when an empty list will be
-     *                 used
-     * @return itself, for usage in fluent api
-     */
-    T setOverlays( List<FileTask> overlays );
+  /**
+   * Sets overlays. Provided overlays will overwrite existing overlays.
+   * Overlays are applied in provided order.
+   *
+   * @param overlays overlays to be applied over exploded bundle. Can be null, case when an empty list will be
+   *                 used
+   * @return itself, for usage in fluent api
+   */
+  T setOverlays(List<FileTask> overlays);
 
-    /**
-     * Append overlays to existing set of overlays.
-     *
-     * @param overlays overlays to be applied over exploded bundle
-     * @return itself, for usage in fluent api
-     */
-    T addOverlays( FileTask... overlays );
+  /**
+   * Append overlays to existing set of overlays.
+   *
+   * @param overlays overlays to be applied over exploded bundle
+   * @return itself, for usage in fluent api
+   */
+  T addOverlays(FileTask... overlays);
 
-    /**
-     * Returns the number of seconds to wait for application to start (boot).
-     *
-     * @return the number of seconds to wait for application to start (boot)
-     */
-    Integer getStartTimeout();
+  /**
+   * Returns the number of seconds to wait for application to start (boot).
+   *
+   * @return the number of seconds to wait for application to start (boot)
+   */
+  Integer getStartTimeout();
 
-    /**
-     * Sets start (boot) timeout.
-     *
-     * @param timeout the number of seconds to wait for application to start (boot)
-     * @return itself, for usage in fluent api
-     */
-    T setStartTimeout( Integer timeout );
+  /**
+   * Sets start (boot) timeout.
+   *
+   * @param timeout the number of seconds to wait for application to start (boot)
+   * @return itself, for usage in fluent api
+   */
+  T setStartTimeout(Integer timeout);
 
-    /**
-     * Returns debugging port.
-     *
-     * @return debugging port if debugging is enabled, zero otherwise
-     */
-    Integer getDebugPort();
+  /**
+   * Returns debugging port.
+   *
+   * @return debugging port if debugging is enabled, zero otherwise
+   */
+  Integer getDebugPort();
 
-    /**
-     * Returns debugging suspend status.
-     *
-     * @return true if debugging is enabled and it should suspend on start
-     */
-    Boolean isSuspendOnStart();
+  /**
+   * Returns debugging suspend status.
+   *
+   * @return true if debugging is enabled and it should suspend on start
+   */
+  Boolean isSuspendOnStart();
 
-    /**
-     * Enables debugging.
-     *
-     * @param debugPort      debugging port
-     * @param suspendOnStart if debugging should suspend execution on start
-     * @return itself, for usage in fluent api
-     */
-    T enableDebugging( Integer debugPort, Boolean suspendOnStart );
+  /**
+   * Enables debugging.
+   *
+   * @param debugPort      debugging port
+   * @param suspendOnStart if debugging should suspend execution on start
+   * @return itself, for usage in fluent api
+   */
+  T enableDebugging(Integer debugPort, Boolean suspendOnStart);
 
-    /**
-     * Returns system properties.
-     *
-     * @return system properties map. Never null.
-     */
-    Map<String, String> getSystemProperties();
+  /**
+   * Returns system properties.
+   *
+   * @return system properties map. Never null.
+   */
+  Map<String, String> getSystemProperties();
 
-    /**
-     * Sets a system property.
-     *
-     * @param key   system property key
-     * @param value system property value
-     * @return itself, for usage in fluent api
-     */
-    T setSystemProperty( String key, String value );
+  /**
+   * Sets a system property.
+   *
+   * @param key   system property key
+   * @param value system property value
+   * @return itself, for usage in fluent api
+   */
+  T setSystemProperty(String key, String value);
 
-    /**
-     * @return JMXConfiguration for the bundle or null if JMX is not configured
-     */
-    JMXConfiguration getJmxConfiguration();
+  /**
+   * @return JMXConfiguration for the bundle or null if JMX is not configured
+   */
+  JMXConfiguration getJmxConfiguration();
 
-    /**
-     * Set the hostname that should be used when accessing the bundle.
-     *
-     * @param hostName the not null host name to configure
-     * @return the host name that should be used when accessing the web bundle
-     */
-    T setHostName( String hostName );
+  /**
+   * Set the hostname that should be used when accessing the bundle.
+   *
+   * @param hostName the not null host name to configure
+   * @return the host name that should be used when accessing the web bundle
+   */
+  T setHostName(String hostName);
 
-    /**
-     * Returns the host name that should be used when accessing the bundle, for example '127.0.0.1' or 'localhost'.
-     *
-     * @return the configured host name, never null
-     */
-    String getHostName();
+  /**
+   * Returns the host name that should be used when accessing the bundle, for example '127.0.0.1' or 'localhost'.
+   *
+   * @return the configured host name, never null
+   */
+  String getHostName();
 }

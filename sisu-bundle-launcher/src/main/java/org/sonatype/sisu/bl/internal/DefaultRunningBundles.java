@@ -10,13 +10,13 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package org.sonatype.sisu.bl.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+package org.sonatype.sisu.bl.internal;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -24,9 +24,12 @@ import javax.inject.Singleton;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.support.RunningBundles;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Keeps a list of current running bundles.
@@ -40,51 +43,45 @@ public class DefaultRunningBundles
     implements RunningBundles
 {
 
-    /**
-     * List of running bundles.
-     */
-    private final Set<Bundle> bundles;
+  /**
+   * List of running bundles.
+   */
+  private final Set<Bundle> bundles;
 
-    @Inject
-    public DefaultRunningBundles()
+  @Inject
+  public DefaultRunningBundles() {
+    bundles = Collections.synchronizedSet(Sets.<Bundle>newHashSet());
+  }
+
+  @Override
+  public void add(final Bundle bundle) {
+    bundles.add(checkNotNull(bundle));
+    log.debug("Added bundle: {}", bundle);
+  }
+
+  @Override
+  public void remove(final Bundle bundle) {
+    bundles.remove(checkNotNull(bundle));
+    log.debug("Removed bundle: {}", bundle);
+  }
+
+  @Override
+  public Bundle[] get() {
+    return bundles.toArray(new Bundle[bundles.size()]);
+  }
+
+  @Override
+  public Bundle[] get(final Class<?> bundleType) {
+    checkNotNull(bundleType);
+    final Collection<Bundle> filtered = Collections2.filter(bundles, new Predicate<Bundle>()
     {
-        bundles = Collections.synchronizedSet( Sets.<Bundle>newHashSet() );
-    }
+      @Override
+      public boolean apply(final Bundle input) {
+        return bundleType.isInstance(input);
+      }
 
-    @Override
-    public void add( final Bundle bundle )
-    {
-        bundles.add( checkNotNull( bundle ) );
-        log.debug( "Added bundle: {}", bundle );
-    }
-
-    @Override
-    public void remove( final Bundle bundle )
-    {
-        bundles.remove( checkNotNull( bundle ) );
-        log.debug( "Removed bundle: {}", bundle );
-    }
-
-    @Override
-    public Bundle[] get()
-    {
-        return bundles.toArray( new Bundle[bundles.size()] );
-    }
-
-    @Override
-    public Bundle[] get( final Class<?> bundleType )
-    {
-        checkNotNull( bundleType );
-        final Collection<Bundle> filtered = Collections2.filter( bundles, new Predicate<Bundle>()
-        {
-            @Override
-            public boolean apply( final Bundle input )
-            {
-                return bundleType.isInstance( input );
-            }
-
-        } );
-        return filtered.toArray( new Bundle[filtered.size()] );
-    }
+    });
+    return filtered.toArray(new Bundle[filtered.size()]);
+  }
 
 }

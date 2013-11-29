@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support;
 
 import org.sonatype.sisu.bl.Bundle;
@@ -22,34 +23,34 @@ import org.sonatype.sisu.bl.Bundle;
 public interface RunningBundles
 {
 
-    /**
-     * Adds a running bundle to the list of running bundles.
-     *
-     * @param bundle to be added
-     */
-    void add( Bundle bundle );
+  /**
+   * Adds a running bundle to the list of running bundles.
+   *
+   * @param bundle to be added
+   */
+  void add(Bundle bundle);
 
-    /**
-     * Removes a running bundle from the list of running bundles.
-     * If bundle was not previously added, returns silently.
-     *
-     * @param bundle to be removed
-     */
-    void remove( Bundle bundle );
+  /**
+   * Removes a running bundle from the list of running bundles.
+   * If bundle was not previously added, returns silently.
+   *
+   * @param bundle to be removed
+   */
+  void remove(Bundle bundle);
 
-    /**
-     * Returns a copy of the list of running bundles at the time of call.
-     *
-     * @return running bundles
-     */
-    Bundle[] get();
+  /**
+   * Returns a copy of the list of running bundles at the time of call.
+   *
+   * @return running bundles
+   */
+  Bundle[] get();
 
-    /**
-     * Returns a copy of the list of running bundles at the time of call of the type specified.
-     *
-     * @param bundleType type of the bundles to be included
-     * @return running bundles
-     */
-    Bundle[] get( Class<?> bundleType );
+  /**
+   * Returns a copy of the list of running bundles at the time of call of the type specified.
+   *
+   * @param bundleType type of the bundles to be included
+   * @return running bundles
+   */
+  Bundle[] get(Class<?> bundleType);
 
 }

@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support.resolver;
 
 import java.io.File;
@@ -20,13 +21,14 @@ import java.io.File;
  * @see org.sonatype.sisu.bl.BundleConfiguration#getBundle()
  * @since 1.0
  */
-public interface BundleResolver {
+public interface BundleResolver
+{
 
-    /**
-     * Resolves bundle.
-     *
-     * @return a zip/jar/tar file or a directory
-     */
-    File resolve();
+  /**
+   * Resolves bundle.
+   *
+   * @return a zip/jar/tar file or a directory
+   */
+  File resolve();
 
 }

@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl;
 
 import java.net.URL;
@@ -20,21 +21,21 @@ import java.net.URL;
  * @since 1.0
  */
 public interface WebBundle<WB extends WebBundle, BC extends BundleConfiguration>
-    extends Bundle<WB,BC>
+    extends Bundle<WB, BC>
 {
 
-    /**
-     * Returns the port (random generated) application is running on. If bundle is not running return 0 (zero).
-     *
-     * @return the port (random generated) application is running on. 0 (zero) if bundle is not running.
-     */
-    int getPort();
+  /**
+   * Returns the port (random generated) application is running on. If bundle is not running return 0 (zero).
+   *
+   * @return the port (random generated) application is running on. 0 (zero) if bundle is not running.
+   */
+  int getPort();
 
-    /**
-     * Returns the URL application is available at. If bundle is not running returns null.
-     *
-     * @return URL application is available at. Null if bundle is not running.
-     */
-    URL getUrl();
+  /**
+   * Returns the URL application is available at. If bundle is not running returns null.
+   *
+   * @return URL application is available at. Null if bundle is not running.
+   */
+  URL getUrl();
 
 }

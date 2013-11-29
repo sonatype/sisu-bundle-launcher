@@ -10,15 +10,18 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support.resolver;
 
-import com.google.inject.Binder;
-import org.junit.Test;
+import java.util.Properties;
+
+import javax.inject.Inject;
+
 import org.sonatype.sisu.litmus.testsupport.inject.InjectedTestSupport;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
-import javax.inject.Inject;
-import java.util.Properties;
+import com.google.inject.Binder;
+import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -31,26 +34,27 @@ import static org.mockito.Mockito.mock;
  * @since 1.0
  */
 public class MavenBridgedBundleResolverTest
-        extends InjectedTestSupport {
+    extends InjectedTestSupport
+{
 
-    @Inject
-    private MavenBridgedBundleResolver resolver;
+  @Inject
+  private MavenBridgedBundleResolver resolver;
 
-    @Override
-    public void configure(final Properties properties) {
-        super.configure(properties);
-        properties.put(MavenBridgedBundleResolver.BUNDLE_COORDINATES, "group:artifact:version");
-    }
+  @Override
+  public void configure(final Properties properties) {
+    super.configure(properties);
+    properties.put(MavenBridgedBundleResolver.BUNDLE_COORDINATES, "group:artifact:version");
+  }
 
-    @Override
-    public void configure(Binder binder) {
-        binder.bind(MavenArtifactResolver.class).toInstance(mock(MavenArtifactResolver.class));
-    }
+  @Override
+  public void configure(Binder binder) {
+    binder.bind(MavenArtifactResolver.class).toInstance(mock(MavenArtifactResolver.class));
+  }
 
-    @Test
-    public void canInject() {
-        assertThat(resolver, is(notNullValue()));
-    }
+  @Test
+  public void canInject() {
+    assertThat(resolver, is(notNullValue()));
+  }
 
 
 }

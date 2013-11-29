@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support.resolver;
 
 import java.io.File;
@@ -20,13 +21,14 @@ import java.io.File;
  * @see org.sonatype.sisu.bl.BundleConfiguration#getTargetDirectory()
  * @since 1.0
  */
-public interface TargetDirectoryResolver {
+public interface TargetDirectoryResolver
+{
 
-    /**
-     * Resolves target directory.
-     *
-     * @return directory where application bundle to be run will be exploded
-     */
-    File resolve();
+  /**
+   * Resolves target directory.
+   *
+   * @return directory where application bundle to be run will be exploded
+   */
+  File resolve();
 
 }

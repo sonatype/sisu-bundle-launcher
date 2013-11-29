@@ -10,6 +10,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl;
 
 /**
@@ -18,23 +19,24 @@ package org.sonatype.sisu.bl;
  * @since 1.2
  */
 public interface WebBundleConfiguration<T extends WebBundleConfiguration>
-    extends BundleConfiguration<T> {
+    extends BundleConfiguration<T>
+{
 
-    /**
-     * Returns the port on which the application will be accessible.
-     * If zero (0) a random port will be used.
-     *
-     * @return bundle identity
-     */
-    int getPort();
+  /**
+   * Returns the port on which the application will be accessible.
+   * If zero (0) a random port will be used.
+   *
+   * @return bundle identity
+   */
+  int getPort();
 
-    /**
-     * Sets the port on which the application will be accessible.
-     * If zero (0) a random port will be used.
-     *
-     * @param port wanted port number
-     * @return itself, for usage in fluent api
-     */
-    T setPort( int port );
+  /**
+   * Sets the port on which the application will be accessible.
+   * If zero (0) a random port will be used.
+   *
+   * @param port wanted port number
+   * @return itself, for usage in fluent api
+   */
+  T setPort(int port);
 
 }

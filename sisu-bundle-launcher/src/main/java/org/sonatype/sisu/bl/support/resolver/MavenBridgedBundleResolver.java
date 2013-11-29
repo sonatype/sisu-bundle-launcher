@@ -10,21 +10,23 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
+
 package org.sonatype.sisu.bl.support.resolver;
+
+import java.io.File;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.inject.Nullable;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.File;
+import com.google.common.base.Throwables;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
-
-import com.google.common.base.Throwables;
 
 /**
  * {@link MavenArtifactResolver} based {@link BundleResolver}.
@@ -34,78 +36,82 @@ import com.google.common.base.Throwables;
  * @since 1.0
  */
 public class MavenBridgedBundleResolver
-        implements BundleResolver {
+    implements BundleResolver
+{
 
-    /**
-     * Bundle coordinates configuration property key.
-     */
-    public static final String BUNDLE_COORDINATES = "DefaultBundleConfiguration.bundleCoordinates";
+  /**
+   * Bundle coordinates configuration property key.
+   */
+  public static final String BUNDLE_COORDINATES = "DefaultBundleConfiguration.bundleCoordinates";
 
-    /**
-     * Maven coordinates of the bundle artifact to be resolved.
-     */
-    private final String bundleCoordinates;
+  /**
+   * Maven coordinates of the bundle artifact to be resolved.
+   */
+  private final String bundleCoordinates;
 
-    /**
-     * Artifact resolver.
-     */
-    private final MavenArtifactResolver artifactResolver;
+  /**
+   * Artifact resolver.
+   */
+  private final MavenArtifactResolver artifactResolver;
 
-    /**
-     *  Name of property used to lookup bundle coordinates.
-     */
-    private final String bundleCoordinatesProperty;
+  /**
+   * Name of property used to lookup bundle coordinates.
+   */
+  private final String bundleCoordinatesProperty;
 
-    /**
-     * Constructor.
-     *
-     * @param bundleCoordinates Maven artifact coordinates of bundle to be resolved. If injected will use the
-     *                          coordinates bounded to {@link #BUNDLE_COORDINATES}
-     * @param artifactResolver  artifact resolver to be used to resolve the bundle
-     */
-    @Inject
-    public MavenBridgedBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
-                                      final MavenArtifactResolver artifactResolver) {
+  /**
+   * Constructor.
+   *
+   * @param bundleCoordinates Maven artifact coordinates of bundle to be resolved. If injected will use the
+   *                          coordinates bounded to {@link #BUNDLE_COORDINATES}
+   * @param artifactResolver  artifact resolver to be used to resolve the bundle
+   */
+  @Inject
+  public MavenBridgedBundleResolver(final @Nullable @Named("${" + BUNDLE_COORDINATES + "}") String bundleCoordinates,
+                                    final MavenArtifactResolver artifactResolver)
+  {
 
-        this(bundleCoordinates, BUNDLE_COORDINATES, artifactResolver);
+    this(bundleCoordinates, BUNDLE_COORDINATES, artifactResolver);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param bundleCoordinates         Maven artifact coordinates of bundle to be resolved. If injected will use the
+   *                                  coordinates bounded to {@link #BUNDLE_COORDINATES}
+   * @param bundleCoordinatesProperty name of property used to lookup bundle coordinates
+   * @param artifactResolver          artifact resolver to be used to resolve the bundle
+   */
+  public MavenBridgedBundleResolver(final String bundleCoordinates,
+                                    final String bundleCoordinatesProperty,
+                                    final MavenArtifactResolver artifactResolver)
+  {
+
+    this.bundleCoordinates = bundleCoordinates;
+    this.bundleCoordinatesProperty = bundleCoordinatesProperty;
+    this.artifactResolver = checkNotNull(artifactResolver);
+  }
+
+  /**
+   * Resolves bundle specified by Maven artifact coordinates using provided {@link MavenArtifactResolver}.
+   * <p/>
+   * {@inheritDoc}
+   */
+  @Override
+  public File resolve() {
+    if (bundleCoordinates == null) {
+      throw new RuntimeException(
+          "Bundle coordinates must be set. Did you set '" + bundleCoordinatesProperty + "' configuration property?");
     }
-
-    /**
-     * Constructor.
-     *
-     * @param bundleCoordinates Maven artifact coordinates of bundle to be resolved. If injected will use the
-     *                          coordinates bounded to {@link #BUNDLE_COORDINATES}
-     * @param bundleCoordinatesProperty name of property used to lookup bundle coordinates
-     * @param artifactResolver  artifact resolver to be used to resolve the bundle
-     */
-    public MavenBridgedBundleResolver(final String bundleCoordinates,
-                                      final String bundleCoordinatesProperty,
-                                      final MavenArtifactResolver artifactResolver) {
-
-        this.bundleCoordinates = bundleCoordinates;
-        this.bundleCoordinatesProperty = bundleCoordinatesProperty;
-        this.artifactResolver = checkNotNull(artifactResolver);
+    try {
+      Artifact artifact = artifactResolver.resolveArtifact(
+          request().artifact(bundleCoordinates)
+      );
+      return artifact.getFile();
     }
-
-    /**
-     * Resolves bundle specified by Maven artifact coordinates using provided {@link MavenArtifactResolver}.
-     * <p/>
-     * {@inheritDoc}
-     */
-    @Override
-    public File resolve() {
-        if (bundleCoordinates == null) {
-            throw new RuntimeException(
-                "Bundle coordinates must be set. Did you set '" + bundleCoordinatesProperty + "' configuration property?");
-        }
-        try {
-            Artifact artifact = artifactResolver.resolveArtifact(
-                    request().artifact(bundleCoordinates)
-            );
-            return artifact.getFile();
-        } catch (ArtifactResolutionException e) {
-            throw Throwables.propagate( e );
-        }
+    catch (ArtifactResolutionException e) {
+      throw Throwables.propagate(e);
     }
+  }
 
 }
