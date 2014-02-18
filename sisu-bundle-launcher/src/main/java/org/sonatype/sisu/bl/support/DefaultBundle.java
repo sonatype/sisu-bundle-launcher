@@ -16,6 +16,7 @@ package org.sonatype.sisu.bl.support;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -163,7 +164,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
       if (bootingWatch.isRunning()) {
         bootingWatch.stop();
       }
-      bootingTime = Time.millis(bootingWatch.elapsedMillis());
+      bootingTime = Time.millis(bootingWatch.elapsed(TimeUnit.MILLISECONDS));
     }
   }
 

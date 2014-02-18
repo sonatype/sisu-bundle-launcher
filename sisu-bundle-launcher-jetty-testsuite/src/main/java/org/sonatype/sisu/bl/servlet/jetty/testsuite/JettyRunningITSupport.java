@@ -12,21 +12,23 @@
  */
 package org.sonatype.sisu.bl.servlet.jetty.testsuite;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy;
-import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy.EACH_METHOD;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.sonatype.sisu.bl.servlet.jetty.JettyBundle;
+import org.sonatype.sisu.bl.servlet.jetty.JettyBundleConfiguration;
+
+import com.google.common.base.Stopwatch;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.sonatype.sisu.bl.servlet.jetty.JettyBundle;
-import org.sonatype.sisu.bl.servlet.jetty.JettyBundleConfiguration;
-import org.sonatype.sisu.bl.support.RunningBundles;
-import com.google.common.base.Stopwatch;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy;
+import static org.sonatype.sisu.bl.servlet.jetty.testsuite.JettyStartAndStopStrategy.Strategy.EACH_METHOD;
 
 /**
  * Support class for Jetty based ITs that require a jetty running before the test.
@@ -55,7 +57,7 @@ public class JettyRunningITSupport
     {
         final Stopwatch stopwatch = startJetty( jetty() );
         testIndex().recordInfo(
-            "startup time", stopwatch.elapsedMillis() == 0 ? "already running" : stopwatch.toString()
+            "startup time", stopwatch.elapsed(TimeUnit.MILLISECONDS) == 0 ? "already running" : stopwatch.toString()
         );
 
         assertThat( "Jetty is running before test starts", jetty().isRunning(), is( true ) );

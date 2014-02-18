@@ -15,7 +15,7 @@ package org.sonatype.sisu.bl.support.port.internal;
 
 import org.sonatype.sisu.litmus.testsupport.TestSupport;
 
-import com.google.common.collect.Ranges;
+import com.google.common.collect.Range;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
@@ -66,7 +66,7 @@ public class DefaultPortReservationServiceTest
 
   @Test
   public void blockedRangeOfPortsShouldNeverBeReservable() throws Exception {
-    portReservationService = spy(new DefaultPortReservationService(Ranges.closed(1, 1)));
+    portReservationService = spy(new DefaultPortReservationService(Range.closed(1, 1)));
     doReturn(1).when(portReservationService).findFreePort();
     assertCannotReservePort();
 
@@ -80,15 +80,15 @@ public class DefaultPortReservationServiceTest
   public void addedBlockedRangeForPreviouslyUnsetRangeIsBlocked() throws Exception {
     portReservationService = spy(new DefaultPortReservationService());
     doReturn(1).when(portReservationService).findFreePort();
-    portReservationService.addBlockedPorts(Ranges.closed(1, 1));
+    portReservationService.addBlockedPorts(Range.closed(1, 1));
     assertCannotReservePort();
   }
 
   @Test
   public void addedBlockedRangeIntersectingPreviouslyAddedRangeBlocksReservation() throws Exception {
     portReservationService = spy(new DefaultPortReservationService());
-    portReservationService.addBlockedPorts(Ranges.closed(2, 5));
-    portReservationService.addBlockedPorts(Ranges.closed(3, 7));
+    portReservationService.addBlockedPorts(Range.closed(2, 5));
+    portReservationService.addBlockedPorts(Range.closed(3, 7));
 
     // resulting range of blocked ports should be 3-5
     doReturn(4).when(portReservationService).findFreePort();
@@ -99,8 +99,8 @@ public class DefaultPortReservationServiceTest
   @Test
   public void addedBlockedRangeDisparateFromPreviouslyAddedRangeBlocksReservation() throws Exception {
     portReservationService = spy(new DefaultPortReservationService());
-    portReservationService.addBlockedPorts(Ranges.closed(2, 5));
-    portReservationService.addBlockedPorts(Ranges.closed(7, 10));
+    portReservationService.addBlockedPorts(Range.closed(2, 5));
+    portReservationService.addBlockedPorts(Range.closed(7, 10));
 
     doReturn(4).when(portReservationService).findFreePort();
     assertCannotReservePort();
@@ -116,10 +116,10 @@ public class DefaultPortReservationServiceTest
   @Test
   public void multipleRangesCanBlocked() throws Exception {
     portReservationService = spy(new DefaultPortReservationService());
-    portReservationService.addBlockedPorts(Ranges.closed(2, 5));
-    portReservationService.addBlockedPorts(Ranges.closed(7, 10));
+    portReservationService.addBlockedPorts(Range.closed(2, 5));
+    portReservationService.addBlockedPorts(Range.closed(7, 10));
 
-    portReservationService.addBlockedPorts(Ranges.closed(9, 12));
+    portReservationService.addBlockedPorts(Range.closed(9, 12));
 
     doReturn(2).when(portReservationService).findFreePort();
     assertCannotReservePort();

@@ -13,6 +13,8 @@
 
 package org.sonatype.sisu.bl.internal.support;
 
+import java.util.concurrent.TimeUnit;
+
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
@@ -140,7 +142,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
         failure = e;
       }
       stopwatch.stop();
-      preparationTime = Time.millis(stopwatch.elapsedMillis());
+      preparationTime = Time.millis(stopwatch.elapsed(TimeUnit.MILLISECONDS));
       startupTime = Time.millis(0);
       stoppingTime = Time.millis(0);
     }
@@ -156,7 +158,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
         failure = e;
       }
       stopwatch.stop();
-      cleanupTime = Time.millis(stopwatch.elapsedMillis());
+      cleanupTime = Time.millis(stopwatch.elapsed(TimeUnit.MILLISECONDS));
       preparationTime = Time.millis(0);
       startupTime = Time.millis(0);
       stoppingTime = Time.millis(0);
@@ -173,7 +175,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
         failure = e;
       }
       stopwatch.stop();
-      startupTime = Time.millis(stopwatch.elapsedMillis());
+      startupTime = Time.millis(stopwatch.elapsed(TimeUnit.MILLISECONDS));
       stoppingTime = Time.millis(0);
     }
 
@@ -188,7 +190,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
         failure = e;
       }
       stopwatch.stop();
-      stoppingTime = Time.millis(stopwatch.elapsedMillis());
+      stoppingTime = Time.millis(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
   }
 
