@@ -105,7 +105,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.goodies</groupId>
         <artifactId>goodies-common</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.9</version>
       </dependency>
       <dependency>
         <groupId>org.apache.ant</groupId>
