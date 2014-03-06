@@ -62,6 +62,7 @@
     <module>sisu-bundle-launcher-tomcat</module>
     <module>sisu-bundle-launcher-jetty</module>
     <module>sisu-bundle-launcher-jetty-testsuite</module>
+    <module>sisu-bundle-launcher-testsupport</module>
   </modules>
 
   <dependencyManagement>
@@ -117,6 +118,11 @@
         <artifactId>wrapper</artifactId>
         <version>3.2.3</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-exec</artifactId>
+        <version>1.1</version>
+      </dependency>
 
       <dependency>
         <groupId>org.sonatype.sisu.litmus</groupId>
@@ -153,6 +159,11 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-file-tasks</artifactId>
+        <version>1.8-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.sisu</groupId>
+        <artifactId>sisu-bundle-launcher-testsupport</artifactId>
         <version>1.8-SNAPSHOT</version>
       </dependency>
     </dependencies>
