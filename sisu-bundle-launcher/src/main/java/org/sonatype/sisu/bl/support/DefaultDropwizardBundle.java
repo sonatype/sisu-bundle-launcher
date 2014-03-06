@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,8 +37,10 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FileUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.bl.BundleConfiguration.RANDOM_PORT;
 import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 
@@ -139,7 +142,7 @@ public class DefaultDropwizardBundle
 
     CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"))
         .addArgument("-jar")
-        .addArgument(getConfiguration().jarName())
+        .addArgument(getJarName())
         .addArguments(getConfiguration().arguments())
         .addArgument("config.yaml");
 
@@ -156,6 +159,21 @@ public class DefaultDropwizardBundle
     catch (IOException e) {
       throw Throwables.propagate(e);
     }
+  }
+
+  private String getJarName() {
+    String jarName = getConfiguration().jarName();
+    if (jarName == null) {
+      Collection<File> jars = FileUtils.listFiles(getBundleDirectory(), new String[]{"jar"}, false);
+      checkState(
+          jars.size() <= 1,
+          "Found more then one jars in {}. JAR name must be specified in this case", getBundleDirectory()
+      );
+      if (jars.size() == 1) {
+        jarName = jars.iterator().next().getName();
+      }
+    }
+    return checkNotNull(jarName, "Bundle JAR name must be configured via bundle configuration");
   }
 
   @Override

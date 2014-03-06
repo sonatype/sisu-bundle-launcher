@@ -38,7 +38,7 @@ public interface DropwizardBundleConfiguration
   DropwizardBundleConfiguration setAdminPort(int port);
 
   /**
-   * @return application jar name.
+   * @return application jar name. If not set and bundle contains only one jar, it will be used.
    */
   String jarName();
 
