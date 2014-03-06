@@ -94,6 +94,17 @@ public class DefaultDropwizardBundle
     adminUrl = new URL(String.format("http://localhost:%s/", getAdminPort()));
 
     super.configure();
+
+    FileRef yamlConfigPath = FileRef.path(getName() + "/config.yaml");
+    getConfiguration().addOverlays(
+        getFileTaskBuilder().copy()
+            .file(FileRef.file(checkNotNull(
+                getConfiguration().getYaml(), "Bundle Yaml file must be configured via bundle configuration"
+            )))
+            .to().file(yamlConfigPath)
+            .filterUsing("port", String.valueOf(getPort()))
+            .filterUsing("adminPort", String.valueOf(getAdminPort()))
+    );
   }
 
   @Override
@@ -127,18 +138,7 @@ public class DefaultDropwizardBundle
 
   @Override
   protected void startApplication() {
-    FileRef yamlConfigPath = FileRef.path("config.yaml");
     File bundleDirectory = getBundleDirectory();
-
-    onDirectory(bundleDirectory).apply(
-        getFileTaskBuilder().copy()
-            .file(FileRef.file(checkNotNull(
-                getConfiguration().getYaml(), "Bundle Yaml file must be configured via bundle configuration"
-            )))
-            .to().file(yamlConfigPath)
-            .filterUsing("port", String.valueOf(getPort()))
-            .filterUsing("adminPort", String.valueOf(getAdminPort()))
-    );
 
     CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"))
         .addArgument("-jar")
