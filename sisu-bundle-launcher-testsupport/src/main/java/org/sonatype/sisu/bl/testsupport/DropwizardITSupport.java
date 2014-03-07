@@ -48,7 +48,9 @@ public class DropwizardITSupport
    * Never null.
    */
   @Rule
-  public TestIndexRule testIndex = new TestIndexRule(util.resolveFile("target/its"));
+  public TestIndexRule testIndex = new TestIndexRule(
+      util.resolveFile("target/it-reports"), util.resolveFile("target/it-data")
+  );
 
   /**
    * Test data.
@@ -127,7 +129,7 @@ public class DropwizardITSupport
       });
       if (logFiles != null && logFiles.length > 0) {
         for (File logFile : logFiles) {
-          testIndex().recordLink(logFile.getName(), logFile);
+          testIndex().recordAndCopyLink(logFile.getName(), logFile);
         }
       }
     }
