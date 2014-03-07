@@ -307,7 +307,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
    * @since 1.2
    */
   protected String generateId() {
-    return name + "-" + UUID.randomUUID();
+    return getName() + "-" + UUID.randomUUID();
   }
 
   /**
@@ -319,14 +319,14 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
     DirectoryScanner ds = new DirectoryScanner();
     ds.setBasedir(config.getTargetDirectory());
-    ds.setIncludes(new String[]{name + "*"});
+    ds.setIncludes(new String[]{getName() + "*"});
     ds.scan();
     String[] dirs = ds.getIncludedDirectories();
 
     if (dirs.length == 1 && new File(config.getTargetDirectory(), dirs[0]).exists()) {
       onDirectory(config.getTargetDirectory()).apply(
           getFileTaskBuilder().rename(path(dirs[0]))
-              .to(name)
+              .to(getName())
       );
     }
   }

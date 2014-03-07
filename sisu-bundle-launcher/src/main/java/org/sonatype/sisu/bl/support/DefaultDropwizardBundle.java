@@ -42,7 +42,6 @@ import org.apache.commons.io.FileUtils;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.sonatype.sisu.bl.BundleConfiguration.RANDOM_PORT;
-import static org.sonatype.sisu.filetasks.FileTaskRunner.onDirectory;
 
 /**
  * {@link DropwizardBundle} implementation.
@@ -75,12 +74,13 @@ public class DefaultDropwizardBundle
                                  final FileTaskBuilder fileTaskBuilder,
                                  final PortReservationService portReservationService)
   {
-    super("analytics", configurationProvider, runningBundles, fileTaskBuilder, portReservationService);
+    super("dw", configurationProvider, runningBundles, fileTaskBuilder, portReservationService);
   }
 
   @Override
-  protected String generateId() {
-    return "analytics";
+  protected String getName() {
+    String id = getConfiguration().getId();
+    return id == null ? super.getName() : id;
   }
 
   @Override

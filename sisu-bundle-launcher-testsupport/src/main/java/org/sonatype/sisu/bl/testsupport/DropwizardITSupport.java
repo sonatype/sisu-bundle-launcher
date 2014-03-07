@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import org.sonatype.sisu.bl.DropwizardBundle;
+import org.sonatype.sisu.bl.DropwizardBundleConfiguration;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
 import org.sonatype.sisu.litmus.testsupport.TestData;
 import org.sonatype.sisu.litmus.testsupport.TestIndex;
@@ -116,9 +117,8 @@ public class DropwizardITSupport
   }
 
   protected void recordLogs(final DropwizardBundle bundle) {
-    if (bundle != null) {
-      final File logs = new File(bundle.getConfiguration().getTargetDirectory(), bundle.getConfiguration().getId());
-      final File[] logFiles = logs.listFiles(new FilenameFilter()
+    if (bundle != null && bundle.isRunning()) {
+      final File[] logFiles = bundle.getBundleDirectory().listFiles(new FilenameFilter()
       {
         @Override
         public boolean accept(final File parentDir, final String name) {
