@@ -139,12 +139,19 @@ public class DefaultDropwizardBundle
   @Override
   protected void startApplication() {
     File bundleDirectory = getBundleDirectory();
+    String[] javaAgentArguments = getJavaAgentArguments();
 
-    CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"))
+    CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"));
+    if (javaAgentArguments.length > 0) {
+      cmdLine.addArguments(javaAgentArguments);
+    }
+    cmdLine
         .addArgument("-jar")
         .addArgument(getJarName())
         .addArguments(getConfiguration().arguments())
         .addArgument("config.yaml");
+
+    log.debug("Launching: {}", cmdLine.toString());
 
     DefaultExecutor executor = new DefaultExecutor();
     executor.setWorkingDirectory(bundleDirectory);

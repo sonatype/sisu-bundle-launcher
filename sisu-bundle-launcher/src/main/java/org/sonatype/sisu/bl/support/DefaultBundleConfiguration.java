@@ -25,6 +25,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.sonatype.sisu.bl.BundleConfiguration;
+import org.sonatype.sisu.bl.JavaAgent;
 import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.support.resolver.BundleResolver;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
@@ -135,10 +136,16 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
    */
   private String hostName;
 
+  /**
+   * List of java agents to be used with teh bundle.
+   */
+  private List<JavaAgent> javaAgents;
+
   @Inject
   public DefaultBundleConfiguration(final Provider<JMXConfiguration> jmxConfigurationProvider) {
     this.jmxConfigurationProvider = checkNotNull(jmxConfigurationProvider);
     setOverlays();
+    setJavaAgents();
     debugPort = 0;
     suspendOnStart = false;
     systemProperties = Maps.newHashMap();
@@ -321,6 +328,43 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   @Override
   public String getHostName() {
     return this.hostName;
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public List<JavaAgent> getJavaAgents() {
+    return javaAgents;
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T setJavaAgents(List<JavaAgent> javaAgents) {
+    this.javaAgents = new ArrayList<JavaAgent>();
+    if (javaAgents != null) {
+      this.javaAgents.addAll(javaAgents);
+    }
+    return self();
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T setJavaAgents(JavaAgent... javaAgents) {
+    return setJavaAgents(Arrays.asList(javaAgents));
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T addJavaAgents(JavaAgent... javaAgents) {
+    this.javaAgents.addAll(Arrays.asList(javaAgents));
+    return self();
   }
 
   @Override
