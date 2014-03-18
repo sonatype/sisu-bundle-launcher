@@ -141,11 +141,11 @@ public class DefaultDropwizardBundle
   protected void startApplication() {
     File bundleDirectory = getBundleDirectory();
     List<String> javaOptions = getConfiguration().getJavaOptions();
-    String[] javaAgentArguments = getJavaAgentArguments();
+    List<String> javaAgentOptions = getJavaAgentOptions();
 
     CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"));
-    if (javaAgentArguments.length > 0) {
-      cmdLine.addArguments(javaAgentArguments);
+    if (javaAgentOptions.size() > 0) {
+      cmdLine.addArguments(javaAgentOptions.toArray(new String[javaAgentOptions.size()]));
     }
     if (javaOptions.size() > 0) {
       cmdLine.addArguments(javaOptions.toArray(new String[javaOptions.size()]));

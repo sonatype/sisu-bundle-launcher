@@ -116,7 +116,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
   /**
    * List of arguments returned by configured java agents. Valid only after preparation step.
    */
-  private List<String> javaAgentArguments;
+  private List<String> javaAgentOptions;
 
   /**
    * Constructor. Creates the bundle with a default configuration and a not running state.
@@ -140,7 +140,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     this.portReservationService = checkNotNull(portReservationService);
     bootingTime = Time.millis(0);
     statistics = new Statistics();
-    javaAgentArguments = Lists.newArrayList();
+    javaAgentOptions = Lists.newArrayList();
   }
 
   /**
@@ -469,12 +469,12 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
    * @since 1.8
    */
   private void prepareJavaAgents() {
-    javaAgentArguments.clear();
+    javaAgentOptions.clear();
     List<JavaAgent> agents = getConfiguration().getJavaAgents();
     for (JavaAgent agent : agents) {
       String argument = agent.prepare(this);
       if (argument != null && !argument.trim().isEmpty()) {
-        javaAgentArguments.add(argument);
+        javaAgentOptions.add(argument);
       }
     }
   }
@@ -483,8 +483,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
    * @return java agents arguments if any java agent was configured
    * @since 1.8
    */
-  protected String[] getJavaAgentArguments() {
-    return javaAgentArguments.toArray(new String[javaAgentArguments.size()]);
+  protected List<String> getJavaAgentOptions() {
+    return javaAgentOptions;
   }
 
   @Override
