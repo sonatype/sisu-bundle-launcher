@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -139,11 +140,15 @@ public class DefaultDropwizardBundle
   @Override
   protected void startApplication() {
     File bundleDirectory = getBundleDirectory();
+    List<String> javaOptions = getConfiguration().getJavaOptions();
     String[] javaAgentArguments = getJavaAgentArguments();
 
     CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"));
     if (javaAgentArguments.length > 0) {
       cmdLine.addArguments(javaAgentArguments);
+    }
+    if (javaOptions.size() > 0) {
+      cmdLine.addArguments(javaOptions.toArray(new String[javaOptions.size()]));
     }
     cmdLine
         .addArgument("-jar")

@@ -31,6 +31,7 @@ import org.sonatype.sisu.bl.support.resolver.BundleResolver;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
 import org.sonatype.sisu.filetasks.FileTask;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -137,14 +138,20 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   private String hostName;
 
   /**
-   * List of java agents to be used with teh bundle.
+   * List of java agents to be used with the bundle.
    */
   private List<JavaAgent> javaAgents;
+
+  /**
+   * Lists of java options to be used.
+   */
+  private List<String> javaOptions;
 
   @Inject
   public DefaultBundleConfiguration(final Provider<JMXConfiguration> jmxConfigurationProvider) {
     this.jmxConfigurationProvider = checkNotNull(jmxConfigurationProvider);
     setOverlays();
+    setJavaOptions();
     setJavaAgents();
     debugPort = 0;
     suspendOnStart = false;
@@ -328,6 +335,43 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   @Override
   public String getHostName() {
     return this.hostName;
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public List<String> getJavaOptions() {
+    return javaOptions;
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T setJavaOptions(List<String> javaOptions) {
+    this.javaOptions = Lists.newArrayList();
+    if (javaOptions != null) {
+      this.javaOptions.addAll(javaOptions);
+    }
+    return self();
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T setJavaOptions(String... javaOptions) {
+    return setJavaOptions(Arrays.asList(javaOptions));
+  }
+
+  /**
+   * @since 1.8
+   */
+  @Override
+  public T addJavaOptions(String... javaOptions) {
+    this.javaOptions.addAll(Arrays.asList(javaOptions));
+    return self();
   }
 
   /**

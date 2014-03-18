@@ -187,15 +187,50 @@ public interface BundleConfiguration<T extends BundleConfiguration>
   String getHostName();
 
   /**
+   * Returns java options to be used.
+   *
+   * @return java options to be used, always a non null value (eventually empty)
+   * @since 1.8
+   */
+  List<String> getJavaOptions();
+
+  /**
+   * Sets java options. Provided java options will overwrite existing options.
+   *
+   * @param javaOptions java options to be used
+   * @return itself, for usage in fluent api
+   * @since 1.8
+   */
+  T setJavaOptions(String... javaOptions);
+
+  /**
+   * Sets java options. Provided java options will overwrite existing options.
+   *
+   * @param javaOptions java options to be used. Can be null, case when an empty list will be used.
+   * @return itself, for usage in fluent api
+   * @since 1.8
+   */
+  T setJavaOptions(List<String> javaOptions);
+
+  /**
+   * Append java options to existing set of java options.
+   *
+   * @param javaOptions java options to be used
+   * @return itself, for usage in fluent api
+   * @since 1.8
+   */
+  T addJavaOptions(String... javaOptions);
+
+  /**
    * Returns java agents to be used with the bundle.
    *
-   * @return overlays java agents to be used with the bundle, always a non null value (eventually empty)
+   * @return java agents to be used with the bundle, always a non null value (eventually empty)
    * @since 1.8
    */
   List<JavaAgent> getJavaAgents();
 
   /**
-   * Sets java agents. Provided java agents will overwrite existing overlays.
+   * Sets java agents. Provided java agents will overwrite existing agents.
    *
    * @param javaAgents java agents to be used with the bundle
    * @return itself, for usage in fluent api
@@ -204,7 +239,7 @@ public interface BundleConfiguration<T extends BundleConfiguration>
   T setJavaAgents(JavaAgent... javaAgents);
 
   /**
-   * Sets java agents. Provided java agents will overwrite existing overlays
+   * Sets java agents. Provided java agents will overwrite existing agents.
    *
    * @param javaAgents java agents to be used with the bundle. Can be null, case when an empty list will be used
    * @return itself, for usage in fluent api
