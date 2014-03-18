@@ -20,30 +20,30 @@ import javax.inject.Named;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 /**
- * {@link MavenArtifactResolver} based Jococo {@link FileResolver}.
+ * {@link MavenArtifactResolver} based Jacoco {@link FileResolver}.
  * <p/>
  * Resolves the jar specified by its Maven artifact coordinates.
  *
  * @since 1.8
  */
-public class MavenBridgedJococoJarResolver
+public class MavenBridgedJacocoJarResolver
     extends MavenBridgedFileResolver
 {
 
   /**
    * Coordinates configuration property key.
    */
-  public static final String COORDINATES = "jococo.jar.coordinates";
+  public static final String COORDINATES = "jacoco.jar.coordinates";
 
   /**
    * Constructor.
    *
-   * @param coordinates      Maven artifact coordinates of jococo jar to be resolved. If injected will use the
+   * @param coordinates      Maven artifact coordinates of jacoco jar to be resolved. If injected will use the
    *                         coordinates bounded to {@link #COORDINATES}
    * @param artifactResolver artifact resolver to be used to resolve the bundle
    */
   @Inject
-  public MavenBridgedJococoJarResolver(final @Nullable @Named("${" + COORDINATES + "}") String coordinates,
+  public MavenBridgedJacocoJarResolver(final @Nullable @Named("${" + COORDINATES + "}") String coordinates,
                                        final MavenArtifactResolver artifactResolver)
   {
     super(coordinates, COORDINATES, artifactResolver);

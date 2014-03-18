@@ -26,11 +26,11 @@ import org.sonatype.sisu.bl.support.resolver.FileResolver;
 import com.google.common.base.Preconditions;
 
 /**
- * Jococo java agent.
+ * Jacoco java agent.
  *
  * @since 1.8
  */
-public class JococoJavaAgent
+public class JacocoJavaAgent
     implements JavaAgent
 {
 
@@ -41,16 +41,16 @@ public class JococoJavaAgent
 
   @Override
   public String prepare(final Bundle bundle) {
-    File jococoJar = getJar();
-    if (jococoJar == null) {
-      throw new IllegalStateException("Jococo jar not set");
+    File jacocoJar = getJar();
+    if (jacocoJar == null) {
+      throw new IllegalStateException("Jacoco jar not set");
     }
-    return "-javaagent:" + jococoJar.getAbsolutePath() + "=" +
+    return "-javaagent:" + jacocoJar.getAbsolutePath() + "=" +
         "destfile=" + new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();
   }
 
   @Inject
-  public void setJarResolver(@Nullable @Named("jococo") FileResolver jarResolver) {
+  public void setJarResolver(@Nullable @Named("jacoco") FileResolver jarResolver) {
     this.jarResolver = jarResolver;
   }
 
