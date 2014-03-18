@@ -16,19 +16,15 @@ package org.sonatype.sisu.bl.support.resolver;
 import java.io.File;
 
 /**
- * Strategy for resolving application bundle directory, directory where application bundle to be run will be exploded.
+ * Strategy for resolving a file.
  *
- * @see org.sonatype.sisu.bl.BundleConfiguration#getTargetDirectory()
- * @since 1.0
+ * @since 1.8
  */
-public interface TargetDirectoryResolver
-  extends FileResolver
+public interface FileResolver
 {
 
   /**
-   * Resolves target directory.
-   *
-   * @return directory where application bundle to be run will be exploded
+   * @return resolved file
    */
   File resolve();
 
