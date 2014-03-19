@@ -22,6 +22,7 @@ import java.io.File;
  * @since 1.0
  */
 public interface BundleResolver
+  extends FileResolver
 {
 
   /**

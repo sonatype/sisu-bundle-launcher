@@ -11,25 +11,20 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-package org.sonatype.sisu.bl.support.resolver;
-
-import java.io.File;
+package org.sonatype.sisu.bl;
 
 /**
- * Strategy for resolving application bundle directory, directory where application bundle to be run will be exploded.
+ * An java agent.
  *
- * @see org.sonatype.sisu.bl.BundleConfiguration#getTargetDirectory()
- * @since 1.0
+ * @since 1.8
  */
-public interface TargetDirectoryResolver
-  extends FileResolver
+public interface JavaAgent
 {
 
   /**
-   * Resolves target directory.
-   *
-   * @return directory where application bundle to be run will be exploded
+   * @param bundle {@link Bundle} to which will use the java agent
+   * @return java argument
    */
-  File resolve();
+  String prepare(Bundle bundle);
 
 }

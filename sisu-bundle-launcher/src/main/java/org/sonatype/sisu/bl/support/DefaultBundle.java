@@ -25,6 +25,7 @@ import javax.inject.Provider;
 import org.sonatype.sisu.bl.Bundle;
 import org.sonatype.sisu.bl.BundleConfiguration;
 import org.sonatype.sisu.bl.BundleStatistics;
+import org.sonatype.sisu.bl.JavaAgent;
 import org.sonatype.sisu.bl.internal.support.BundleLifecycle;
 import org.sonatype.sisu.bl.jmx.JMXConfiguration;
 import org.sonatype.sisu.bl.support.port.PortReservationService;
@@ -35,6 +36,7 @@ import org.sonatype.sisu.goodies.common.Time;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 import org.apache.tools.ant.DirectoryScanner;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -111,6 +113,10 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
    */
   private long secondsUntilAlive = 0;
 
+  /**
+   * List of arguments returned by configured java agents. Valid only after preparation step.
+   */
+  private List<String> javaAgentOptions;
 
   /**
    * Constructor. Creates the bundle with a default configuration and a not running state.
@@ -134,6 +140,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     this.portReservationService = checkNotNull(portReservationService);
     bootingTime = Time.millis(0);
     statistics = new Statistics();
+    javaAgentOptions = Lists.newArrayList();
   }
 
   /**
@@ -206,6 +213,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
     validateConfiguration();
     createBundle();
     renameApplicationDirectory();
+    prepareJavaAgents();
     try {
       configure();
     }
@@ -453,6 +461,30 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
       return;
     }
     onDirectory(config.getTargetDirectory()).apply(overlays);
+  }
+
+  /**
+   * Prepare configured java agents.
+   *
+   * @since 1.8
+   */
+  private void prepareJavaAgents() {
+    javaAgentOptions.clear();
+    List<JavaAgent> agents = getConfiguration().getJavaAgents();
+    for (JavaAgent agent : agents) {
+      String argument = agent.prepare(this);
+      if (argument != null && !argument.trim().isEmpty()) {
+        javaAgentOptions.add(argument);
+      }
+    }
+  }
+
+  /**
+   * @return java agents arguments if any java agent was configured
+   * @since 1.8
+   */
+  protected List<String> getJavaAgentOptions() {
+    return javaAgentOptions;
   }
 
   @Override

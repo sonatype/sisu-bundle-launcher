@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -139,12 +140,23 @@ public class DefaultDropwizardBundle
   @Override
   protected void startApplication() {
     File bundleDirectory = getBundleDirectory();
+    List<String> javaOptions = getConfiguration().getJavaOptions();
+    List<String> javaAgentOptions = getJavaAgentOptions();
 
-    CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"))
+    CommandLine cmdLine = new CommandLine(new File(System.getProperty("java.home"), "/bin/java"));
+    if (javaAgentOptions.size() > 0) {
+      cmdLine.addArguments(javaAgentOptions.toArray(new String[javaAgentOptions.size()]));
+    }
+    if (javaOptions.size() > 0) {
+      cmdLine.addArguments(javaOptions.toArray(new String[javaOptions.size()]));
+    }
+    cmdLine
         .addArgument("-jar")
         .addArgument(getJarName())
         .addArguments(getConfiguration().arguments())
         .addArgument("config.yaml");
+
+    log.debug("Launching: {}", cmdLine.toString());
 
     DefaultExecutor executor = new DefaultExecutor();
     executor.setWorkingDirectory(bundleDirectory);
