@@ -33,12 +33,13 @@ import com.google.common.base.Preconditions;
 public class JacocoJavaAgent
     implements JavaAgent
 {
-  public static final String JACOCO_OUTPUT_OVERRIDE_SYSTEM_PROPERTY = "it.test.jacoco.outputfile";
 
   private File jar;
 
   @Nullable
   private FileResolver jarResolver;
+
+  private String outputFile;
 
   @Override
   public String prepare(final Bundle bundle) {
@@ -69,12 +70,19 @@ public class JacocoJavaAgent
   String determineJacocoOutputFile(
       final Bundle bundle)
   {
-    String destFile = getSystemProperty();
-    if (destFile != null) {
-      return new File(destFile).getAbsolutePath();
+    if (outputFile != null) {
+      return new File(outputFile).getAbsolutePath();
     }
 
-    return new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();}
+    return new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();
+  }
 
-  String getSystemProperty() {return System.getProperty(JACOCO_OUTPUT_OVERRIDE_SYSTEM_PROPERTY);}
-}
+  /**
+   * Overrides the default location of jacoco's output (jacoco-it.exec).
+   *
+   * @since 1.9
+   */
+  public void setOutputFile(
+      final String outputFile)
+  { this.outputFile = outputFile; }
+ }

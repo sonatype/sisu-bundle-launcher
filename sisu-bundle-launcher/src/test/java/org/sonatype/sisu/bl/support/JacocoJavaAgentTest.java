@@ -30,18 +30,16 @@ public class JacocoJavaAgentTest
 {
   private Bundle bundle;
 
-  private BundleConfiguration config;
-
-  private TestableJacocoJavaAgent agent;
+  private JacocoJavaAgent agent;
 
   private File bundleTargetDir;
 
   @Before
   public void setUp() {
     bundle = mock(Bundle.class);
-    config = mock(BundleConfiguration.class);
+    BundleConfiguration config = mock(BundleConfiguration.class);
 
-    agent = new TestableJacocoJavaAgent();
+    agent = new JacocoJavaAgent();
 
     bundleTargetDir = new File(System.getProperty("java.io.tmpdir"));
 
@@ -62,21 +60,7 @@ public class JacocoJavaAgentTest
   @Test
   public void missingSystemPropertyImpliesDefaultJacocoOutput() {
     String expectedOutputFile = new File(bundleTargetDir, "jacoco.exec").getAbsolutePath();
-    assertThat("Jacoco output file", agent.determineJacocoOutputFile(bundle), equalTo(expectedOutputFile));
-  }
-
-  // A test-specific subclass to avoid having to mock System.getProperty()
-  private static class TestableJacocoJavaAgent
-      extends JacocoJavaAgent
-  {
-    private String outputFile;
-
-    public void setOutputFile(
-        final String outputFile)
-    { this.outputFile = outputFile; }
-
-    @Override
-    String getSystemProperty() { return outputFile; }
+    assertThat("Jacoco output fle", agent.determineJacocoOutputFile(bundle), equalTo(expectedOutputFile));
   }
 }
 
