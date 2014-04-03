@@ -33,6 +33,7 @@ import com.google.common.base.Preconditions;
 public class JacocoJavaAgent
     implements JavaAgent
 {
+  public static final String JACOCO_OUTPUT_OVERRIDE_SYSTEM_PROPERTY = "it.test.jacoco.outputfile";
 
   private File jar;
 
@@ -46,7 +47,7 @@ public class JacocoJavaAgent
       throw new IllegalStateException("Jacoco jar not set");
     }
     return "-javaagent:" + jacocoJar.getAbsolutePath() + "=" +
-        "destfile=" + new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();
+        "destfile=" + determineJacocoOutputFile(bundle);
   }
 
   @Inject
@@ -65,4 +66,15 @@ public class JacocoJavaAgent
     return jar;
   }
 
+  String determineJacocoOutputFile(
+      final Bundle bundle)
+  {
+    String destFile = getSystemProperty();
+    if (destFile != null) {
+      return new File(destFile).getAbsolutePath();
+    }
+
+    return new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();}
+
+  String getSystemProperty() {return System.getProperty(JACOCO_OUTPUT_OVERRIDE_SYSTEM_PROPERTY);}
 }
