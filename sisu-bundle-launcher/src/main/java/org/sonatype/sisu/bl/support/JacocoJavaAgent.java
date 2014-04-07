@@ -39,6 +39,8 @@ public class JacocoJavaAgent
   @Nullable
   private FileResolver jarResolver;
 
+  private String outputFile;
+
   @Override
   public String prepare(final Bundle bundle) {
     File jacocoJar = getJar();
@@ -46,7 +48,7 @@ public class JacocoJavaAgent
       throw new IllegalStateException("Jacoco jar not set");
     }
     return "-javaagent:" + jacocoJar.getAbsolutePath() + "=" +
-        "destfile=" + new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();
+        "destfile=" + determineJacocoOutputFile(bundle);
   }
 
   @Inject
@@ -65,4 +67,20 @@ public class JacocoJavaAgent
     return jar;
   }
 
+  String determineJacocoOutputFile(final Bundle bundle) {
+    if (outputFile != null) {
+      return new File(outputFile).getAbsolutePath();
+    }
+
+    return new File(bundle.getConfiguration().getTargetDirectory(), "jacoco.exec").getAbsolutePath();
+  }
+
+  /**
+   * Overrides the default location of jacoco's output (jacoco-it.exec).
+   *
+   * @since 1.9
+   */
+  public void setOutputFile(final String outputFile) {
+    this.outputFile = outputFile;
+  }
 }
