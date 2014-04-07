@@ -48,19 +48,19 @@ public class JacocoJavaAgentTest
   }
 
   @Test
-  public void systemPropertyOverridesJacocoOutputLocation() {
+  public void useDefaultJacocoOutputLocation() {
+    String expectedOutputFile = new File(bundleTargetDir, "jacoco.exec").getAbsolutePath();
+    assertThat("Jacoco output fle", agent.determineJacocoOutputFile(bundle), equalTo(expectedOutputFile));
+  }
+
+  @Test
+  public void overrideJacocoOutputLocation() {
     String outputFile = "overridden-jacoco.exec";
     agent.setOutputFile(outputFile);
 
     String expectedOutputFile = new File(outputFile).getAbsolutePath();
 
     assertThat("Jacoco output file", agent.determineJacocoOutputFile(bundle), equalTo(expectedOutputFile));
-  }
-
-  @Test
-  public void missingSystemPropertyImpliesDefaultJacocoOutput() {
-    String expectedOutputFile = new File(bundleTargetDir, "jacoco.exec").getAbsolutePath();
-    assertThat("Jacoco output fle", agent.determineJacocoOutputFile(bundle), equalTo(expectedOutputFile));
   }
 }
 

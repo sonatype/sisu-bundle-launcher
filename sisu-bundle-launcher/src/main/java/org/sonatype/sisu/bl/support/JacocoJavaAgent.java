@@ -67,9 +67,7 @@ public class JacocoJavaAgent
     return jar;
   }
 
-  String determineJacocoOutputFile(
-      final Bundle bundle)
-  {
+  String determineJacocoOutputFile(final Bundle bundle) {
     if (outputFile != null) {
       return new File(outputFile).getAbsolutePath();
     }
@@ -82,7 +80,7 @@ public class JacocoJavaAgent
    *
    * @since 1.9
    */
-  public void setOutputFile(
-      final String outputFile)
-  { this.outputFile = outputFile; }
- }
+  public void setOutputFile(final String outputFile) {
+    this.outputFile = outputFile;
+  }
+}
