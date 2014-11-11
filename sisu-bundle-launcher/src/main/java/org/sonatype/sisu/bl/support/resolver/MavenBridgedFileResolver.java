@@ -15,11 +15,11 @@ package org.sonatype.sisu.bl.support.resolver;
 
 import java.io.File;
 
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 import com.google.common.base.Throwables;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
