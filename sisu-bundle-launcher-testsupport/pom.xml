@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.sonatype.sisu</groupId>
     <artifactId>sisu-bundle-launcher-aggregator</artifactId>
-    <version>1.9</version>
+    <version>1.10-SNAPSHOT</version>
   </parent>
 
   <artifactId>sisu-bundle-launcher-testsupport</artifactId>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
       <artifactId>sisu-bundle-launcher</artifactId>
-      <version>1.9</version>
+      <version>1.10-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
