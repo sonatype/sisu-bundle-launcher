@@ -29,6 +29,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,13 +48,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DefaultPortReservationService
     implements PortReservationService
 {
+  private static final int MAX_ATTEMPTS = 10;
 
+  private final List<Range> blockedPortRanges;
 
-  private Range<Integer> blockedPortRange;
+  private final Set<Integer> blockedPorts;
 
-  private List<Range> blockedPortRanges;
-
-  private Set<Integer> blockedPortSet;
+  private final Set<Integer> reservedPorts;
 
   @Inject
   public DefaultPortReservationService() {
@@ -74,31 +75,16 @@ public class DefaultPortReservationService
     this(blockedRange, null);
   }
 
-  /**
-   *
-   * @param blockedRange
-   * @param blockedSet
-   */
   private DefaultPortReservationService(Range<Integer> blockedRange, Set<Integer> blockedSet) {
-    this.blockedPortRange = blockedRange;
     this.blockedPortRanges = Lists.newArrayList();
-    this.blockedPortSet = blockedSet;
-  }
-
-  /**
-   * Port registry
-   */
-  private final Set<Integer> ports = Sets.newHashSet();
-
-
-  private boolean isBlocked(int port) {
-    for (Range r : this.blockedPortRanges) {
-      if (r.contains(port)) {
-        return true;
-      }
+    this.blockedPorts = Sets.newHashSet();
+    this.reservedPorts = Sets.newHashSet();
+    if (blockedRange != null) {
+      addBlockedPorts(blockedRange);
     }
-    return (this.blockedPortRange != null && this.blockedPortRange.contains(port))
-        || (this.blockedPortSet != null && this.blockedPortSet.contains(port));
+    if (blockedSet != null) {
+      addBlockedPorts(blockedSet);
+    }
   }
 
   /**
@@ -106,59 +92,52 @@ public class DefaultPortReservationService
    * @throws RuntimeException if a port could not be reserved
    */
   @Override
-  public int reservePort() {
+  public synchronized int reservePort() {
     int port = 0;
     int attempts = 0;
     boolean searchingForPort = true;
-    synchronized (ports) {
-      while (searchingForPort && ++attempts < 10) {
-        port = findFreePort();
-        searchingForPort = !ports.add(port) || isBlocked(port);
-      }
+    while (searchingForPort && ++attempts < MAX_ATTEMPTS) {
+      port = findFreePort();
+      searchingForPort = isBlocked(port) || !reservedPorts.add(port);
     }
-    if (!(attempts < 10)) {
-      throw new RuntimeException("Could not allocate a free port after " + attempts + " attempts.");
+    if (searchingForPort) {
+      throw new RuntimeException("Could not allocate a free port after " + MAX_ATTEMPTS + " attempts.");
     }
     return port;
   }
 
   @Override
-  public void cancelPort(int port) {
+  public synchronized void cancelPort(int port) {
     checkNotNull(port);
-    synchronized (ports) {
-      if (!ports.remove(port)) {
-        throw new IllegalArgumentException("port " + port + " not yet reserved by this service.");
-      }
+    if (!reservedPorts.remove(port)) {
+      throw new IllegalArgumentException("port " + port + " not yet reserved by this service.");
     }
   }
 
   @Override
-  public void addBlockedPorts(Range<Integer> blockedRange) {
+  public synchronized void addBlockedPorts(Range<Integer> blockedRange) {
     checkNotNull(blockedRange);
-    synchronized (ports) {
-      if (this.blockedPortRange == null) {
-        this.blockedPortRange = blockedRange;
-      }
-      else if (this.blockedPortRange.isConnected(blockedRange)) {
-        this.blockedPortRange = this.blockedPortRange.span(blockedRange);
-      }
-      else {
-        this.blockedPortRanges.add(blockedRange);
-      }
-    }
+    this.blockedPortRanges.add(blockedRange);
   }
 
   @Override
-  public void addBlockedPorts(Set<Integer> blockedSet) {
+  public synchronized void addBlockedPorts(Set<Integer> blockedSet) {
     checkNotNull(blockedSet);
-    synchronized (ports) {
-      if (this.blockedPortSet == null) {
-        this.blockedPortSet = blockedSet;
-      }
-      else {
-        this.blockedPortSet.addAll(blockedSet);
+    this.blockedPorts.addAll(blockedSet);
+  }
+
+  @Override
+  public void addBlockedPorts(final int... ports) {
+    this.blockedPorts.addAll(Ints.asList(ports));
+  }
+
+  private boolean isBlocked(int port) {
+    for (Range r : this.blockedPortRanges) {
+      if (r.contains(port)) {
+        return true;
       }
     }
+    return blockedPorts.contains(port);
   }
 
   /**
