@@ -34,7 +34,7 @@ import com.google.common.primitives.Ints;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Act as a registry of reservedPorts available to use in the JVM.
+ * Act as a registry of ports available to use in the JVM.
  *
  * Ports which are 'free' and not explicitly blocked may be reserved for use.
  *
@@ -62,14 +62,14 @@ public class DefaultPortReservationService
   }
 
   /**
-   * @param blockedSet a disparate set of reservedPorts to be blocked from reservation
+   * @param blockedSet a disparate set of ports to be blocked from reservation
    */
   public DefaultPortReservationService(Set<Integer> blockedSet) {
     this(null, blockedSet);
   }
 
   /**
-   * @param blockedRange a contiguous range of reservedPorts to be blocked from reservation
+   * @param blockedRange a contiguous range of ports to be blocked from reservation
    */
   public DefaultPortReservationService(Range<Integer> blockedRange) {
     this(blockedRange, null);
