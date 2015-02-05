@@ -107,7 +107,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.goodies</groupId>
         <artifactId>goodies-common</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.12</version>
       </dependency>
       <dependency>
         <groupId>org.apache.ant</groupId>
@@ -128,7 +128,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.goodies</groupId>
         <artifactId>goodies-testsupport</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.12</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
