@@ -60,4 +60,11 @@ public interface PortReservationService
    */
   void addBlockedPorts(Set<Integer> blockedSet);
 
+  /**
+   * Adds blocked ports to any existing set of blocked ports.
+   *
+   * @param ports ports that are to be blocked from future reservation
+   * @since 1.9
+   */
+  void addBlockedPorts(int... ports);
 }
