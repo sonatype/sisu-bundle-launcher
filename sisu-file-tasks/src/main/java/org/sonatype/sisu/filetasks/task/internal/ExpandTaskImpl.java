@@ -163,7 +163,13 @@ class ExpandTaskImpl
     @Override
     public ExpandTask setToDirectory( final File directory )
     {
-        this.toDirectory = directory;
+        String path = directory.toString();
+        if (path.endsWith(File.separator)) {
+          this.toDirectory = new File(path.substring(0, path.length() - 1));
+        }
+        else {
+          this.toDirectory = directory;
+        }
         return this;
     }
 
