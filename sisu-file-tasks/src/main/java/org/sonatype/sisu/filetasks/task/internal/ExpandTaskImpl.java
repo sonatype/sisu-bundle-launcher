@@ -26,8 +26,6 @@ import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.mappers.CutDirsMapper;
 import org.sonatype.sisu.filetasks.task.ExpandTask;
 
-import com.google.common.io.Files;
-
 /**
  * ANT based {@link ExpandTask} implementation.
  *
