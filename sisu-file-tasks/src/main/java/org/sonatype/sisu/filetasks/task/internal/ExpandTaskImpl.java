@@ -26,6 +26,8 @@ import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.mappers.CutDirsMapper;
 import org.sonatype.sisu.filetasks.task.ExpandTask;
 
+import com.google.common.io.Files;
+
 /**
  * ANT based {@link ExpandTask} implementation.
  *
@@ -163,7 +165,13 @@ class ExpandTaskImpl
     @Override
     public ExpandTask setToDirectory( final File directory )
     {
-        this.toDirectory = directory;
+        String path = directory.toString();
+        if (path.endsWith(File.separator)) {
+          this.toDirectory = new File(path.substring(0, path.length() - 1));
+        }
+        else {
+          this.toDirectory = directory;
+        }
         return this;
     }
 
