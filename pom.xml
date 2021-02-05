@@ -250,7 +250,6 @@
       <plugin>
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
-        <version>0.3.4</version>
         <executions>
           <execution>
             <goals>
@@ -261,6 +260,18 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <!--
+            Exclude markdown documentation files
+            -->
+            <exclude>**/*.md</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
