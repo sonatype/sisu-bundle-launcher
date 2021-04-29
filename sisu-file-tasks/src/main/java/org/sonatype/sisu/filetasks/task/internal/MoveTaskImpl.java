@@ -43,7 +43,7 @@ class MoveTaskImpl
 
     /**
      * Returns a {@link Move} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

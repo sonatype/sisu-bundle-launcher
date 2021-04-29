@@ -343,6 +343,8 @@ public class JSWConfig
   /**
    * Configure if during {@link #load()} properties starting with {@code wrapper.*} will be extracted from
    * {@link System#getProperties()}
+   * 
+   * @param wrapperSystemOverridesEnabled whether to enable the wrapper system override
    */
   public void setWrapperSystemOverridesEnabled(final boolean wrapperSystemOverridesEnabled) {
     this.wrapperSystemOverridesEnabled = wrapperSystemOverridesEnabled;

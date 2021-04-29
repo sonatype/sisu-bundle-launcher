@@ -173,7 +173,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   /**
    * Resolves the bundle (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.BundleResolver} (if
    * present).
-   * <p/>
+   * 
    * {@inheritDoc}
    */
   @Override
@@ -193,7 +193,7 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   /**
    * Resolves the target directory (if not already set) by using {@link org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver}
    * (if present).
-   * <p/>
+   * 
    * {@inheritDoc}
    */
   @Override
@@ -249,6 +249,8 @@ public class DefaultBundleConfiguration<T extends BundleConfiguration>
   /**
    * Sets number of seconds to wait for application to boot. If injected will use the timeout bounded to
    * {@link #START_TIMEOUT} with a default of {@link #START_TIMEOUT_DEFAULT} seconds.
+   * 
+   * @param startTimeout the start timeout
    */
   @Inject
   protected void configureStartTimeout(

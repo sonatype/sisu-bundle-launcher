@@ -44,7 +44,7 @@ class DeleteFileTaskImpl
 
     /**
      * Returns a {@link Delete} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0
@@ -57,7 +57,7 @@ class DeleteFileTaskImpl
 
     /**
      * Returns false if file to be deleted does not exist, true otherwise.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

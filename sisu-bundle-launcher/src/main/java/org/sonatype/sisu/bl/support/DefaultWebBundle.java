@@ -101,7 +101,7 @@ public abstract class DefaultWebBundle<WB extends WebBundle, WBC extends WebBund
 
   /**
    * Logs URL where application is running.
-   * <p/>
+   * 
    * {@inheritDoc}
    */
   @Override

@@ -48,7 +48,7 @@ class SymlinkTaskImpl
 
     /**
      * Returns a {@link Symlink} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

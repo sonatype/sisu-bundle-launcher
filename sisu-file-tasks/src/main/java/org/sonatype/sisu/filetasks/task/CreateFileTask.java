@@ -25,7 +25,7 @@ public interface CreateFileTask
 {
     /**
      * Set the content the new file should contain.
-     * @param content
+     * @param content content for the file task
      * @return CreateFileTask for fluent API
      */
     CreateFileTask setContent(String content);

@@ -48,7 +48,7 @@ class ReplaceInFileTaskImpl
 
     /**
      * Returns false if file does not exist, true otherwise.
-     * <p/>
+     * 
      * {@inheritDoc}
      */
     @Override

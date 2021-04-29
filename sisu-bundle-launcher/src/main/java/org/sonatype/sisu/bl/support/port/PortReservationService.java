@@ -19,7 +19,7 @@ import com.google.common.collect.Range;
 
 /**
  * Service that reserves free system ports.
- * <p/>
+ * 
  * Ports are only guaranteed freely available at port reservation time.
  */
 public interface PortReservationService

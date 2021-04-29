@@ -50,7 +50,7 @@ abstract class AbstractReplaceTask<ART extends AbstractReplaceTask>
 
     /**
      * Returns a {@link org.apache.tools.ant.taskdefs.Replace} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -73,7 +73,7 @@ abstract class AbstractReplaceTask<ART extends AbstractReplaceTask>
 
     /**
      * Returns false if file does not exist, true otherwise.
-     * <p/>
+     * 
      * {@inheritDoc}
      */
     @Override

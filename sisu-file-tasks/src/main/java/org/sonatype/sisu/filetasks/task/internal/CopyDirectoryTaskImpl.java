@@ -83,7 +83,7 @@ class CopyDirectoryTaskImpl
 
     /**
      * Execute only when source directory exists or it does not exist and we should fail.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

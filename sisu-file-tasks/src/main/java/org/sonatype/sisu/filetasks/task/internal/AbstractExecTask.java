@@ -74,7 +74,7 @@ abstract class AbstractExecTask<AET extends AbstractExecTask>
 
     /**
      * Returns a {@link ExecTask} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

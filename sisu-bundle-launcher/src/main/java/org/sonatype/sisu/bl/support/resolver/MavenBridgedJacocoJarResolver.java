@@ -21,7 +21,7 @@ import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 /**
  * {@link MavenArtifactResolver} based Jacoco {@link FileResolver}.
- * <p/>
+ * 
  * Resolves the jar specified by its Maven artifact coordinates.
  *
  * @since 1.8

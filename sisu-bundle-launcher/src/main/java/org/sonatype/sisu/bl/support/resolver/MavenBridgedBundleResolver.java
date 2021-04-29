@@ -21,7 +21,7 @@ import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 /**
  * {@link MavenArtifactResolver} based {@link BundleResolver}.
- * <p/>
+ * 
  * Resolves the bundle specified by its Maven artifact coordinates.
  *
  * @since 1.0

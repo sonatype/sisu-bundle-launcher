@@ -63,7 +63,7 @@ abstract class AbstractCopyTask<AFCT extends AbstractCopyTask>
 
     /**
      * Returns a {@link Copy} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

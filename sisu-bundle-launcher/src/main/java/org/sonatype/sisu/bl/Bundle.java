@@ -47,6 +47,7 @@ public interface Bundle<B extends Bundle, BC extends BundleConfiguration>
   /**
    * Cleans up filesystem, basically removing the target directory.
    *
+   * @throws Exception when an error occurs
    * @return itself, for usage in fluent api
    */
   B cleanup() throws Exception;

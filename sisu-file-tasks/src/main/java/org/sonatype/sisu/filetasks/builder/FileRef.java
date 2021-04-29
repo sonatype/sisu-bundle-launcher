@@ -17,7 +17,7 @@ import java.io.File;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A reference to a file. Reference could be a file or a re-target-able path.<br/>
+ * A reference to a file. Reference could be a file or a re-target-able path.<br>
  * Re-target-able paths are relative paths to a directory that can be specified before that path usage.
  *
  * @since 1.0
@@ -54,9 +54,9 @@ public class FileRef
     }
 
     /**
-     * Re-targets the reference to a specified directory.<br/>
+     * Re-targets the reference to a specified directory.<br>
      * If reference was created by {@link #file(java.io.File)}, referenced file will remain the same as prior invocation
-     * .<br/>
+     * .<br>
      * If reference was created by {@link #path(String)}, referenced file will point to specified directory + specified
      * path.
      *
@@ -107,5 +107,4 @@ public class FileRef
             }
         };
     }
-
 }

@@ -85,7 +85,7 @@ class ExpandTaskImpl
 
     /**
      * Returns a {@link Expand} or {@link Untar} ANT task based on archive extension.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

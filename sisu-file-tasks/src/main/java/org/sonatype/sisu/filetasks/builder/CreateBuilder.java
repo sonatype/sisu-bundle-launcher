@@ -33,7 +33,7 @@ public interface CreateBuilder {
      * @param dir directory to be created
      * @return ongoing create directory task builder
      */
-    CreateDirectoryBuilder directory( final FileRef file );
+    CreateDirectoryBuilder directory( final FileRef dir );
 
 
 }

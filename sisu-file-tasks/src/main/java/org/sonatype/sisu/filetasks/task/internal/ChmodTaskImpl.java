@@ -71,7 +71,7 @@ class ChmodTaskImpl
 
     /**
      * Returns a {@link Chmod} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

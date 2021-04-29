@@ -58,7 +58,7 @@ public abstract class BuilderImpl
 
     /**
      * Executes builder created task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0
@@ -71,7 +71,7 @@ public abstract class BuilderImpl
 
     /**
      * Re-targets all re-target-ables to specified directory.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

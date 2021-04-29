@@ -77,7 +77,7 @@ class DeleteDirectoryTaskImpl
 
     /**
      * Returns a {@link Delete} ANT task.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0
@@ -90,7 +90,7 @@ class DeleteDirectoryTaskImpl
 
     /**
      * Returns false if directory to be deleted does not exist, true otherwise.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

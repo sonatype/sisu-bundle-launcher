@@ -102,9 +102,9 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
  * or action=&quot;recreate&quot;, but action=&quot;record&quot; should still
  * work. Finally, the lack of support for symlinks in Java means that all links
  * are recorded as links to the <strong>canonical</strong> resource name.
- * Therefore the link: <code>link --> subdir/dir/../foo.bar</code> will be
+ * Therefore the link: <code>link --&gt; subdir/dir/../foo.bar</code> will be
  * recorded as <code>link=subdir/foo.bar</code> and restored as
- * <code>link --> subdir/foo.bar</code>.
+ * <code>link --&gt; subdir/foo.bar</code>.
  *
  */
 public class Symlink extends DispatchTask {

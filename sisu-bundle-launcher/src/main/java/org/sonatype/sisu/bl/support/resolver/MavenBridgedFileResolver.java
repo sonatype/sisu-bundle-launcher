@@ -26,7 +26,7 @@ import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.requ
 
 /**
  * {@link MavenArtifactResolver} based {@link FileResolver}.
- * <p/>
+ * 
  * Resolves the file specified by its Maven artifact coordinates.
  *
  * @since 1.8
@@ -69,7 +69,7 @@ public class MavenBridgedFileResolver
 
   /**
    * Resolves a file specified by Maven artifact coordinates using provided {@link MavenArtifactResolver}.
-   * <p/>
+   * 
    * {@inheritDoc}
    */
   @Override

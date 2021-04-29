@@ -65,7 +65,7 @@ class CopyFileTaskImpl
 
     /**
      * Execute only when source file exists or it does not exist and we should fail.
-     * <p/>
+     * 
      * {@inheritDoc}
      *
      * @since 1.0

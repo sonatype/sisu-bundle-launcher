@@ -60,7 +60,7 @@ public interface JMXConfiguration<J extends JMXConfiguration>
 
   /**
    * Flag indicating if the local JMX connector should be enabled?
-   * <p/>
+   * 
    * Local connector is only suitable for connecting by the same user id/file system as the user that started the
    * agent.
    *
@@ -72,6 +72,7 @@ public interface JMXConfiguration<J extends JMXConfiguration>
    * Set if a local JVM connector should be enabled.
    *
    * @param enabled true to enable the connector, false to disable it
+   * @return self, for fluent API
    */
   J setLocalConnectorEnabled(boolean enabled);
 
@@ -84,8 +85,8 @@ public interface JMXConfiguration<J extends JMXConfiguration>
 
   /**
    * Sets the remote port a JMX agent should listen on.
-   * <p/>
-   * <p>Setting this to a number zero or greater implies remote JMX  access should be enabled.</p>
+   * 
+   * Setting this to a number zero or greater implies remote JMX  access should be enabled.
    *
    * @param remotePort a port number or {@link J#RANDOM_JMX_REMOTE_PORT} if requesting a random free port be used
    *                   or null to not configure remote access
@@ -103,7 +104,7 @@ public interface JMXConfiguration<J extends JMXConfiguration>
 
   /**
    * Set if a remote JVM connector should use authentication methods.
-   * <p/>
+   * 
    * <p>Relevant only if a remote port is also set.</p>
    *
    * @param enabled true to enable connector authentication, false to disable it

@@ -125,6 +125,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
    * @param configurationProvider configuration provider
    * @param runningBundles        running bundles
    * @param fileTaskBuilder       file task builder
+   * @param portReservationService port reservation service
    */
   @Inject
   public DefaultBundle(final String name,
@@ -145,11 +146,9 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
   /**
    * Starts application and waits for it to boot. if successfully started sets the state to running.
-   * <p/>
+   * 
    * {@inheritDoc}
    *
-   * @throws Exception if a problem occurred during startup of application, wait period or it could not determine if
-   *                   application is started in specified timeout
    * @see Bundle#start()
    */
   @Override
@@ -177,7 +176,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
   /**
    * Stops application, if running.
-   * <p/>
+   * 
    * {@inheritDoc}
    *
    * @see Bundle#stop()
@@ -197,13 +196,13 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
   }
 
   /**
-   * Prepares application target directory for running by:<br/>
-   * - ensuring a valid configuration<br/>
-   * - cleanup of target directory<br/>
-   * - unpacking bundle<br/>
-   * - configure<br/>
+   * Prepares application target directory for running by:<br>
+   * - ensuring a valid configuration<br>
+   * - cleanup of target directory<br>
+   * - unpacking bundle<br>
+   * - configure<br>
    * - applying overlays
-   * <p/>
+   * 
    * {@inheritDoc}
    */
   @Override
@@ -278,6 +277,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
 
   /**
    * Template method for subclasses to perform configuration tasks when bundle is starting, if necessary.
+   * 
+   * @throws Exception when an error occurs
    */
   protected void configure()
       throws Exception
@@ -385,6 +386,8 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
   /**
    * Bundle specific jmx port, possibly altered from what may have been originally configured as part of
    * {@link JMXConfiguration}.
+   * 
+   * @return the jmx remote port
    */
   protected Integer getJmxRemotePort() {
     return jmxRemotePort == null ? getConfiguration().getJmxConfiguration().getRemotePort() : this.jmxRemotePort;
@@ -416,9 +419,9 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
   }
 
   /**
-   * Validates configuration:<br/>
+   * Validates configuration:<br>
    * - id is set
-   * - bundle is set<br/>
+   * - bundle is set<br>
    * - target directory is set
    *
    * @throws RuntimeException if any of above is not true
