@@ -34,8 +34,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.sisu.litmus</groupId>
-      <artifactId>litmus-testsupport</artifactId>
+      <groupId>org.sonatype.sisu.goodies</groupId>
+      <artifactId>goodies-testsupport</artifactId>
       <scope>compile</scope>
     </dependency>
   </dependencies>

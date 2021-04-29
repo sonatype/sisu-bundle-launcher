@@ -155,7 +155,7 @@ public abstract class DefaultBundle<B extends Bundle, BC extends BundleConfigura
   @Override
   public void doStart() {
     bootingTime = Time.millis(0);
-    final Stopwatch bootingWatch = new Stopwatch();
+    final Stopwatch bootingWatch = Stopwatch.createUnstarted();
     try {
       startApplication();
       running = true;

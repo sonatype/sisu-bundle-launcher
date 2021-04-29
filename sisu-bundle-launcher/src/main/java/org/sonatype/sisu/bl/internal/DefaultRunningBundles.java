@@ -77,9 +77,13 @@ public class DefaultRunningBundles
     {
       @Override
       public boolean apply(final Bundle input) {
-        return bundleType.isInstance(input);
+        return test(input);
       }
 
+      @Override
+      public boolean test(final Bundle input) {
+        return bundleType.isInstance(input);
+      }
     });
     return filtered.toArray(new Bundle[filtered.size()]);
   }

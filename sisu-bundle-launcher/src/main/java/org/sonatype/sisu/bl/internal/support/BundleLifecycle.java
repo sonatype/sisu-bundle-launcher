@@ -133,7 +133,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
     @Override
     public void doPrepare() {
-      final Stopwatch stopwatch = new Stopwatch().start();
+      final Stopwatch stopwatch = Stopwatch.createStarted();
       try {
         failure = null;
         BundleLifecycle.this.doPrepare();
@@ -149,7 +149,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
     @Override
     public void doClean() {
-      final Stopwatch stopwatch = new Stopwatch().start();
+      final Stopwatch stopwatch = Stopwatch.createStarted();
       try {
         failure = null;
         BundleLifecycle.this.doClean();
@@ -166,7 +166,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
     @Override
     public void doStart() {
-      final Stopwatch stopwatch = new Stopwatch().start();
+      final Stopwatch stopwatch = Stopwatch.createStarted();
       try {
         failure = null;
         BundleLifecycle.this.doStart();
@@ -181,7 +181,7 @@ public abstract class BundleLifecycle<T extends Bundle, C extends BundleConfigur
 
     @Override
     public void doStop() {
-      final Stopwatch stopwatch = new Stopwatch().start();
+      final Stopwatch stopwatch = Stopwatch.createStarted();
       try {
         failure = null;
         BundleLifecycle.this.doStop();

@@ -91,7 +91,7 @@ public class JettyITSupport
 
     protected static Stopwatch startJetty( final JettyBundle jettyBundle )
     {
-        final Stopwatch stopwatch = new Stopwatch();
+        final Stopwatch stopwatch = Stopwatch.createUnstarted();
         if ( jettyBundle != null && !jettyBundle.isRunning() )
         {
             stopwatch.start();

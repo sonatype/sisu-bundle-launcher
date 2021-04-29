@@ -91,7 +91,7 @@ public class DropwizardITSupport
   }
 
   protected static Stopwatch startBundle(final DropwizardBundle bundle) {
-    final Stopwatch stopwatch = new Stopwatch();
+    final Stopwatch stopwatch = Stopwatch.createUnstarted();
     if (bundle != null && !bundle.isRunning()) {
       stopwatch.start();
       try {

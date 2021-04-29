@@ -80,7 +80,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>16.0.1</version>
+        <version>24.1.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
@@ -125,9 +125,9 @@
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.sisu.litmus</groupId>
-        <artifactId>litmus-testsupport</artifactId>
-        <version>1.9</version>
+        <groupId>org.sonatype.sisu.goodies</groupId>
+        <artifactId>goodies-testsupport</artifactId>
+        <version>1.14</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
