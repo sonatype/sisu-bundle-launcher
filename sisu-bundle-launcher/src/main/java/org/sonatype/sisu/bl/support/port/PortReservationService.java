@@ -44,7 +44,6 @@ public interface PortReservationService
   /**
    * Adds a range of ports to be blocked.
    *
-   * <p />
    * If the provided range is connected to a previously added range, the span of the ranges forms a new blocked
    * range of ports. If the provided range is not connected to the existing range of blocked ports, it is simply
    * treated as an additional range of ports to be blocked.
