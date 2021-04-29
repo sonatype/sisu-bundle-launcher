@@ -25,7 +25,7 @@
   <groupId>org.sonatype.sisu</groupId>
   <artifactId>sisu-bundle-launcher-aggregator</artifactId>
   <packaging>pom</packaging>
-  <version>1.8.1-SNAPSHOT</version>
+  <version>1.8.1-01</version>
 
   <inceptionYear>2008</inceptionYear>
   <url>https://github.com/sonatype/sisu-bundle-launcher</url>
@@ -149,22 +149,22 @@
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1-01</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-servlet</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1-01</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-file-tasks</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1-01</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-bundle-launcher-testsupport</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1-01</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
