@@ -53,6 +53,8 @@
 
   <properties>
     <test.log.pattern>%date %level [%thread%X{DC}] %logger - %msg%n</test.log.pattern>
+
+    <goodies.version>1.15.0-SNAPSHOT</goodies.version>
   </properties>
 
   <modules>
@@ -70,7 +72,7 @@
       <dependency>
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>org.eclipse.sisu.inject</artifactId>
-        <version>0.3.1</version>
+        <version>0.3.5</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
@@ -80,7 +82,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>24.1.1-jre</version>
+        <version>31.0.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
@@ -90,7 +92,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.25</version>
+        <version>1.7.32</version>
       </dependency>
       <dependency>
         <groupId>net.sf.smc</groupId>
@@ -106,7 +108,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.goodies</groupId>
         <artifactId>goodies-common</artifactId>
-        <version>1.9</version>
+        <version>${goodies.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.ant</groupId>
@@ -127,7 +129,7 @@
       <dependency>
         <groupId>org.sonatype.sisu.goodies</groupId>
         <artifactId>goodies-testsupport</artifactId>
-        <version>1.14</version>
+        <version>${goodies.version}</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -136,11 +138,16 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.sonatype.sisu.goodies</groupId>
+        <artifactId>goodies-lifecycle</artifactId>
+        <version>${goodies.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.2.3</version>
+        <version>1.2.7</version>
         <scope>test</scope>
       </dependency>
 
