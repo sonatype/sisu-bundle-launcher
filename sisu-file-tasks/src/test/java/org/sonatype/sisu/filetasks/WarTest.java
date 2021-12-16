@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.util.jar.JarFile;
 import org.junit.Test;
 import org.sonatype.sisu.filetasks.support.FileTaskTest;
-import static org.sonatype.sisu.litmus.testsupport.hamcrest.IsNot.not;
+import static org.sonatype.sisu.goodies.testsupport.hamcrest.IsNot.not;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
-import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.containsEntry;
+import static org.sonatype.sisu.goodies.testsupport.hamcrest.FileMatchers.containsEntry;
 
 
 import static org.hamcrest.MatcherAssert.*;

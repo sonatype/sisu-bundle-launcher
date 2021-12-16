@@ -13,7 +13,7 @@
 
 package org.sonatype.sisu.bl.support.port.internal;
 
-import org.sonatype.sisu.litmus.testsupport.TestSupport;
+import org.sonatype.sisu.goodies.testsupport.TestSupport;
 
 import com.google.common.collect.Range;
 import org.junit.Before;

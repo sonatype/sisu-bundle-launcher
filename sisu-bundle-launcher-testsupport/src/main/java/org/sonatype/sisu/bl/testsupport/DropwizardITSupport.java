@@ -19,11 +19,11 @@ import java.io.FilenameFilter;
 import org.sonatype.sisu.bl.DropwizardBundle;
 import org.sonatype.sisu.bl.DropwizardBundleConfiguration;
 import org.sonatype.sisu.bl.support.resolver.TargetDirectoryResolver;
-import org.sonatype.sisu.litmus.testsupport.TestData;
-import org.sonatype.sisu.litmus.testsupport.TestIndex;
-import org.sonatype.sisu.litmus.testsupport.inject.InjectedTestSupport;
-import org.sonatype.sisu.litmus.testsupport.junit.TestDataRule;
-import org.sonatype.sisu.litmus.testsupport.junit.TestIndexRule;
+import org.sonatype.sisu.goodies.testsupport.TestData;
+import org.sonatype.sisu.goodies.testsupport.TestIndex;
+import org.sonatype.sisu.goodies.testsupport.inject.InjectedTestSupport;
+import org.sonatype.sisu.goodies.testsupport.junit.TestDataRule;
+import org.sonatype.sisu.goodies.testsupport.junit.TestIndexRule;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;

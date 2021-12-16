@@ -15,7 +15,7 @@ package org.sonatype.sisu.filetasks;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.sonatype.sisu.filetasks.builder.FileRef.file;
 import static org.sonatype.sisu.filetasks.builder.FileRef.path;
-import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.contains;
+import static org.sonatype.sisu.goodies.testsupport.hamcrest.FileMatchers.contains;
 
 import java.io.File;
 

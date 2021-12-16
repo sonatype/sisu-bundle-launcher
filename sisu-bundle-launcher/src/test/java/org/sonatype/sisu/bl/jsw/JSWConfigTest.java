@@ -19,9 +19,9 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
-import org.sonatype.sisu.litmus.testsupport.TestSupport;
-import org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers;
-import org.sonatype.sisu.litmus.testsupport.junit.TestIndexRule;
+import org.sonatype.sisu.goodies.testsupport.TestSupport;
+import org.sonatype.sisu.goodies.testsupport.hamcrest.FileMatchers;
+import org.sonatype.sisu.goodies.testsupport.junit.TestIndexRule;
 
 import com.google.common.collect.Maps;
 import org.junit.Before;
@@ -33,8 +33,8 @@ import static org.apache.commons.io.FileUtils.copyFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.contains;
-import static org.sonatype.sisu.litmus.testsupport.hamcrest.FileMatchers.doesNotContain;
+import static org.sonatype.sisu.goodies.testsupport.hamcrest.FileMatchers.contains;
+import static org.sonatype.sisu.goodies.testsupport.hamcrest.FileMatchers.doesNotContain;
 
 /**
  * Tests for {@link JSWConfig}
